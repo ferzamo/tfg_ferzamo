@@ -1,16 +1,25 @@
-div{
+.container {
 
-    display: grid;
-    height: auto;
-    grid-template-areas: 
-        "..."
-        ". content ."
-        "...";
-    grid-template-columns: 10% 80% 10%;
-    grid-template-rows: 10% 80% 10%;
+  background-image: url(/assets/images/fondo.jpg);
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 
+  display: grid;
+  height: 100vh;
+  grid-gap: 10px;
+  grid-template-areas:
+    ". . ."
+    ". content ."
+    ". . .";
+  grid-template-columns: 30vh auto 30vh;
+  grid-template-rows: 15vh auto 30vh;
 }
 
-router-outlet{
-    grid-area: content;
+.content {
+  grid-area: content;
+  background-color: white;
 }
+
+

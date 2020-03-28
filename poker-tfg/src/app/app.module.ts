@@ -11,6 +11,9 @@ import {
 import { RouterModule } from "@angular/router";
 import { routes } from './app.routes';
 
+/* Angular materials */
+import {MatCardModule} from '@angular/material/card';
+
 @NgModule({
   declarations: [
     CreateComponent,
@@ -20,7 +23,8 @@ import { routes } from './app.routes';
     ShellComponent,
     MainComponent
   ],
-  imports: [BrowserModule, RouterModule.forRoot(routes)],
+  imports: [BrowserModule, RouterModule.forRoot(routes),
+    MatCardModule],
   providers: [],
   bootstrap: [ShellComponent]
 })

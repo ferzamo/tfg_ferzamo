@@ -4,7 +4,6 @@ import {
     GameComponent,
     JoinComponent,
     LobbyComponent,
-    ShellComponent,
     MainComponent
   } from "./components";
 
