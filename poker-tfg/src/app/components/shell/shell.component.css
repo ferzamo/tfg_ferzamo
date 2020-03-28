@@ -1,0 +1,16 @@
+div{
+
+    display: grid;
+    height: auto;
+    grid-template-areas: 
+        "..."
+        ". content ."
+        "...";
+    grid-template-columns: 10% 80% 10%;
+    grid-template-rows: 10% 80% 10%;
+
+}
+
+router-outlet{
+    grid-area: content;
+}

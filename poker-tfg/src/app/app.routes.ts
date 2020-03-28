@@ -1,8 +1,36 @@
 import {Routes} from '@angular/router';
+import {
+    CreateComponent,
+    GameComponent,
+    JoinComponent,
+    LobbyComponent,
+    ShellComponent,
+    MainComponent
+  } from "./components";
 
-export const ROUTES: Routes = [
+export const routes: Routes = [
     {
         path: '',
-        loadChildren: './modules/+create/creade.module#CreateModule',
+        component: MainComponent
+    },
+    {
+        path: 'join',
+        component: JoinComponent
+    },
+    {
+        path: 'create',
+        component: CreateComponent
+    },
+    {
+        path: 'lobby',
+        component: LobbyComponent
+    },
+    {
+        path: 'game',
+        component: GameComponent
+    },
+    {
+        path: '**',
+        component: MainComponent
     }
 ]

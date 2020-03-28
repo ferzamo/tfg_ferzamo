@@ -1,21 +1,27 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { CreateMainComponent, CreateModule} from './modules/+create'
-import { RouterModule } from '@angular/router';
-import { ROUTES } from './app.routes';
-
-
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import {
+  CreateComponent,
+  GameComponent,
+  JoinComponent,
+  LobbyComponent,
+  ShellComponent,
+  MainComponent
+} from "./components";
+import { RouterModule } from "@angular/router";
+import { routes } from './app.routes';
 
 @NgModule({
-  
-  imports: [
-    BrowserModule,
-    CreateModule,
-    RouterModule.forRoot(ROUTES, {
-      useHash: true
-    })
+  declarations: [
+    CreateComponent,
+    GameComponent,
+    JoinComponent,
+    LobbyComponent,
+    ShellComponent,
+    MainComponent
   ],
+  imports: [BrowserModule, RouterModule.forRoot(routes)],
   providers: [],
-  bootstrap: [CreateMainComponent]
+  bootstrap: [ShellComponent]
 })
-export class AppModule { }
+export class AppModule {}
