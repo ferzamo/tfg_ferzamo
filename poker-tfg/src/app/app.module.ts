@@ -9,10 +9,11 @@ import {
   MainComponent
 } from "./components";
 import { RouterModule } from "@angular/router";
-import { routes } from './app.routes';
+import { routes } from "./app.routes";
 
 /* Angular materials */
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from "@angular/material/card";
+import { SharedModule } from './shared/shared.module'
 
 @NgModule({
   declarations: [
@@ -23,8 +24,11 @@ import {MatCardModule} from '@angular/material/card';
     ShellComponent,
     MainComponent
   ],
-  imports: [BrowserModule, RouterModule.forRoot(routes),
-    MatCardModule],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(routes), 
+    MatCardModule, 
+    SharedModule],
   providers: [],
   bootstrap: [ShellComponent]
 })

@@ -1,7 +1,38 @@
-mat-card{
-    background-color: red;
-
+.mainContainer {
+  display: grid;
+  height: 100%;
+  grid-gap: 10px;
+  grid-template-areas:
     
-    height: 100px;
-    width: 100px;
+    ". logo ."
+    ". mainContent ."
+    ". . .";
+  grid-template-columns: 5% auto 5%;
+  grid-template-rows:  20% 70% 10%;
+  
+}
+
+.logo {
+  grid-area: logo;
+  background-color: #2A2E35;
+}
+
+.mainContent {
+  grid-area: mainContent;
+  background-color: #11181B;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-grow: 1;
+}
+
+.buttonCreate{
+  grid-area: buttonCreate;
+}
+
+.buttonJoin{
+  grid-area: buttonJoin;
 }
