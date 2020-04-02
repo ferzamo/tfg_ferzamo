@@ -1,0 +1,40 @@
+.joinContainer {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+}
+
+.joinContent{
+
+    height: 100px;
+    max-width: 550px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-grow: 2;
+
+}
+
+.inputJoin {
+  font-size: 25px;
+  text-align: center;
+  background-color: rgb(42, 46, 53);
+  color: rgb(236, 165, 11);
+  border-color:  rgb(236, 165, 11);
+  border-radius: 5px;
+  height: 60px;
+  width: 400px;
+}
+.inputJoin:focus{
+    outline-width: 0;
+}
+
+
+.buttonJoin {
+}

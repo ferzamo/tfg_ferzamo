@@ -3,8 +3,8 @@
         <div class="logo"></div>
     
         <div class="mainContent">
-                <app-main-button class="buttonCreate" [buttonText]="'New Game'"></app-main-button>
-                <app-main-button class="buttonJoin" [buttonText]="'Join Game'"></app-main-button>
+                <app-main-button class="buttonCreate" [buttonText]="'New Game'" (click)="navigateCreate()"></app-main-button>
+                <app-main-button class="buttonJoin" [buttonText]="'Join Game'" (click)="navigateJoin()"></app-main-button>
         </div>
 
     
