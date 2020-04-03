@@ -14,7 +14,14 @@
 
 .logo {
   grid-area: logo;
-  background-color: #2A2E35;
+  
+}
+
+.imageLogo{
+  display:block;
+  margin:auto;
+  padding-top: 10px;
+  height: 150px;
 }
 
 .mainContent {
