@@ -1,3 +1,5 @@
+@import "../../shared/constants/less/variables.less";
+
 .joinContainer {
   height: 100%;
   display: flex;
@@ -24,9 +26,10 @@
 .inputJoin {
   font-size: 25px;
   text-align: center;
-  background-color: rgb(42, 46, 53);
-  color: rgb(236, 165, 11);
-  border-color:  rgb(236, 165, 11);
+  background-color: @SECONDARY_COLOR;
+  color: @PRIMARY_COLOR;
+  border-color:  @PRIMARY_COLOR;
+  border-style: solid;
   border-radius: 5px;
   height: 60px;
   width: 400px;

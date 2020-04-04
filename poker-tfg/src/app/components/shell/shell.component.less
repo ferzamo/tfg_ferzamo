@@ -1,6 +1,8 @@
+@import "../../shared/constants/less/variables.less";
+
 .shellContainer {
 
-  background-color: #11181B;
+  background-color: @SECONDARY_COLOR;
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
@@ -8,7 +10,6 @@
 
   display: grid;
   height: 100vh;
-  grid-gap: 10px;
   grid-template-areas:
     ". . ."
     ". shellContent ."

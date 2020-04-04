@@ -1,0 +1,67 @@
+@import "../../shared/constants/less/variables.less";
+
+.container{
+    border-color:  @PRIMARY_COLOR;
+    border-style: solid;
+    border-radius: 5px;
+}
+
+.lobbyContainer{
+
+    display: grid;
+    height: 100%;
+    grid-gap: 10px;
+    
+
+    grid-template-areas:
+    "playersContainer specsContainer"
+    "playersContainer linkContainer"
+    "playersContainer startButtonContainer";
+
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: 5fr 1fr 1fr;
+
+
+}
+
+.playersContainer{
+
+    grid-area: playersContainer;
+    display: flex;
+    flex-direction: column ;
+    
+    position: relative;
+
+    .player{
+        border-style: solid;
+    border-color: red;
+       width: 100%;
+       flex: 1;
+    }
+    
+}
+
+.specsContainer{
+
+    grid-area: specsContainer;
+    
+}
+
+.linkContainer{
+
+    grid-area: linkContainer;
+    text-align: center;
+    vertical-align: middle;
+    
+
+    .link{
+        font-size: 30px;
+        color: white;
+    }
+}
+
+.startButtonContainer{
+
+    grid-area: startButtonContainer;
+   
+}
