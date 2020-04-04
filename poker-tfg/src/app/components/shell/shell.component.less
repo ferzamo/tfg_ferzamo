@@ -2,20 +2,17 @@
 
 .shellContainer {
 
-  background-color: @SECONDARY_COLOR;
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  
 
   display: grid;
   height: 100vh;
+
   grid-template-areas:
     ". . ."
     ". shellContent ."
     ". . .";
-  grid-template-columns: 10% auto 10%;
-  grid-template-rows: 5% auto 5%;
+  grid-template-columns: 10% 80% 10%;
+  grid-template-rows: 5% 90% 5%;
 }
 
 .shellContent {

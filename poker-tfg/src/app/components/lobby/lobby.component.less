@@ -1,67 +1,74 @@
 @import "../../shared/constants/less/variables.less";
 
-.container{
-    border-color:  @PRIMARY_COLOR;
-    border-style: solid;
-    border-radius: 5px;
+.container {
+  border-color: @PRIMARY_COLOR;
+  border-style: solid;
+  border-radius: 5px;
 }
 
-.lobbyContainer{
+.lobbyContainer {
+  display: grid;
+  height: 100%;
+  grid-gap: 10px;
 
-    display: grid;
-    height: 100%;
-    grid-gap: 10px;
-    
-
-    grid-template-areas:
+  grid-template-areas:
     "playersContainer specsContainer"
     "playersContainer linkContainer"
     "playersContainer startButtonContainer";
 
-    grid-template-columns: 1fr 3fr;
-    grid-template-rows: 5fr 1fr 1fr;
-
-
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: 5fr 1fr 1fr;
 }
 
-.playersContainer{
+.playersContainer {
+  grid-area: playersContainer;
+  display: flex;
+  flex-direction: column;
 
-    grid-area: playersContainer;
-    display: flex;
-    flex-direction: column ;
+  position: relative;
+
+  .player {
     
-    position: relative;
+    width: 100%;
+    flex: 1;
 
-    .player{
-        border-style: solid;
-    border-color: red;
-       width: 100%;
-       flex: 1;
+    display: grid;
+    grid-template-areas: 
+    ". . . ."
+    ". photoLobby nameLobby ."
+    ". . . .";
+
+    grid-template-columns: 2% 33% 63% 2%;
+    grid-template-rows: 5% 90% 5%;
+
+    .photoLobby{
+        grid-area: photoLobby;
+        background-color: blue;
     }
-    
-}
 
-.specsContainer{
-
-    grid-area: specsContainer;
-    
-}
-
-.linkContainer{
-
-    grid-area: linkContainer;
-    text-align: center;
-    vertical-align: middle;
-    
-
-    .link{
-        font-size: 30px;
-        color: white;
+    .nameLobby{
+        grid-area: nameLobby;
+        background-color: white;
     }
+  }
+  
 }
 
-.startButtonContainer{
+.specsContainer {
+  grid-area: specsContainer;
+}
 
-    grid-area: startButtonContainer;
-   
+.linkContainer {
+  grid-area: linkContainer;
+  text-align: center;
+  vertical-align: middle;
+
+  .link {
+    font-size: 30px;
+    color: white;
+  }
+}
+
+.startButtonContainer {
+  grid-area: startButtonContainer;
 }
