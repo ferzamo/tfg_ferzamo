@@ -39,18 +39,19 @@
     .photoLobby {
       border-style: solid;
 
-      border-color: rgba(107, 11, 11, 0.411);
+      border-color: rgba(107, 11, 11, 0.61);
     }
     .nameLobby {
       .name {
         color: rgba(255, 255, 255, 0.253);
+        
       }
     }
   }
 
   .photoLobby {
     grid-area: photoLobby;
-
+    border-radius: 4px;
     border-style: solid;
     border-color: @PRIMARY_COLOR;
 
@@ -67,18 +68,60 @@
   .nameLobby {
     grid-area: nameLobby;
 
-    text-align: center;
+    padding-left: 10px;
     vertical-align: middle;
 
     .name {
       font-size: 20px;
       color: white;
+      
     }
+    
   }
 }
 
 .specsContainer {
   grid-area: specsContainer;
+  border-style: solid;
+  border-radius: 4px;
+  border-color: @PRIMARY_COLOR;
+  background-color: @SECONDARY_COLOR;
+  background-image:  url(/assets/images/specsBackground.jpg);
+  
+  background-position: center;
+  
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  
+
+  .specText{
+
+    display: flex;
+    flex-wrap: nowrap;
+
+    .specStatic{
+      flex: 0 20%;
+      color: @PRIMARY_COLOR;
+      font-size: 25px;
+      padding-left: 20px;
+    }
+  
+    .specDinamic{
+      flex: 0 50%;
+      color: white;
+      font-size: 25px;
+      padding-left: 9px;
+      
+      
+    }
+
+  }
+
+  
+
+ 
+  
 }
 
 .linkContainer {
