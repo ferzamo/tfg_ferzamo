@@ -1,11 +1,5 @@
 @import "../../shared/constants/less/variables.less";
 
-.container {
-  border-color: @PRIMARY_COLOR;
-  border-style: solid;
-  border-radius: 5px;
-}
-
 .lobbyContainer {
   display: grid;
   height: 100%;
@@ -16,7 +10,7 @@
     "playersContainer linkContainer"
     "playersContainer startButtonContainer";
 
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 30% auto;
   grid-template-rows: 5fr 1fr 1fr;
 }
 
@@ -28,30 +22,59 @@
   position: relative;
 
   .player {
-    
     width: 100%;
     flex: 1;
 
     display: grid;
-    grid-template-areas: 
-    ". . . ."
-    ". photoLobby nameLobby ."
-    ". . . .";
+    grid-template-areas:
+      ". . . ."
+      ". photoLobby nameLobby ."
+      ". . . .";
 
     grid-template-columns: 2% 33% 63% 2%;
     grid-template-rows: 5% 90% 5%;
+  }
 
-    .photoLobby{
-        grid-area: photoLobby;
-        background-color: blue;
+  .waiting {
+    .photoLobby {
+      border-style: solid;
+
+      border-color: rgba(107, 11, 11, 0.411);
     }
-
-    .nameLobby{
-        grid-area: nameLobby;
-        background-color: white;
+    .nameLobby {
+      .name {
+        color: rgba(255, 255, 255, 0.253);
+      }
     }
   }
-  
+
+  .photoLobby {
+    grid-area: photoLobby;
+
+    border-style: solid;
+    border-color: @PRIMARY_COLOR;
+
+    .photoUser {
+      height: 100%;
+      width: 100%;
+
+      border-radius: 4px;
+
+      box-shadow: 5px 5px 10px 1px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .nameLobby {
+    grid-area: nameLobby;
+
+    text-align: center;
+    vertical-align: middle;
+
+    .name {
+      font-size: 20px;
+      color: white;
+    }
+  }
 }
 
 .specsContainer {
