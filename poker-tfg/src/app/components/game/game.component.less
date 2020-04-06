@@ -1,17 +1,16 @@
 @import "../../shared/constants/less/variables.less";
 
-.gameContainer{
+.gameContainer {
+  height: 100%;
+  background-image: url(/assets/images/table.png);
+  background-attachment: fixed;
+  background-position: 50% 20%;
+  background-repeat: no-repeat;
+  background-size: 70%;
 
-    height: 100%;
-    background-image: url(/assets/images/table.png);
-    background-attachment: fixed;
-    background-position: 50% 20%;
-    background-repeat: no-repeat;
-    background-size: 70%;
-
-    display: grid;
-    grid-gap: 20px;
-    grid-template-areas:
+  display: grid;
+  grid-gap: 20px;
+  grid-template-areas:
     ". . . . . . . ."
     ". . playerSpace3 playerSpace4 playerSpace5 playerSpace6 . ."
     ". . tableSpace tableSpace tableSpace tableSpace . ."
@@ -22,196 +21,248 @@
     ". . actionsBar actionsBar actionsBar actionsBar . ."
     ". . . . . . . .";
 
-    grid-template-rows: auto 15% 7% 15% 7% 15% auto 25% auto;
-    grid-template-columns: auto 15% 15% 15% 15% 15% 15% auto
+  grid-template-rows: auto 15% 7% 15% 7% 15% auto 25% auto;
+  grid-template-columns: auto 15% 15% 15% 15% 15% 15% auto;
 }
 
+.userSpace {
+  grid-area: userSpace;
+  background-color: black;
 
-
-.userSpace{
-    grid-area: userSpace;
-    background-color: black;
-
-    display: grid;
-    grid-template-areas:
-    
+  display: grid;
+  grid-template-areas:
     ". . ."
-    ". userCard ."
+    ". userCards ."
     ". . .";
-    
 
-    grid-template-columns: 20% 60% 20%;
-    grid-template-rows: 5% 90% 5%;
+  grid-template-columns: 20% 60% 20%;
+  grid-template-rows: 5% 90% 5%;
 
+  .userCards {
+    grid-area: userCards;
     
-    .userCard{
-        grid-area: userCard;
-        background-color: orange;
-    }
- 
+  }
 }
 
-.tableSpace{
-    grid-area: tableSpace;
-    background-color: yellow;
+.tableSpace {
+  grid-area: tableSpace;
 
-    display:grid;
-    grid-template-areas:
+  display: grid;
+  grid-template-areas:
     "chipsSpace3 dealerSpace3 chipsSpace4 dealerSpace4 chipsSpace5  dealerSpace5 chipsSpace6 dealerSpace6"
     ". showDownSpace showDownSpace showDownSpace showDownSpace showDownSpace showDownSpace ."
     "dealerSpace2 showDownSpace showDownSpace showDownSpace showDownSpace showDownSpace showDownSpace chipsSpace7"
     "chipsSpace2 showDownSpace showDownSpace showDownSpace showDownSpace showDownSpace showDownSpace dealerSpace7"
-    ". showDownSpace showDownSpace showDownSpace showDownSpace showDownSpace showDownSpace."
+    ". showDownSpace showDownSpace showDownSpace showDownSpace showDownSpace showDownSpace ."
     "dealerSpace1 chipsSpace1 . dealerSpaceUser chipsSpaceUser . dealerSpace8 chipsSpace8";
 
-    grid-template-columns: 12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%;
-    grid-template-rows: 15% auto 15% 15% auto 15%;
+  grid-template-columns: 12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%;
+  grid-template-rows: 15% auto 15% 15% auto 15%;
 
-    .showDownSpace{
-        grid-area: showDownSpace;
-        background-color: orange;
-    }
+  .showDownSpace {
+    grid-area: showDownSpace;
 
-}
-
-.actionsBar{
-    grid-area: actionsBar;
-    background-color: blue;
-}
-
-.playerSpace{
     display: grid;
+
     grid-template-areas:
-    
-    "playerPhoto playerName"
-    "playerCard playerCard";
-    
+      ". . . . . . . . . . ."
+      ". card1 . card2 . card3 . card4 . card5 ."
+      ". . . . . pot . . . . .";
 
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 40% 60%;
+    grid-template-columns: 11% 15% 1% 15% 1% 15% 1% 15% 1% 15% 10%;
+    grid-template-rows: 10% 60% 30%;
 
-    .playerPhoto{
-        grid-area: playerPhoto;
-        background-color: grey;
+    .pot {
+      grid-area: pot;
+      background-color: purple;
     }
-    
-    .playerName{
-        grid-area: playerName;
-        background-color: green;
+  }
+}
+
+.actionsBar {
+  grid-area: actionsBar;
+  background-color: blue;
+}
+
+.playerSpace {
+  display: grid;
+  grid-template-areas:
+    "playerPhoto playerStack"
+    "playerCards playerCards";
+
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 40% 60%;
+
+  .playerPhoto {
+    grid-area: playerPhoto;
+    background-image: url(/assets/images/photoUser1.jpg);
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .playerStack {
+    grid-area: playerStack;
+    background-color: @PRIMARY_COLOR;
+    text-align: center;
+    vertical-align: middle;
+
+    p{
+
+        font-size: 18px;
+        color: white;
     }
+  }
+
+  .playerCards {
+    grid-area: playerCards;
     
-    .playerCard{
-        grid-area: playerCard;
-        background-color: orange;
-    }
-}   
-
-
-
-
-.playerSpace1{
-    grid-area: playerSpace1;
-    background-color: red;
-}
-.playerSpace2{
-    grid-area: playerSpace2;
-    background-color: red;
-}
-.playerSpace3{
-    grid-area: playerSpace3;
-    background-color: red;
-}
-.playerSpace4{
-    grid-area: playerSpace4;
-    background-color: red;
-}
-.playerSpace5{
-    grid-area: playerSpace5;
-    background-color: red;
-}
-.playerSpace6{
-    grid-area: playerSpace6;
-    background-color: red;
-}
-.playerSpace7{
-    grid-area: playerSpace7;
-    background-color: red;
-}
-.playerSpace8{
-    grid-area: playerSpace8;
-    background-color: red;
+    display: grid;
+    grid-template-areas: ". playerCard1 . playerCard2 .";
+    grid-template-columns: 10% 35% 10% 35% 10%;
+  }
 }
 
-.chipsSpace1{
-    grid-area: chipsSpace1;
-    background-color: red;
+.playerSpace1 {
+  grid-area: playerSpace1;
+  
 }
-.chipsSpace2{
-    grid-area: chipsSpace2;
-    background-color: red;
+.playerSpace2 {
+  grid-area: playerSpace2;
+  
 }
-.chipsSpace3{
-    grid-area: chipsSpace3;
-    background-color: red;
+.playerSpace3 {
+  grid-area: playerSpace3;
+  
 }
-.chipsSpace4{
-    grid-area: chipsSpace4;
-    background-color: red;
+.playerSpace4 {
+  grid-area: playerSpace4;
+  
 }
-.chipsSpace5{
-    grid-area: chipsSpace5;
-    background-color: red;
+.playerSpace5 {
+  grid-area: playerSpace5;
+  
 }
-.chipsSpace6{
-    grid-area: chipsSpace6;
-    background-color: red;
+.playerSpace6 {
+  grid-area: playerSpace6;
+ 
 }
-.chipsSpace7{
-    grid-area: chipsSpace7;
-    background-color: red;
+.playerSpace7 {
+  grid-area: playerSpace7;
+  
 }
-.chipsSpace8{
-    grid-area: chipsSpace8;
-    background-color: red;
-}
-.chipsSpaceUser{
-    grid-area: chipsSpaceUser;
-    background-color: red;
+.playerSpace8 {
+  grid-area: playerSpace8;
+  
 }
 
-.dealerSpace1{
-    grid-area: dealerSpace1;
-    background-color: blue;
+.chipsSpace1 {
+  grid-area: chipsSpace1;
+  background-color: red;
 }
-.dealerSpace2{
-    grid-area: dealerSpace2;
-    background-color: blue;
+.chipsSpace2 {
+  grid-area: chipsSpace2;
+  background-color: red;
 }
-.dealerSpace3{
-    grid-area: dealerSpace3;
-    background-color: blue;
+.chipsSpace3 {
+  grid-area: chipsSpace3;
+  background-color: red;
 }
-.dealerSpace4{
-    grid-area: dealerSpace4;
-    background-color: blue;
+.chipsSpace4 {
+  grid-area: chipsSpace4;
+  background-color: red;
 }
-.dealerSpace5{
-    grid-area: dealerSpace5;
-    background-color: blue;
+.chipsSpace5 {
+  grid-area: chipsSpace5;
+  background-color: red;
 }
-.dealerSpace6{
-    grid-area: dealerSpace6;
-    background-color: blue;
+.chipsSpace6 {
+  grid-area: chipsSpace6;
+  background-color: red;
 }
-.dealerSpace7{
-    grid-area: dealerSpace7;
-    background-color: blue;
+.chipsSpace7 {
+  grid-area: chipsSpace7;
+  background-color: red;
 }
-.dealerSpace8{
-    grid-area: dealerSpace8;
-    background-color: blue;
+.chipsSpace8 {
+  grid-area: chipsSpace8;
+  background-color: red;
 }
-.dealerSpaceUser{
-    grid-area: dealerSpaceUser;
-    background-color: blue;
+.chipsSpaceUser {
+  grid-area: chipsSpaceUser;
+  background-color: red;
+}
+
+.dealerSpace1 {
+  grid-area: dealerSpace1;
+  background-color: blue;
+}
+.dealerSpace2 {
+  grid-area: dealerSpace2;
+  background-color: blue;
+}
+.dealerSpace3 {
+  grid-area: dealerSpace3;
+  background-color: blue;
+}
+.dealerSpace4 {
+  grid-area: dealerSpace4;
+  background-color: blue;
+}
+.dealerSpace5 {
+  grid-area: dealerSpace5;
+  background-color: blue;
+}
+.dealerSpace6 {
+  grid-area: dealerSpace6;
+  background-color: blue;
+}
+.dealerSpace7 {
+  grid-area: dealerSpace7;
+  background-color: blue;
+}
+.dealerSpace8 {
+  grid-area: dealerSpace8;
+  background-color: blue;
+}
+.dealerSpaceUser {
+  grid-area: dealerSpaceUser;
+  background-color: blue;
+}
+
+.card1 {
+  grid-area: card1;
+  background-color: white;
+}
+
+.card2 {
+  grid-area: card2;
+  background-color: white;
+}
+
+.card3 {
+  grid-area: card3;
+  background-color: white;
+}
+
+.card4 {
+  grid-area: card4;
+  background-color: white;
+}
+
+.card5 {
+  grid-area: card5;
+  background-color: white;
+}
+
+.playerCard1 {
+  grid-area: playerCard1;
+  background-color: white;
+}
+
+.playerCard2 {
+  grid-area: playerCard2;
+  background-color: white;
 }
