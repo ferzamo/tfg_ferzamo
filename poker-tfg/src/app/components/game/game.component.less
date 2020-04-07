@@ -27,20 +27,44 @@
 
 .userSpace {
   grid-area: userSpace;
-  background-color: black;
+  border-radius: 4px;
+  border-width: 5px 5px 0px 5px;
+  border-style: solid;
+  border-color: blue;
+  background-color: @SECONDARY_COLOR;
 
   display: grid;
   grid-template-areas:
-    ". . ."
-    ". userCards ."
-    ". . .";
+    ". userCard1 . userCard2 . . ."
+    ". userCard1 . userCard2 . userStack ."
+    ". userCard1 . userCard2 . userStack ."
+    ". userCard1 . userCard2. . .";
 
-  grid-template-columns: 20% 60% 20%;
-  grid-template-rows: 5% 90% 5%;
+  grid-template-columns: 5% 25% 5% 25% 5% 30% 5%;
+  grid-template-rows: 25% 25% 25% 25%;
 
-  .userCards {
-    grid-area: userCards;
+  .userCard1 {
+    grid-area: userCard1;
     
+  }
+  .userCard2 {
+    grid-area: userCard2;
+    
+  }
+
+
+  .userStack{
+    grid-area: userStack;
+  
+    background-color: @SECONDARY_COLOR;
+    text-align: center;
+    vertical-align: middle;
+
+    p{
+        
+        font-size: 20px;
+        color: white;
+    }
   }
 }
 
@@ -74,7 +98,7 @@
 
     .pot {
       grid-area: pot;
-      background-color: purple;
+      
     }
   }
 }
@@ -94,6 +118,9 @@
   grid-template-rows: 40% 60%;
 
   .playerPhoto {
+    border-radius: 4px;
+    border-style: solid;
+    border-color: blue;
     grid-area: playerPhoto;
     background-image: url(/assets/images/photoUser1.jpg);
 
@@ -104,14 +131,17 @@
   }
 
   .playerStack {
+    border-radius: 4px;
+    border-style: solid;
+    border-color: blue;
     grid-area: playerStack;
-    background-color: @PRIMARY_COLOR;
+    background-color: @SECONDARY_COLOR;
     text-align: center;
     vertical-align: middle;
 
     p{
-
-        font-size: 18px;
+        
+        font-size: 13px;
         color: white;
     }
   }
@@ -161,108 +191,109 @@
 .chipsSpace1 {
   grid-area: chipsSpace1;
   background-color: red;
+ 
 }
 .chipsSpace2 {
   grid-area: chipsSpace2;
-  background-color: red;
+  
 }
 .chipsSpace3 {
   grid-area: chipsSpace3;
-  background-color: red;
+ 
 }
 .chipsSpace4 {
   grid-area: chipsSpace4;
-  background-color: red;
+ 
 }
 .chipsSpace5 {
   grid-area: chipsSpace5;
-  background-color: red;
+ 
 }
 .chipsSpace6 {
   grid-area: chipsSpace6;
-  background-color: red;
+  
 }
 .chipsSpace7 {
   grid-area: chipsSpace7;
-  background-color: red;
+ 
 }
 .chipsSpace8 {
   grid-area: chipsSpace8;
-  background-color: red;
+  
 }
 .chipsSpaceUser {
   grid-area: chipsSpaceUser;
-  background-color: red;
+  
 }
 
 .dealerSpace1 {
   grid-area: dealerSpace1;
-  background-color: blue;
+  
 }
 .dealerSpace2 {
   grid-area: dealerSpace2;
-  background-color: blue;
+  
 }
 .dealerSpace3 {
   grid-area: dealerSpace3;
-  background-color: blue;
+  
 }
 .dealerSpace4 {
   grid-area: dealerSpace4;
-  background-color: blue;
+  
 }
 .dealerSpace5 {
   grid-area: dealerSpace5;
-  background-color: blue;
+
 }
 .dealerSpace6 {
   grid-area: dealerSpace6;
-  background-color: blue;
+  
 }
 .dealerSpace7 {
   grid-area: dealerSpace7;
-  background-color: blue;
+  
 }
 .dealerSpace8 {
   grid-area: dealerSpace8;
-  background-color: blue;
+  
 }
 .dealerSpaceUser {
   grid-area: dealerSpaceUser;
-  background-color: blue;
+  
 }
 
 .card1 {
   grid-area: card1;
-  
+
 }
 
 .card2 {
   grid-area: card2;
-  background-color: white;
+  
 }
 
 .card3 {
   grid-area: card3;
-  background-color: white;
+  
 }
 
 .card4 {
   grid-area: card4;
-  background-color: white;
+ 
 }
 
 .card5 {
   grid-area: card5;
-  background-color: white;
+  
 }
 
 .playerCard1 {
   grid-area: playerCard1;
-  background-color: white;
+ 
 }
 
 .playerCard2 {
   grid-area: playerCard2;
-  background-color: white;
+
 }
