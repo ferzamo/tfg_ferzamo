@@ -30,7 +30,7 @@
   border-radius: 4px;
   border-width: 5px 5px 0px 5px;
   border-style: solid;
-  border-color: blue;
+  border-color: @PRIMARY_COLOR;
   background-color: @SECONDARY_COLOR;
 
   display: grid;
@@ -45,25 +45,21 @@
 
   .userCard1 {
     grid-area: userCard1;
-    
   }
   .userCard2 {
     grid-area: userCard2;
-    
   }
 
-
-  .userStack{
+  .userStack {
     grid-area: userStack;
-  
+
     background-color: @SECONDARY_COLOR;
     text-align: center;
     vertical-align: middle;
 
-    p{
-        
-        font-size: 20px;
-        color: white;
+    p {
+      font-size: 20px;
+      color: white;
     }
   }
 }
@@ -83,6 +79,30 @@
   grid-template-columns: 12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%;
   grid-template-rows: 15% auto 15% 15% auto 15%;
 
+  .chipsSpace {
+  
+    display: grid;
+    grid-template-areas: 
+    ". betAmount ."
+    "chipSvg .  ."
+    ". . .";
+
+    padding-top: 0;
+    font-size: 14px;
+    grid-template-columns: 30% 25% 55%;
+    grid-template-rows:25% 50% 25%;
+
+    .chipSvg{
+      grid-area: chipSvg
+    }
+
+    .betAmount{
+      grid-area: betAmount;
+      color: white;
+     
+    }
+  }
+
   .showDownSpace {
     grid-area: showDownSpace;
 
@@ -98,14 +118,55 @@
 
     .pot {
       grid-area: pot;
-      
     }
   }
 }
 
 .actionsBar {
   grid-area: actionsBar;
-  background-color: blue;
+  grid-gap: 5px;
+  display: grid;
+  grid-template-areas:
+    ". . ."
+    "sliderArea sliderArea sliderMarkerArea"
+    "foldArea checkArea raiseArea";
+
+  grid-template-rows: 10% 30% 60%;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  .sliderArea {
+    grid-area: sliderArea;
+
+    .slider {
+      width: 110%;
+    }
+  }
+
+  .sliderMarkerArea {
+    grid-area: sliderMarkerArea;
+
+    .markerArea {
+      font-size: 30px;
+      text-align: center;
+      background-color: @SECONDARY_COLOR;
+      color: @PRIMARY_COLOR;
+      border: none;
+      height: 80%;
+      width: 100%;
+    }
+  }
+
+  .foldArea {
+    grid-area: foldArea;
+  }
+
+  .checkArea {
+    grid-area: checkArea;
+  }
+
+  .raiseArea {
+    grid-area: raiseArea;
+  }
 }
 
 .playerSpace {
@@ -119,8 +180,9 @@
 
   .playerPhoto {
     border-radius: 4px;
+    border-width: 0px 0px 4px 4px;
     border-style: solid;
-    border-color: blue;
+    border-color: @PRIMARY_COLOR;
     grid-area: playerPhoto;
     background-image: url(/assets/images/photoUser1.jpg);
 
@@ -132,23 +194,22 @@
 
   .playerStack {
     border-radius: 4px;
+    border-width: 0px 4px 4px 0px;
     border-style: solid;
-    border-color: blue;
+    border-color: @PRIMARY_COLOR;
     grid-area: playerStack;
     background-color: @SECONDARY_COLOR;
     text-align: center;
     vertical-align: middle;
 
-    p{
-        
-        font-size: 13px;
-        color: white;
+    p {
+      font-size: 13px;
+      color: white;
     }
   }
 
   .playerCards {
     grid-area: playerCards;
-    
     display: grid;
     grid-template-areas: ". playerCard1 . playerCard2 .";
     grid-template-columns: 10% 35% 10% 35% 10%;
@@ -157,143 +218,109 @@
 
 .playerSpace1 {
   grid-area: playerSpace1;
-  
 }
 .playerSpace2 {
   grid-area: playerSpace2;
-  
 }
 .playerSpace3 {
   grid-area: playerSpace3;
-  
 }
 .playerSpace4 {
   grid-area: playerSpace4;
-  
 }
 .playerSpace5 {
   grid-area: playerSpace5;
-  
 }
 .playerSpace6 {
   grid-area: playerSpace6;
- 
 }
 .playerSpace7 {
   grid-area: playerSpace7;
-  
 }
 .playerSpace8 {
   grid-area: playerSpace8;
-  
 }
 
 .chipsSpace1 {
   grid-area: chipsSpace1;
-  background-color: red;
- 
 }
 .chipsSpace2 {
   grid-area: chipsSpace2;
-  
 }
 .chipsSpace3 {
   grid-area: chipsSpace3;
- 
 }
 .chipsSpace4 {
   grid-area: chipsSpace4;
- 
 }
 .chipsSpace5 {
   grid-area: chipsSpace5;
- 
 }
 .chipsSpace6 {
   grid-area: chipsSpace6;
-  
 }
 .chipsSpace7 {
   grid-area: chipsSpace7;
- 
 }
 .chipsSpace8 {
   grid-area: chipsSpace8;
-  
 }
 .chipsSpaceUser {
   grid-area: chipsSpaceUser;
-  
 }
 
 .dealerSpace1 {
   grid-area: dealerSpace1;
-  
 }
 .dealerSpace2 {
   grid-area: dealerSpace2;
-  
 }
 .dealerSpace3 {
   grid-area: dealerSpace3;
-  
 }
 .dealerSpace4 {
   grid-area: dealerSpace4;
-  
 }
 .dealerSpace5 {
   grid-area: dealerSpace5;
-
 }
 .dealerSpace6 {
   grid-area: dealerSpace6;
-  
 }
 .dealerSpace7 {
   grid-area: dealerSpace7;
-  
 }
 .dealerSpace8 {
   grid-area: dealerSpace8;
-  
 }
 .dealerSpaceUser {
   grid-area: dealerSpaceUser;
-  
 }
 
 .card1 {
   grid-area: card1;
-
 }
 
 .card2 {
   grid-area: card2;
-  
 }
 
 .card3 {
   grid-area: card3;
-  
 }
 
 .card4 {
   grid-area: card4;
- 
 }
 
 .card5 {
   grid-area: card5;
-  
 }
 
 .playerCard1 {
   grid-area: playerCard1;
- 
 }
 
 .playerCard2 {
   grid-area: playerCard2;
-
 }

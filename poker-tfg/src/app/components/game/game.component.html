@@ -4,7 +4,7 @@
     <div class="playerStack">
       <p>234</p>
     </div>
-    <div class="playerCards" [style.visibility]="'hidden'">
+    <div class="playerCards" [style.visibility]="'visible'">
       <div class="playerCard1">
         <svg width="71" height="97" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <use xlink:href="../../../assets/svg/svg-cards.svg#back" x="60" y="0" fill="#e5240b" transform="scale(0.3)" />
@@ -90,19 +90,33 @@
     </div>
   </div>
   <div class="tableSpace">
-    <div class="chipsSpace3">
-      
+    <div class="chipsSpace3 chipsSpace">
+      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
+      </svg>
+      <p class="betAmount">234</p>
     </div>
     <div class="dealerSpace3"></div>
-    <div class="chipsSpace4"></div>
-    <div class="dealerSpace4"></div>
-    <div class="chipsSpace5">
-      <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/poker.svg" transform="scale(0.2)" />
+    <div class="chipsSpace4 chipsSpace">
+      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
       </svg>
+      <p class="betAmount">234</p>
+    </div>
+    <div class="dealerSpace4"></div>
+    <div class="chipsSpace5 chipsSpace">
+      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
+      </svg>
+      <p class="betAmount">234</p>
     </div>
     <div class="dealerSpace5"></div>
-    <div class="chipsSpace6"></div>
+    <div class="chipsSpace6 chipsSpace">
+      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
+      </svg>
+      <p class="betAmount">234</p>
+    </div>
     <div class="dealerSpace6"></div>
     <div class="dealerSpace2"></div>
     <div class="showDownSpace">
@@ -133,15 +147,40 @@
       </div>
       <div class="pot"></div>
     </div>
-    <div class="chipsSpace7"></div>
-    <div class="chipsSpace2"></div>
+    <div class="chipsSpace7 chipsSpace">
+      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
+      </svg>
+      <p class="betAmount">234</p>
+    </div>
+    <div class="chipsSpace2 chipsSpace">
+      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
+      </svg>
+      <p class="betAmount">234</p>
+    </div>
     <div class="dealerSpace7"></div>
     <div class="dealerSpace1"></div>
-    <div class="chipsSpace1"></div>
+    <div class="chipsSpace1 chipsSpace">
+      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
+      </svg>
+      <p class="betAmount">234</p>
+    </div>
     <div class="dealerSpaceUser"></div>
-    <div class="chipsSpaceUser"></div>
+    <div class="chipsSpaceUser chipsSpace">
+      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
+      </svg>
+      <p class="betAmount">234</p>
+    </div>
     <div class="dealerSpace8"></div>
-    <div class="chipsSpace8"></div>
+    <div class="chipsSpace8 chipsSpace">
+      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
+      </svg>
+      <p class="betAmount">234</p>
+    </div>
   </div>
   <div class="playerSpace7 playerSpace">
     <div class="playerPhoto"></div>
@@ -191,7 +230,7 @@
       </svg>
     </div>
     <div class="userStack">
-      <p>3.234</p>
+      <p class="betAmount">3.234</p>
     </div>
   </div>
   <div class="playerSpace8 playerSpace">
@@ -212,5 +251,28 @@
       </div>
     </div>
   </div>
-  <div class="actionsBar"></div>
+  <div class="actionsBar">
+    <div class="sliderArea">
+      <mat-slider
+       class="slider"
+        
+        [max]="maxSlider"
+        [min]="minSlider"
+        [(ngModel)]="sliderValue"
+        (input)="sliderValue = $event.value">
+    </mat-slider>
+    </div>
+    <div class="sliderMarkerArea">
+      <input type="text" class="markerArea" [(ngModel)]="sliderValue"/>
+    </div>
+    <div class="foldArea">
+      <app-main-button [buttonText]="'Fold'"></app-main-button>
+    </div>
+    <div class="checkArea">
+      <app-main-button [buttonText]="'Check'"></app-main-button>
+    </div>
+    <div class="raiseArea">
+      <app-main-button [buttonText]="'Raise'"></app-main-button>
+    </div>
+  </div>
 </div>

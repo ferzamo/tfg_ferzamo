@@ -9,7 +9,15 @@ export class GameComponent implements OnInit {
 
   constructor() { }
 
+  minSlider = 500;
+  maxSlider = 1000;
+  sliderValue = this.minSlider;
+
   ngOnInit(): void {
+    
+    this.minSlider = 500;
   }
+  
+
 
 }
