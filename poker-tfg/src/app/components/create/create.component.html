@@ -1,2 +1,20 @@
-<p>create works</p>
+<div class="createContainer">
 
+    <label class="labelName labelCreate">Name</label>
+    <input type="text" class="inputName inputCreate" autofocus/>
+
+    <label class="labelSpeed labelCreate">Speed</label>
+    <select class="selectSpeed">
+        <option value="Normal">Normal</option>
+        <option value="Turbo">Turbo</option>
+        <option value="HyperTurbo">HyperTurbo</option>
+    </select>
+
+    <label class="labelStack labelCreate">Stack</label>
+    <input type="text" class="inputStack inputCreate"/>
+
+    <app-main-button class="buttonCreate" [buttonText]="'Create'"></app-main-button>
+    
+
+
+</div>

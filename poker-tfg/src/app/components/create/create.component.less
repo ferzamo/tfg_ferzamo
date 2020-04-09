@@ -1,1 +1,79 @@
 @import "../../shared/constants/less/variables.less";
+
+.createContainer {
+  height: 100%;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-areas:
+    ". . . ."
+    ". labelName inputName ."
+    ". labelSpeed selectSpeed ."
+    ". labelStack inputStack ."
+    ". buttonCreate buttonCreate ."
+    ". . . .";
+
+  grid-template-columns: auto 20% 20% auto;
+  grid-template-rows: auto 10% 10% 10% 10% auto;
+}
+
+.inputCreate {
+  font-size: 25px;
+  text-align: center;
+
+  background-color: @SECONDARY_COLOR;
+  color: @PRIMARY_COLOR;
+  border-color: @PRIMARY_COLOR;
+  border-style: solid;
+  border-radius: 5px;
+  height: 70%;
+  width: 100%;
+}
+.inputCreate:focus {
+  outline-width: 0;
+}
+
+.labelCreate {
+  text-align: left;
+  vertical-align: center;
+  font-size: 40px;
+  color: @PRIMARY_COLOR;
+}
+
+.selectSpeed {
+  text-align-last: center;
+  vertical-align: center;
+  font-size: 30px;
+  grid-area: selectSpeed;
+  border-color: @PRIMARY_COLOR;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  color: @PRIMARY_COLOR;
+  background-color: @SECONDARY_COLOR;
+  height: 90%;
+  width: 103%;
+}
+
+.selectSpeed:focus {
+  outline-width: 0;
+}
+
+.labelName {
+  grid-area: labelName;
+}
+.inputName {
+  grid-area: inputName;
+}
+.labelSpeed {
+  grid-area: labelSpeed;
+}
+.labelStack {
+  grid-area: labelStack;
+}
+.inputStack {
+  grid-area: inputStack;
+}
+.buttonCreate {
+  grid-area: buttonCreate;
+  width: 102%;
+}
