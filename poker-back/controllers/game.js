@@ -1,14 +1,14 @@
 'use strict'
 
 var Game = require('../models/game');
-var Player = require('../models/player');
 
 function createGame(req,res){
     var game = new Game();
 
     var params = req.body;
 
-    game.name = params.name;
+    game.speed = params.speed;
+    game.stack = params.stack;
     game.pot = 0;
     game.flop1 = null;
     game.flop2 = null;
@@ -27,8 +27,31 @@ function createGame(req,res){
             }
         }
     });
+    
 }
 
+function updateGame(req, res){
+    
+    var update = req.body;
+   
+    var id = req.params.id;
+ 
+    Game.findByIdAndUpdate(id, update, (err, gameUpdated) => {
+         if(err){
+             res.status(500).send({message: "Error updating game"});
+         }else{
+             if(!gameUpdated){
+                 res.status(404).send({message: "Game did not update"});
+             }else{
+                 res.status(200).send({game: gameUpdated});
+             }
+         }
+    });
+ 
+ 
+ }
+
 module.exports =  {
-    createGame
+    createGame,
+    updateGame
 };

@@ -4,7 +4,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var GameSchema = Schema({
-    name: String,
+    speed: String,
+    stack: Number,
     pot: Number,
     flop1: String,
     flop2: String,

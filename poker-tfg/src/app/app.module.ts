@@ -1,6 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import {MatSliderModule} from '@angular/material/slider';
+import {HttpClientModule} from '@angular/common/http'
 
 import {
   CreateComponent,
@@ -33,7 +34,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
     SharedModule,
     MatSliderModule,
     BrowserAnimationsModule,
-    FormsModule],
+    FormsModule,
+    HttpClientModule],
   providers: [],
   bootstrap: [ShellComponent]
 })
