@@ -9,12 +9,12 @@ function createGame(req,res){
 
     game.speed = params.speed;
     game.stack = params.stack;
-    game.pot = 0;
-    game.flop1 = null;
-    game.flop2 = null;
-    game.flop3 = null;
-    game.turn = null;
-    game.river = null;
+    game.pot = params.pot;
+    game.flop1 = params.flop1;
+    game.flop2 = params.flop2;
+    game.flop3 = params.flop3;
+    game.turn = params.turn;
+    game.river = params.river;
 
     game.save((err, gameStored) => {
         if(err){
@@ -28,6 +28,24 @@ function createGame(req,res){
         }
     });
     
+}
+
+function getGame(req, res){
+
+    var id = req.params.id;
+
+    Game.findById(id, (err, game) => {
+        if(err){
+            res.status(500).send({message: "getgame failed"});
+        }else{
+            if(!game){
+                res.status(404).send({message: "Game doesnt exist"});
+            }else{
+                res.status(200).send({game});
+            }
+        }
+    });
+
 }
 
 function updateGame(req, res){
@@ -53,5 +71,6 @@ function updateGame(req, res){
 
 module.exports =  {
     createGame,
+    getGame,
     updateGame
 };

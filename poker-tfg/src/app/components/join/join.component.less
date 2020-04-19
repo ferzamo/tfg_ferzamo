@@ -6,17 +6,19 @@
   grid-gap: 10px;
   grid-template-areas: 
   ". . . ."
-  ". labelJoin labelJoin ."
-  ". inputJoin buttonJoin ."
+  ". labelName labelName ."
+  ". inputName inputName ."
+  ". . . ."
+  ". labelGame labelGame ."
+  ". inputGame buttonJoin ."
   ". . . .";
 
   grid-template-columns: auto 40% 20% auto;
-  grid-template-rows: auto 10% 10% auto;
+  grid-template-rows: auto 10% 10% 5% 10% 10% auto;
 }
 
 
 .inputJoin {
-  grid-area: inputJoin;
   font-size: 25px;
   text-align: center;
   background-color: @SECONDARY_COLOR;
@@ -31,16 +33,31 @@
     outline-width: 0;
 }
 
+.inputGame{
+  grid-area: inputGame;
+}
+.inputName{
+  grid-area: inputName;
+}
+
 .buttonJoin{
   grid-area: buttonJoin;
 }
 
 .labelJoin{
-  grid-area: labelJoin;
+  
   text-align: left;
   vertical-align: center;
   font-size: 60px;
   color: @PRIMARY_COLOR
+}
+
+.labelName{
+  grid-area: labelName;
+}
+
+.labelGame{
+  grid-area: labelGame;
 }
 
 

@@ -11,8 +11,8 @@ function createPlayer (req, res){
     player.game = params.game;
     player.position = params.position;
     player.stack = params.stack;
-    player.card1= null;
-    player.card2= null;
+    player.card1= params.card1;
+    player.card2= params.card2;
 
     player.save((err, playerStored) => {
         if(err){
@@ -27,6 +27,51 @@ function createPlayer (req, res){
     });
 
  
+}
+
+function getPlayer(req, res){
+
+    var id = req.params.id;
+
+    Player.findById(id, (err, player) => {
+        if(err){
+            res.status(500).send({message: "getplayer failed"});
+        }else{
+            if(!player){
+                res.status(404).send({message: "Player doesnt exist"});
+            }else{
+                res.status(200).send({player: player});
+            }
+        }
+    });
+
+}
+
+function getPlayers(req, res){
+
+    var gameId = req.params.gameId;
+    
+    if(!gameId){
+        
+        var find = Player.find({});
+    }else{
+        var find = Player.find({game: gameId}).sort('position');
+    }
+
+    find.populate({
+        path: 'game'
+    }).exec(function(err, players){
+        if(err){
+            res.status(500).send({message: "getplayers failed"});
+        }else{
+            if(!players){
+                res.status(404).send({message: "Players dont exist"});
+            }else{
+                res.status(200).send({players});
+            }
+        }
+    })
+
 }
 
 function updatePlayer(req, res){
@@ -52,5 +97,7 @@ function updatePlayer(req, res){
 
 module.exports =  {
     createPlayer,
+    getPlayer,
+    getPlayers,
     updatePlayer
 };
