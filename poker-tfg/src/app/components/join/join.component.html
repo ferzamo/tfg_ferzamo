@@ -2,6 +2,6 @@
     <label class="labelName labelJoin">Your name</label>
     <input type="text" class="inputName inputJoin" autofocus #name="ngModel" name="name" [(ngModel)]="player.name" required/>
     <label class="labelGame labelJoin">The game code</label>
-    <input type="text" class="inputGame inputJoin" autofocus #game="ngModel" name="game" [(ngModel)]="game._id" required/>
+    <input type="text" class="inputGame inputJoin" autofocus #_id="ngModel" name="id" [(ngModel)]="game._id" required/>
     <app-main-button (clickEvent)="onClick()" class="buttonJoin" [buttonText]="'Join'"></app-main-button>
 </form>

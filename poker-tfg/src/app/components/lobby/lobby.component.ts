@@ -21,6 +21,7 @@ export class LobbyComponent implements OnInit {
 
   public game: Game;
   public players: Player [];
+  public unPlayer: Player;
 
   public playersWaiting;
   
@@ -29,7 +30,8 @@ export class LobbyComponent implements OnInit {
 
     
     this.game = JSON.parse(localStorage.getItem('game'));
-    this.game._id = this.route.snapshot.paramMap.get("gameId")
+    this.unPlayer =JSON.parse(localStorage.getItem('player'));
+    console.log(this.unPlayer.name);
     
     
     this._gameService.getGame(this.game._id).subscribe(
