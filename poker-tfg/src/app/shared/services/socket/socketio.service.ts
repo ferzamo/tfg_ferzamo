@@ -8,9 +8,12 @@ import { SERVICESCONSTANTS } from "../../constants/services/servicesConstants";
 export class SocketioService {
 
   socket;
-  
+
   constructor() {   }
   setupSocketConnection() {
+    console.log(SERVICESCONSTANTS.socket_endpoint)
     this.socket = io(SERVICESCONSTANTS.socket_endpoint);
+    console.log("sale del servicio")
+
   }
 }

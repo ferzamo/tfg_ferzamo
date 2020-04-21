@@ -16,7 +16,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
    
-    //this.socketService.setupSocketConnection();
+    this.socketService.setupSocketConnection();
   }
 
   navigateCreate() {

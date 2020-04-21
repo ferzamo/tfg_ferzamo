@@ -4,9 +4,16 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-const http = require('http').Server(app)
-const io = require('socket.io')(http);
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
+  });
 
 // cargar routes
 var player_routes = require('./routes/player');
@@ -25,18 +32,9 @@ app.use((req, res, next) => {
     next();
 })
 
-// Socketio
-
-io.on('connection', (socket) => {
-    console.log('a user connected');
-    socket.on('disconnect', () => {
-      console.log('user disconnected');
-    });
-  });
-
 //rutas base
 app.use('/api', player_routes);
 app.use('/api', game_routes);
 
 
-module.exports = app;
+module.exports = http;
