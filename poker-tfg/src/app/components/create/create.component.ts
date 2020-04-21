@@ -34,8 +34,8 @@ export class CreateComponent implements OnInit {
         this.player.stack = this.game.stack;
         this._playerService.createPlayer(this.player).subscribe();
 
-        localStorage.setItem('game', JSON.stringify(this.game));
-        localStorage.setItem('player', JSON.stringify(this.player))
+        
+        sessionStorage.setItem('player', JSON.stringify(this.player))
 
         this.router.navigateByUrl('/' + this.game._id + '/lobby');
       },

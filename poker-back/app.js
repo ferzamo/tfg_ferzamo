@@ -5,6 +5,9 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
+const http = require('http').Server(app)
+const io = require('socket.io')(http);
+
 // cargar routes
 var player_routes = require('./routes/player');
 var game_routes = require('./routes/game');
@@ -21,6 +24,15 @@ app.use((req, res, next) => {
 
     next();
 })
+
+// Socketio
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
+  });
 
 //rutas base
 app.use('/api', player_routes);
