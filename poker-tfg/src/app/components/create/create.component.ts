@@ -17,7 +17,7 @@ export class CreateComponent implements OnInit {
   constructor(
     private _gameService: GameService,
     private _playerService: PlayerService,
-    
+
     private router: Router
   ) {}
 
@@ -32,12 +32,14 @@ export class CreateComponent implements OnInit {
         this.game = res["game"];
         this.player.game = this.game._id;
         this.player.stack = this.game.stack;
-        this._playerService.createPlayer(this.player).subscribe();
+        this._playerService.createPlayer(this.player).subscribe((res) => {
+          this.player = res["player"];
+          
+          sessionStorage.setItem("player", JSON.stringify(this.player));
+          
 
-        
-        sessionStorage.setItem('player', JSON.stringify(this.player))
-
-        this.router.navigateByUrl('/' + this.game._id + '/lobby');
+          this.router.navigateByUrl("/" + this.game._id + "/lobby");
+        });
       },
       (error) => {
         console.log(error);

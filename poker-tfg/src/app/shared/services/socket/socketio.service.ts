@@ -1,19 +1,37 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
+import {Observable} from 'rxjs'
+import {delay} from 'rxjs/operators';
 import { SERVICESCONSTANTS } from "../../constants/services/servicesConstants";
+import {Player} from '../../../models/player';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketioService {
 
-  socket;
+  private socket = io(SERVICESCONSTANTS.socket_endpoint);;
 
   constructor() {   }
-  setupSocketConnection() {
-    console.log(SERVICESCONSTANTS.socket_endpoint)
-    this.socket = io(SERVICESCONSTANTS.socket_endpoint);
-    console.log("sale del servicio")
 
+
+  playerConnection(player: Player) {
+    
+    this.socket.emit('playerConnection', player);
+
+  }
+
+  playerConnectionBroadcast(){
+
+    let observable = new Observable<Player>(observer => {
+      this.socket.on('playerConnectionBroadcast', (player: Player) => {
+        
+        observer.next(player);
+      });
+      return () => {this.socket.disconnect();}
+    }).pipe(delay(1000))
+
+    return observable;
+     
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpResponse, HttpHeaders} from '@angular/common/http'
+import {HttpClient} from '@angular/common/http'
 import {Observable} from 'rxjs'
 import {map, delay} from 'rxjs/operators';
 import { SERVICESCONSTANTS } from '../../constants/services/servicesConstants'
@@ -24,6 +24,8 @@ export class PlayerService{
         return this.http.post<Player>(this.url + "/createPlayer", player).pipe(map(res => res));
     
     }
+
+    
 
     getPlayers(gameId : string) : Observable<Player[]> {
 

@@ -58,9 +58,7 @@ function getPlayers(req, res){
         var find = Player.find({game: gameId}).sort('position');
     }
 
-    find.populate({
-        path: 'game'
-    }).exec(function(err, players){
+    find.exec(function(err, players){
         if(err){
             res.status(500).send({message: "getplayers failed"});
         }else{
