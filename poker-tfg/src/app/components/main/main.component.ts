@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { SocketioService } from "../../shared/services/socket/socketio.service";
+
 
 @Component({
   selector: "app-main",
@@ -11,7 +11,7 @@ export class MainComponent implements OnInit {
   constructor(
     
     private router: Router,
-    private socketService: SocketioService
+    
   ) {}
 
   ngOnInit(): void {

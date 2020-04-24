@@ -5,7 +5,7 @@ import { GameService } from "../../shared/services/api/game.service";
 import { PlayerService } from "../../shared/services/api/player.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SocketioService } from "../../shared/services/socket/socketio.service";
-import { ThrowStmt } from '@angular/compiler';
+
 
 @Component({
   selector: "app-lobby",
@@ -19,14 +19,28 @@ export class LobbyComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private socketService: SocketioService
-  ) {}
+  ) {
+
+    this.socketService.playerConnectionBroadcast().subscribe((res) => {
+
+      console.log("players: ", this.players);
+      console.log("unplayer: ", this.unPlayer.name);
+
+     
+
+      if(!this.players.some(e => e._id === res._id)){
+        console.log("entra");
+        this.players.push(res);
+        this.playersWaiting.pop();
+      }
+    });
+
+  }
 
   public game: Game;
   public gameURL: string;
   public players: Player[];
- 
   public unPlayer: Player;
-
   public playersWaiting;
 
   ngOnInit(): void {
@@ -45,8 +59,7 @@ export class LobbyComponent implements OnInit {
         this._playerService.getPlayers(this.game._id).subscribe((res) => {
           
           this.players = res["players"];
-          console.log(this.players[0]._id);
-          
+           
           this.playersWaiting = Array(8 - this.players.length)
             .fill(0)
             .map((x, i) => i);
@@ -61,18 +74,7 @@ export class LobbyComponent implements OnInit {
   }
 
   public ngAfterViewInit() {
-    this.socketService.playerConnectionBroadcast().subscribe((res) => {
-
-      
-      console.log(res);
-      
-      if(this.players[this.players.length-1]._id !== res._id){
-        
-        this.players.push(res);
-       
-        this.playersWaiting--;
-      }
-    });
+    
   }
 
   public ready() {}
