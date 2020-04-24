@@ -40,7 +40,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on('playerConnection', (player) => {
-   
     io.emit('playerConnectionBroadcast', player);
   });
 

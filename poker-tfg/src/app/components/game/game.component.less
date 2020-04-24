@@ -182,7 +182,7 @@
 .playerSpace {
   display: grid;
   grid-template-areas:
-    "playerPhoto playerStack"
+    "playerPhoto playerInfo"
     "playerCards playerCards";
 
   grid-template-columns: 50% 50%;
@@ -202,20 +202,37 @@
     background-size: cover;
   }
 
-  .playerStack {
+  .playerInfo {
     border-radius: 4px;
     border-width: 0px 4px 4px 0px;
     border-style: solid;
     border-color: @PRIMARY_COLOR;
-    grid-area: playerStack;
+    grid-area: playerInfo;
     background-color: @SECONDARY_COLOR;
     text-align: center;
     vertical-align: middle;
 
-    p {
-      font-size: 13px;
+    display: grid;
+    grid-template-areas: 
+    ". . ."
+    ". playerStack ."
+    ". . ."
+    "playerName playerName playerName";
+
+    grid-template-columns: 10% 80% 10%;
+    grid-template-rows: 10% 30% 10% 50%;
+
+
+    .playerStack{
+      grid-area: playerStack;
+      color: @PRIMARY_COLOR;
+    }
+
+    .playerName{
+      grid-area: playerName;
       color: white;
     }
+  
   }
 
   .playerCards {
