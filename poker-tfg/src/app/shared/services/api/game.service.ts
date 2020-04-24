@@ -18,6 +18,7 @@ export class GameService {
   createGame(game: Game): Observable<Game> {
     return this.http
       .post<Game>(this.url + "/createGame", game)
+      .pipe(delay(1400))
       .pipe(map((res) => res));
   }
 

@@ -4,6 +4,8 @@ import { Game } from "../../models/game";
 import { PlayerService } from "../../shared/services/api/player.service";
 import { Player } from "../../models/player";
 import { Router } from "@angular/router";
+import { LoadingService } from '../../shared/services/loading/loading.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: "app-create",
@@ -17,7 +19,7 @@ export class CreateComponent implements OnInit {
   constructor(
     private _gameService: GameService,
     private _playerService: PlayerService,
-
+    private loadingService: LoadingService,
     private router: Router
   ) {}
 
@@ -27,12 +29,15 @@ export class CreateComponent implements OnInit {
   }
 
   onClick() {
+    this.loadingService.show();
     this._gameService.createGame(this.game).subscribe(
       (res) => {
         this.game = res["game"];
         this.player.game = this.game._id;
         this.player.stack = this.game.stack;
-        this._playerService.createPlayer(this.player).subscribe((res) => {
+        this._playerService.createPlayer(this.player)
+        .pipe(finalize(() => this.loadingService.hide()))
+        .subscribe((res) => {
           this.player = res["player"];
           
           sessionStorage.setItem("player", JSON.stringify(this.player));
