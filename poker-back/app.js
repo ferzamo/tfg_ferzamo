@@ -40,7 +40,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on('playerConnection', (player) => {
-    io.emit('playerConnectionBroadcast', player);
+    socket.join(player.game);
+    socket.to(player.game).emit('playerConnectionBroadcast', player);
   });
 
 

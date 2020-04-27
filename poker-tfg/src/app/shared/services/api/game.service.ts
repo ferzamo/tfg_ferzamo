@@ -18,13 +18,14 @@ export class GameService {
   createGame(game: Game): Observable<Game> {
     return this.http
       .post<Game>(this.url + "/createGame", game)
-      .pipe(delay(1400))
+      .pipe(delay(700))
       .pipe(map((res) => res));
   }
 
   getGame(id: string): Observable<Game> {
     return this.http
       .get<Game>(this.url + "/getGame/" + id)
+      .pipe(delay(700))
       .pipe(map((res) => res));
   }
 }
