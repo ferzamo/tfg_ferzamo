@@ -30,13 +30,14 @@ export class CreateComponent implements OnInit {
 
   onClick() {
     this.loadingService.show();
-    this._gameService.createGame(this.game).subscribe(
+    this._gameService.createGame(this.game)
+    .pipe(finalize(() => this.loadingService.hide()))
+    .subscribe(
       (res) => {
         this.game = res["game"];
         this.player.game = this.game._id;
         this.player.stack = this.game.stack;
         this._playerService.createPlayer(this.player)
-        .pipe(finalize(() => this.loadingService.hide()))
         .subscribe((res) => {
           this.player = res["player"];
           

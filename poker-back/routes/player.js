@@ -9,6 +9,7 @@ api.post('/createPlayer', PlayerController.createPlayer);
 api.get('/getPlayer/:id', PlayerController.getPlayer);
 api.get('/getPlayers/:gameId', PlayerController.getPlayers);
 api.put('/updatePlayer/:id', PlayerController.updatePlayer);
+api.delete('/deletePlayer/:id', PlayerController.deletePlayer);
 
 
 module.exports = api;

@@ -34,4 +34,22 @@ export class SocketioService {
     return observable;
      
   }
+
+  startGame(player: Player) {
+
+    this.socket.emit('startGame', player);
+
+  }
+
+  startGameBroadcast(){
+    let observable = new Observable<string>(observer => {
+      this.socket.on('startGameBroadcast', (data: string) => {
+        
+        observer.next(data);
+      });
+      return () => {this.socket.disconnect();}
+    })
+
+    return observable;
+  }
 }

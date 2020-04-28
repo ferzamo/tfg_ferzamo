@@ -31,7 +31,9 @@ export class JoinComponent implements OnInit {
 
   onClick() {
     this.loadingService.show();
-    this._gameService.getGame(this.game._id).subscribe(
+    this._gameService.getGame(this.game._id)
+    .pipe(finalize(() => this.loadingService.hide()))
+    .subscribe(
       (res) => {
         this.game = res["game"];
         
@@ -42,9 +44,7 @@ export class JoinComponent implements OnInit {
             this.player.position = this.lastPosition + 1;
             this.player.game = this.game._id;
             this.player.stack = this.game.stack;
-            this._playerService.createPlayer(this.player)
-            .pipe(finalize(() => this.loadingService.hide()))
-            .subscribe((res) => {
+            this._playerService.createPlayer(this.player).subscribe((res) => {
               this.player = res["player"];
               sessionStorage.setItem("player", JSON.stringify(this.player));
 

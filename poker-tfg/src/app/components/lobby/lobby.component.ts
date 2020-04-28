@@ -5,6 +5,8 @@ import { GameService } from "../../shared/services/api/game.service";
 import { PlayerService } from "../../shared/services/api/player.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SocketioService } from "../../shared/services/socket/socketio.service";
+import { LoadingService } from '../../shared/services/loading/loading.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: "app-lobby",
@@ -12,24 +14,28 @@ import { SocketioService } from "../../shared/services/socket/socketio.service";
   styleUrls: ["./lobby.component.less"],
 })
 export class LobbyComponent implements OnInit {
+
+  public game: Game;
+  public gameURL: string;
+  public players: Player[] = [];
+  public unPlayer: Player;
+  public playersWaiting;
+  public playerReady = false;
+
   constructor(
     private _gameService: GameService,
     private _playerService: PlayerService,
     private route: ActivatedRoute,
     private router: Router,
-    private socketService: SocketioService
+    private _socketService: SocketioService,
+    private _loadingService: LoadingService,
   ) {
-    console.log(
-      "Player session: ",
-      JSON.parse(sessionStorage.getItem("player"))
-    );
-
     if (
       !(JSON.parse(sessionStorage.getItem("player")) === null) &&
       JSON.parse(sessionStorage.getItem("player")).game ===
         this.route.snapshot.paramMap.get("gameId")
     ) {
-      console.log("entra1");
+      
       this.game = new Game(
         null,
         null,
@@ -44,28 +50,32 @@ export class LobbyComponent implements OnInit {
       this.gameURL = this.route.snapshot.paramMap.get("gameId");
       this.unPlayer = JSON.parse(sessionStorage.getItem("player"));
 
-      this.socketService.playerConnectionBroadcast().subscribe((res) => {
+      this._socketService.playerConnectionBroadcast().subscribe((res) => {
         if (!this.players.some((e) => e._id === res._id)) {
           this.players.push(res);
           this.playersWaiting.pop();
         }
       });
+
+      this._socketService.startGameBroadcast().subscribe((res) => {
+        this.router.navigateByUrl("/game");
+      });
+
     } else {
-      console.log("entra2");
+      
       this.router.navigateByUrl("/");
     }
   }
 
-  public game: Game;
-  public gameURL: string;
-  public players: Player[] = [];
-  public unPlayer: Player;
-  public playersWaiting;
+  
 
   ngOnInit(): void {
-    this.socketService.playerConnection(this.unPlayer);
-
-    this._gameService.getGame(this.gameURL).subscribe(
+    
+    this._socketService.playerConnection(this.unPlayer);
+    this._loadingService.show();
+    this._gameService.getGame(this.gameURL)
+    .pipe(finalize(() => this._loadingService.hide()))
+    .subscribe(
       (res) => {
         this.game = res["game"];
 
@@ -85,5 +95,8 @@ export class LobbyComponent implements OnInit {
 
   public ngAfterViewInit() {}
 
-  public ready() {}
+  public startGame() {
+    this._socketService.startGame(this.unPlayer);
+    this.router.navigateByUrl("/game");
+  }
 }

@@ -41,10 +41,11 @@
   </div>
 
   <div class="startButtonContainer">
-    <app-main-button
+    <app-main-button 
+      *ngIf="unPlayer.position === 1"
       class="startButton"
-      [buttonText]="'Ready'"
-      (click)="ready()"
+      [buttonText]="'Start'"
+      (click)="startGame()"
     ></app-main-button>
   </div>
 </div>

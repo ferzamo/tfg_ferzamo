@@ -36,16 +36,19 @@ app.use("/api", game_routes);
 io.on("connection", (socket) => {
   console.log("a user connected");
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    console.log("user disconnected", socket.user);
   });
 
   socket.on('playerConnection', (player) => {
+    socket.user = player._id;
     socket.join(player.game);
     socket.to(player.game).emit('playerConnectionBroadcast', player);
   });
 
-
-
+  socket.on('startGame', (player) => {
+    socket.join(player.game);
+    socket.to(player.game).emit('startGameBroadcast', 'start');
+  })
 
 });
 
