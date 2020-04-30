@@ -25,7 +25,7 @@ export const routes: Routes = [
         component: LobbyComponent
     },
     {
-        path: 'game',
+        path: ':gameId',
         component: GameComponent
     },
     {

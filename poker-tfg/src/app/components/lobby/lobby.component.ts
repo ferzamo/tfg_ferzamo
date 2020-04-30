@@ -30,6 +30,7 @@ export class LobbyComponent implements OnInit {
     private _socketService: SocketioService,
     private _loadingService: LoadingService,
   ) {
+    
     if (
       !(JSON.parse(sessionStorage.getItem("player")) === null) &&
       JSON.parse(sessionStorage.getItem("player")).game ===
@@ -58,7 +59,7 @@ export class LobbyComponent implements OnInit {
       });
 
       this._socketService.startGameBroadcast().subscribe((res) => {
-        this.router.navigateByUrl("/game");
+        this.router.navigateByUrl("/" + this.gameURL);
       });
 
     } else {
@@ -93,10 +94,8 @@ export class LobbyComponent implements OnInit {
     );
   }
 
-  public ngAfterViewInit() {}
-
   public startGame() {
     this._socketService.startGame(this.unPlayer);
-    this.router.navigateByUrl("/game");
+    this.router.navigateByUrl("/" + this.gameURL);
   }
 }
