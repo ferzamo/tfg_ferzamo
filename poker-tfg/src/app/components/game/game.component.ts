@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { SocketioService } from "../../shared/services/socket/socketio.service";
 import { LoadingService } from "../../shared/services/loading/loading.service";
 import { finalize } from "rxjs/operators";
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: "app-game",
@@ -19,9 +20,11 @@ export class GameComponent implements OnInit {
   public sliderValue = this.minSlider;
 
   public players: Player[] = [];
+  public playersOrder: Player[] = []
   public game: Game;
   public gameURL: string;
   public unPlayer: Player;
+  public prueba2 = 'heart_9';
 
   constructor(
     private _gameService: GameService,
@@ -65,8 +68,16 @@ export class GameComponent implements OnInit {
         
         this._playerService.getPlayers(this.game._id).subscribe((res) => {
           this.players = res["players"];
-          console.log(this.game);
+          this.players.splice(this.unPlayer.position-1, 1);
+          this.players.forEach((player) => {
+            player.position = (9-(this.unPlayer.position-player.position))%9;
+            
+        });
+        console.log(this.unPlayer);
+       
         console.log(this.players);
+        
+ 
         });
       },
       (error) => {
@@ -74,8 +85,8 @@ export class GameComponent implements OnInit {
       }
     );
 
-
-      
-
+   
+ 
   }
+
 }
