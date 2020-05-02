@@ -83,7 +83,7 @@ export class LobbyComponent implements OnInit {
         this._playerService.getPlayers(this.game._id).subscribe((res) => {
           this.players = res["players"];
 
-          this.playersWaiting = Array(8 - this.players.length)
+          this.playersWaiting = Array(9 - this.players.length)
             .fill(0)
             .map((x, i) => i);
         });

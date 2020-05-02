@@ -40,7 +40,7 @@ export class JoinComponent implements OnInit {
         this._playerService.getPlayers(this.game._id).subscribe((res) => {
           this.lastPosition = res["players"].length;
 
-          if (this.lastPosition !== 8) {
+          if (this.lastPosition !== 9) {
             this.player.position = this.lastPosition + 1;
             this.player.game = this.game._id;
             this.player.stack = this.game.stack;
