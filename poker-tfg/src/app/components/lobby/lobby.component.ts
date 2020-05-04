@@ -98,4 +98,6 @@ export class LobbyComponent implements OnInit {
     this._socketService.startGame(this.unPlayer);
     this.router.navigateByUrl("/" + this.gameURL);
   }
+
+  
 }

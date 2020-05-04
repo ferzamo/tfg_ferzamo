@@ -72,10 +72,14 @@ export class GameComponent implements OnInit {
           this.players.forEach((player) => {
             player.position = (9-(this.unPlayer.position-player.position))%9;
             
+            
         });
-        console.log(this.unPlayer);
-       
-        console.log(this.players);
+        this.players[0].card1='heart_4';
+        this.players[0].card2='diamond_4';
+        this.players[1].card1='heart_5';
+        this.players[1].card2='diamond_5';
+        this.players[2].card1='heart_6';
+        this.players[2].card2='diamond_6';
         
  
         });

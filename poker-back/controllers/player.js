@@ -5,6 +5,7 @@ var Player = require("../models/player");
 function createPlayer(req, res) {
   var player = new Player();
   var params = req.body;
+ 
 
   player.name = params.name;
   player.game = params.game;

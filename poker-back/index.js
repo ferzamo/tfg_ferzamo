@@ -9,7 +9,6 @@ mongoose.connect('mongodb://localhost:27017/tfg_dataBase', { useNewUrlParser: tr
     if (err) {
         throw err;
     } else {
-        console.log("La base de datos correcta");
         app.listen(port, function () {
             console.log("Servidor del api rest escuchando en " + port);
         })

@@ -11,6 +11,9 @@ var io = require("socket.io")(http);
 var player_routes = require("./routes/player");
 var game_routes = require("./routes/game");
 
+const axios = require('axios')
+
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -36,7 +39,9 @@ app.use("/api", game_routes);
 io.on("connection", (socket) => {
   console.log("a user connected");
   socket.on("disconnect", () => {
-    console.log("user disconnected", socket.user);
+
+    axios.delete('http://localhost:3977/api/deletePlayer/' + socket.user)
+    console.log("user disconnected");
   });
 
   socket.on('playerConnection', (player) => {
