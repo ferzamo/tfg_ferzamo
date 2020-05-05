@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ɵConsole } from "@angular/core";
 import { Game } from "../../models/game";
 import { Player } from "../../models/player";
 import { GameService } from "../../shared/services/api/game.service";
@@ -20,7 +20,7 @@ export class LobbyComponent implements OnInit {
   public players: Player[] = [];
   public unPlayer: Player;
   public playersWaiting;
-  public playerReady = false;
+ 
 
   constructor(
     private _gameService: GameService,
@@ -61,6 +61,32 @@ export class LobbyComponent implements OnInit {
       this._socketService.startGameBroadcast().subscribe((res) => {
         this.router.navigateByUrl("/" + this.gameURL);
       });
+
+      this._socketService.playerDisconnectedBroadcast().subscribe((res) => {
+        console.log("Mi posicion: ", this.unPlayer.position);
+        
+        this.players.forEach((player) => {
+          if(player._id===res){
+            
+            if(this.unPlayer.position>player.position){
+              this._playerService.subtractPlayerPosition(this.unPlayer).subscribe();
+             
+              sessionStorage.setItem("player", JSON.stringify(this.unPlayer));
+              console.log(this.unPlayer.position);
+            }
+            this.players.splice(player.position-1, 1);
+            this.playersWaiting.push(0);
+            
+            
+          }
+          
+        });
+
+        
+        
+        
+        
+      })
 
     } else {
       

@@ -52,4 +52,18 @@ export class SocketioService {
 
     return observable;
   }
+
+  playerDisconnectedBroadcast(){
+   
+    let observable = new Observable<string>(observer => {
+      this.socket.on('playerDisconnectedBroadcast', (data: string) => {
+        
+        observer.next(data);
+      });
+      return () => {this.socket.disconnect();}
+    })
+
+    return observable;
+  }
+  
 }

@@ -37,21 +37,24 @@ app.use("/api", game_routes);
 //Socket.io
 
 io.on("connection", (socket) => {
+  
   console.log("a user connected");
-  socket.on("disconnect", () => {
+  socket.on("disconnect", () =>  {
 
     axios.delete('http://localhost:3977/api/deletePlayer/' + socket.user)
+    socket.to(socket.game).emit('playerDisconnectedBroadcast', socket.user);
     console.log("user disconnected");
   });
 
   socket.on('playerConnection', (player) => {
     socket.user = player._id;
-    socket.join(player.game);
-    socket.to(player.game).emit('playerConnectionBroadcast', player);
+    socket.game = player.game;
+    socket.join(socket.game);
+    socket.to(socket.game).emit('playerConnectionBroadcast', player);
   });
 
   socket.on('startGame', (player) => {
-    socket.join(player.game);
+  
     socket.to(player.game).emit('startGameBroadcast', 'start');
   })
 

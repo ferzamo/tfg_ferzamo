@@ -37,7 +37,7 @@ export class GameComponent implements OnInit {
     if (
       !(JSON.parse(sessionStorage.getItem("player")) === null) &&
       JSON.parse(sessionStorage.getItem("player")).game ===
-        this.route.snapshot.paramMap.get("gameId")
+      this.route.snapshot.paramMap.get("gameId")
     ) {
       this.game = new Game(
         null,
@@ -61,36 +61,34 @@ export class GameComponent implements OnInit {
 
     this._loadingService.show();
     this._gameService.getGame(this.gameURL)
-    .pipe(finalize(() => this._loadingService.hide()))
-    .subscribe(
-      (res) => {
-        this.game = res["game"];
-        
-        this._playerService.getPlayers(this.game._id).subscribe((res) => {
-          this.players = res["players"];
-          this.players.splice(this.unPlayer.position-1, 1);
-          this.players.forEach((player) => {
-            player.position = (9-(this.unPlayer.position-player.position))%9;
-            
-            
-        });
-        this.players[0].card1='heart_4';
-        this.players[0].card2='diamond_4';
-        this.players[1].card1='heart_5';
-        this.players[1].card2='diamond_5';
-        this.players[2].card1='heart_6';
-        this.players[2].card2='diamond_6';
-        
- 
-        });
-      },
-      (error) => {
-        this.router.navigateByUrl("/");
-      }
-    );
+      .pipe(finalize(() => this._loadingService.hide()))
+      .subscribe(
+        (res) => {
+          this.game = res["game"];
 
-   
- 
+          this._playerService.getPlayers(this.game._id).subscribe((res) => {
+            this.players = res["players"];
+            this.players.splice(this.unPlayer.position - 1, 1);
+            this.players.forEach((player) => {
+              player.position = (9 - (this.unPlayer.position - player.position)) % 9;
+            });
+            this.players[0].card1 = 'heart_4';
+            this.players[0].card2 = 'diamond_4';
+            this.players[1].card1 = 'heart_5';
+            this.players[1].card2 = 'diamond_5';
+            this.players[2].card1 = 'heart_6';
+            this.players[2].card2 = 'diamond_6';
+
+
+          });
+        },
+        (error) => {
+          this.router.navigateByUrl("/");
+        }
+      );
+
+
+
   }
 
 }

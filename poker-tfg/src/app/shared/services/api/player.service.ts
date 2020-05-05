@@ -33,6 +33,13 @@ export class PlayerService{
 
     }
 
+    subtractPlayerPosition(player : Player){
+      player.position--;
+      return this.http.put<Player>(this.url + "/updatePlayer/" + player._id, player).pipe(map(res => res));
+    }
+
+   
+
 
 
 
