@@ -30,6 +30,8 @@ export class JoinComponent implements OnInit {
   }
 
   onClick() {
+
+    // If there is a game with that ID, it will take all the players related to, it will asign a position according to the number of players already and will store the new created player in the session storage. If the game is full (9 players) or there is no game with that ID, it will redirect
     this.loadingService.show();
     this._gameService.getGame(this.game._id)
     .pipe(finalize(() => this.loadingService.hide()))

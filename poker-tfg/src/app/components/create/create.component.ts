@@ -24,23 +24,33 @@ export class CreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+    // Game initialized
     this.game = new Game(null, null, 0, null, null, null, null, null, null);
+    // Player initialized with position 1 by default
     this.player = new Player(null, null, null, 1, null, null, null);
   }
 
   onClick() {
+
+    // Once the button is clicked, the game is created and the loading spin is shown till it ends
     this.loadingService.show();
     this._gameService.createGame(this.game)
     .pipe(finalize(() => this.loadingService.hide()))
     .subscribe(
       (res) => {
+
         this.game = res["game"];
+        // The game id and stack of the game is asigned to the player created
         this.player.game = this.game._id;
         this.player.stack = this.game.stack;
+
+        // First player of the game is created
         this._playerService.createPlayer(this.player)
         .subscribe((res) => {
           this.player = res["player"];
           
+          // Player info is stored in session to be reused later
           sessionStorage.setItem("player", JSON.stringify(this.player));
           
 
