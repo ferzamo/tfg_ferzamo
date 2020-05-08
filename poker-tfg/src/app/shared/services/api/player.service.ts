@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http'
 import {Observable} from 'rxjs'
-import {map, delay} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import { SERVICESCONSTANTS } from '../../constants/services/servicesConstants'
 import {Player} from '../../../models/player';
 

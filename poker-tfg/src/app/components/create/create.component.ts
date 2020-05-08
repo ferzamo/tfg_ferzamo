@@ -45,6 +45,8 @@ export class CreateComponent implements OnInit {
         this.player.game = this.game._id;
         this.player.stack = this.game.stack;
 
+        this._gameService.createDeck(this.game).subscribe();
+
         // First player of the game is created
         this._playerService.createPlayer(this.player)
         .subscribe((res) => {
