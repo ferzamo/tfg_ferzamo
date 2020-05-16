@@ -25,6 +25,7 @@ export class GameComponent implements OnInit {
   public game: Game;
   public gameURL: string;
   public unPlayer: Player;
+  
 
   public myTurn: boolean;
   
@@ -57,6 +58,7 @@ export class GameComponent implements OnInit {
       );
       this.gameURL = this.route.snapshot.paramMap.get("gameId");
       this.unPlayer = JSON.parse(sessionStorage.getItem("player"));
+      
       this.myTurn=false;
     } else {
       this.router.navigateByUrl("/");
@@ -100,7 +102,7 @@ export class GameComponent implements OnInit {
   ngAfterContentInit(){
 
     if (this.unPlayer.position === 1) {
-      console.log(this.unPlayer.card1);
+     
       this._deckService.populateDeck(this.gameURL).subscribe(()=>{
         this.getCards();
       });
@@ -109,13 +111,15 @@ export class GameComponent implements OnInit {
 
 
     this._socketService.startYourTurn().subscribe((res)=> {
-      console.log(Number(res)%3);
-      console.log(this.players.length);
-
-      var position = Number(res) % ((this.players.length)+1);
+      
+      
+      console.log(JSON.parse(sessionStorage.getItem("numPlayers")));
+      var position = Number(res) % (JSON.parse(sessionStorage.getItem("numPlayers"))+1);
       console.log(position);
       
-      if(this.unPlayer.position===position){
+      
+      
+      if(this.unPlayer.card1===null && this.unPlayer.position===position){
         this.getCards();
       }else{
         this.myTurn=true;

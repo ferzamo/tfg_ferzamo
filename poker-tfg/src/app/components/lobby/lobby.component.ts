@@ -106,7 +106,7 @@ export class LobbyComponent implements OnInit {
 
           this._playerService.getPlayers(this.game._id).subscribe((res) => {
             this.players = res["players"];
-
+            sessionStorage.setItem("numPlayers", JSON.stringify(this.players.length));
             this.playersWaiting = Array(9 - this.players.length)
               .fill(0)
               .map((x, i) => i);
@@ -121,6 +121,7 @@ export class LobbyComponent implements OnInit {
   // Can only be accessed by the player 1
   public startGame() {
     // Broadcast the start of the game for every player
+    
     this._socketService.startGame(this.unPlayer);
     this.router.navigateByUrl("/" + this.gameURL);
   }

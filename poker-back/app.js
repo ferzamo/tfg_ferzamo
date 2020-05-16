@@ -67,11 +67,11 @@ io.on("connection", (socket) => {
 
   socket.on('myTurnIsOver', (player) => {
     
-    console.log(player.position);
-    if (player.position!==9){
-      
+    
+    
+    
     socket.to(player.game).emit('startYourTurn', player.position+1);
-    }
+    
   })
 
 });
