@@ -1,31 +1,38 @@
-/*import { Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { map, delay } from "rxjs/operators";
 import { SERVICESCONSTANTS } from "../../constants/services/servicesConstants";
 import { Card } from "../../../models/card";
+import { Game } from "../../../models/game";
 
 @Injectable({
   providedIn: "root",
 })
-export class GameService {
+export class DeckService {
   public url: String;
 
   constructor(private http: HttpClient) {
     this.url = SERVICESCONSTANTS.url;
   }
 
-  createGame(game: Game): Observable<Game> {
+  createDeck(game: Game): Observable<any> {
     return this.http
-      .post<Game>(this.url + "/createGame", game)
-      .pipe(delay(700))
+      .post<Game>(this.url + "/createDeck", game)
       .pipe(map((res) => res));
   }
 
-  getGame(id: string): Observable<Game> {
+  populateDeck(gameId: string): Observable<any> {
     return this.http
-      .get<Game>(this.url + "/getGame/" + id)
-      .pipe(delay(700))
+      .put<any>(this.url + "/populateDeck/" + gameId, gameId)
       .pipe(map((res) => res));
   }
-}*/
+
+  getCard(gameId: string): Observable<any> {
+    return this.http
+      .get<any>(this.url + "/getCard/" + gameId)
+      .pipe(map((res) => res));
+  }
+
+  
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵConsole } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Game } from "../../models/game";
 import { Player } from "../../models/player";
 import { GameService } from "../../shared/services/api/game.service";
@@ -124,6 +124,8 @@ export class LobbyComponent implements OnInit {
     this._socketService.startGame(this.unPlayer);
     this.router.navigateByUrl("/" + this.gameURL);
   }
+
+  
 
 
 }

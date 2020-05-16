@@ -158,12 +158,12 @@
   <div class="userSpace">
     <div class="userCard1">
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <use xlink:href="../../../assets/svg/svg-cards.svg#spade_7" x="55" y="10" transform="scale(0.40)" />
+        <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ unPlayer.card1 }}" x="55" y="10" transform="scale(0.40)" />
       </svg>
     </div>
     <div class="userCard2">
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <use xlink:href="../../../assets/svg/svg-cards.svg#heart_7" x="5" y="10" transform="scale(0.40)" />
+        <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ unPlayer.card2 }}" x="5" y="10" transform="scale(0.40)" />
       </svg>
     </div>
     <div class="userStack">
@@ -303,7 +303,7 @@
     </div>
   </div>
   <!------------------------ACTIONS BAR------------------------>
-  <div class="actionsBar">
+  <div class="actionsBar" [style.visibility]="myTurn ? 'visible':'hidden'">
     <div class="sliderArea">
       <mat-slider
        class="slider"
@@ -318,13 +318,13 @@
       <input type="text" class="markerArea" [(ngModel)]="sliderValue"/>
     </div>
     <div class="foldArea">
-      <app-main-button [buttonText]="'Fold'"></app-main-button>
+      <app-main-button [buttonText]="'Fold'" ></app-main-button>
     </div>
     <div class="checkArea">
-      <app-main-button [buttonText]="'Check'"></app-main-button>
+      <app-main-button [buttonText]="'Check'" ></app-main-button>
     </div>
     <div class="raiseArea">
-      <app-main-button [buttonText]="'Raise'"></app-main-button>
+      <app-main-button [buttonText]="'Raise'" ></app-main-button>
     </div>
   </div>
 </div>

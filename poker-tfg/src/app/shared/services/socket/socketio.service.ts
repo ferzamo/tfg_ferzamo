@@ -65,5 +65,25 @@ export class SocketioService {
 
     return observable;
   }
+
+  myTurnIsOver(player: Player){
+
+    this.socket.emit('myTurnIsOver', player);
+
+  }
+
+  startYourTurn(){
+
+    let observable = new Observable<Number>(observer => {
+      this.socket.on('startYourTurn', (data: number) => {
+        
+        observer.next(data);
+      });
+      return () => {this.socket.disconnect();}
+    })
+
+    return observable;
+
+  }
   
 }

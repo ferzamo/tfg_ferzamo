@@ -28,10 +28,6 @@ export class GameService {
       .pipe(delay(700))
       .pipe(map((res) => res));
   }
+
   
-  createDeck(game: Game): Observable<any> {
-    return this.http
-      .post<Game>(this.url + "/createDeck", game)
-      .pipe(map((res) => res));
-  }
 }

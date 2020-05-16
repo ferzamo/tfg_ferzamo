@@ -7,7 +7,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { SocketioService } from "../../shared/services/socket/socketio.service";
 import { LoadingService } from "../../shared/services/loading/loading.service";
 import { finalize } from "rxjs/operators";
-import { map } from 'rxjs/operators';
+import { DeckService } from "../../shared/services/api/deck.service";
+import { map } from "rxjs/operators";
+
 
 @Component({
   selector: "app-game",
@@ -20,24 +22,27 @@ export class GameComponent implements OnInit {
   public sliderValue = this.minSlider;
 
   public players: Player[] = [];
-  public playersOrder: Player[] = []
   public game: Game;
   public gameURL: string;
   public unPlayer: Player;
-  public prueba2 = 'heart_9';
+
+  public myTurn: boolean;
+  
 
   constructor(
     private _gameService: GameService,
     private _playerService: PlayerService,
+    private _deckService: DeckService,
     private route: ActivatedRoute,
     private router: Router,
     private _socketService: SocketioService,
     private _loadingService: LoadingService
   ) {
+    
     if (
       !(JSON.parse(sessionStorage.getItem("player")) === null) &&
       JSON.parse(sessionStorage.getItem("player")).game ===
-      this.route.snapshot.paramMap.get("gameId")
+        this.route.snapshot.paramMap.get("gameId")
     ) {
       this.game = new Game(
         null,
@@ -52,15 +57,18 @@ export class GameComponent implements OnInit {
       );
       this.gameURL = this.route.snapshot.paramMap.get("gameId");
       this.unPlayer = JSON.parse(sessionStorage.getItem("player"));
+      this.myTurn=false;
     } else {
       this.router.navigateByUrl("/");
     }
   }
 
   ngOnInit(): void {
+    
 
     this._loadingService.show();
-    this._gameService.getGame(this.gameURL)
+    this._gameService
+      .getGame(this.gameURL)
       .pipe(finalize(() => this._loadingService.hide()))
       .subscribe(
         (res) => {
@@ -70,16 +78,16 @@ export class GameComponent implements OnInit {
             this.players = res["players"];
             this.players.splice(this.unPlayer.position - 1, 1);
             this.players.forEach((player) => {
-              player.position = (9 - (this.unPlayer.position - player.position)) % 9;
+              player.card1 = "back";
+              player.card2 = "back";
+              player.position =
+                (9 - (this.unPlayer.position - player.position)) % 9;
             });
-            this.players[0].card1 = 'heart_4';
-            this.players[0].card2 = 'diamond_4';
-            this.players[1].card1 = 'heart_5';
-            this.players[1].card2 = 'diamond_5';
-            this.players[2].card1 = 'heart_6';
-            this.players[2].card2 = 'diamond_6';
 
+            
 
+            console.log("Tamaño array: ",this.players.length);
+            
           });
         },
         (error) => {
@@ -87,8 +95,61 @@ export class GameComponent implements OnInit {
         }
       );
 
+  }
+
+  ngAfterContentInit(){
+
+    if (this.unPlayer.position === 1) {
+      console.log(this.unPlayer.card1);
+      this._deckService.populateDeck(this.gameURL).subscribe(()=>{
+        this.getCards();
+      });
+      
+    }
+
+
+    this._socketService.startYourTurn().subscribe((res)=> {
+      console.log(Number(res)%3);
+      console.log(this.players.length);
+
+      var position = Number(res) % ((this.players.length)+1);
+      console.log(position);
+      
+      if(this.unPlayer.position===position){
+        this.getCards();
+      }else{
+        this.myTurn=true;
+      }
+    })
+
+  
+
+
 
 
   }
 
+  getCards(){
+
+   
+      this._deckService.getCard(this.gameURL).subscribe((res) => {
+        this.unPlayer.card1 = res["card"].name;
+        this._deckService.getCard(this.gameURL).subscribe((res) => {
+          this.unPlayer.card2 = res["card"].name;
+          
+          this._socketService.myTurnIsOver(this.unPlayer);
+        });
+        
+      });
+    
+
+  }
+
+  
+
+  
+
+
+
+  
 }

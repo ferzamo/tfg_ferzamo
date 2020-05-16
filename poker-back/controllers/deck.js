@@ -23,9 +23,8 @@ function createDeck(req, res) {
   });
 }
 
-function getCard(req, res) {
+ function getCard(req, res) {
   var game = req.params.gameId;
-
   Deck.findOne({ game: game }, (err, deck) => {
     if (err) {
       res.status(500).send({ message: "getCard failed" });
@@ -34,6 +33,7 @@ function getCard(req, res) {
         res.status(404).send({ message: "Deck doesnt exist" });
       } else {
         const card = deck.cards[0];
+        console.log("Carta: ", card);
         deleteCard(req);
         res.status(200).send({ card });
       }
@@ -70,6 +70,8 @@ function deleteCard(req, res) {
       })
 
     shuffle(cards);
+
+    console.log("Las cartas: ", cards);
     
   
     Deck.findOneAndUpdate({ game: game }, { cards: cards }, (err, deck) => {

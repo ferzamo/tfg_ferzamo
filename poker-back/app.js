@@ -38,9 +38,14 @@ app.use("/api", deck_routes);
 
 //Socket.io
 
+
+
 io.on("connection", (socket) => {
   
   console.log("a user connected");
+ 
+
+
   socket.on("disconnect", () =>  {
 
     axios.delete('http://localhost:3977/api/deletePlayer/' + socket.user)
@@ -58,6 +63,15 @@ io.on("connection", (socket) => {
   socket.on('startGame', (player) => {
   
     socket.to(player.game).emit('startGameBroadcast', 'start');
+  })
+
+  socket.on('myTurnIsOver', (player) => {
+    
+    console.log(player.position);
+    if (player.position!==9){
+      
+    socket.to(player.game).emit('startYourTurn', player.position+1);
+    }
   })
 
 });
