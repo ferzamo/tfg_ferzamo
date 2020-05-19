@@ -67,7 +67,6 @@ export class GameComponent implements OnInit {
 
   ngOnInit(): void {
     
-
     this._loadingService.show();
     this._gameService
       .getGame(this.gameURL)
@@ -78,17 +77,19 @@ export class GameComponent implements OnInit {
 
           this._playerService.getPlayers(this.game._id).subscribe((res) => {
             this.players = res["players"];
+            
             this.players.splice(this.unPlayer.position - 1, 1);
             this.players.forEach((player) => {
               player.card1 = "back";
               player.card2 = "back";
               player.position =
                 (9 - (this.unPlayer.position - player.position)) % 9;
+
             });
 
             
 
-            console.log("Tamaño array: ",this.players.length);
+            
             
           });
         },
@@ -99,7 +100,7 @@ export class GameComponent implements OnInit {
 
   }
 
-  ngAfterContentInit(){
+  ngAfterViewInit(){
 
     if (this.unPlayer.position === 1) {
      
@@ -113,15 +114,28 @@ export class GameComponent implements OnInit {
     this._socketService.startYourTurn().subscribe((res)=> {
       
       
-      console.log(JSON.parse(sessionStorage.getItem("numPlayers")));
-      var position = Number(res) % (JSON.parse(sessionStorage.getItem("numPlayers"))+1);
+      
+      var position = Number(res) % (JSON.parse(sessionStorage.getItem("numPlayers")));
       console.log(position);
+
+      if (position === 0 && this.unPlayer.position===JSON.parse(sessionStorage.getItem("numPlayers"))){
+        position = this.unPlayer.position;
+      }
+      
       
       
       
       if(this.unPlayer.card1===null && this.unPlayer.position===position){
+       
+        
         this.getCards();
-      }else{
+      } 
+      if(this.unPlayer.card1!==null && this.unPlayer.position===position){
+        
+        console.log('Res: ', res);
+        console.log('numPlayers: ', JSON.parse(sessionStorage.getItem("numPlayers")) );
+        console.log('Position: ', position);
+        console.log('unPlayer.position: ',this.unPlayer.position);
         this.myTurn=true;
       }
     })
@@ -140,12 +154,19 @@ export class GameComponent implements OnInit {
         this.unPlayer.card1 = res["card"].name;
         this._deckService.getCard(this.gameURL).subscribe((res) => {
           this.unPlayer.card2 = res["card"].name;
-          
+          console.log("Envio al ", this.unPlayer.position+1);
           this._socketService.myTurnIsOver(this.unPlayer);
         });
         
       });
     
+
+  }
+
+  pasarTurno(){
+
+    this.myTurn=false;
+    this._socketService.myTurnIsOver(this.unPlayer);
 
   }
 

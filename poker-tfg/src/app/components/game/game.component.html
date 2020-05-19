@@ -318,7 +318,7 @@
       <input type="text" class="markerArea" [(ngModel)]="sliderValue"/>
     </div>
     <div class="foldArea">
-      <app-main-button [buttonText]="'Fold'" ></app-main-button>
+      <app-main-button [buttonText]="'Fold'" (clickEvent)="pasarTurno()"></app-main-button>
     </div>
     <div class="checkArea">
       <app-main-button [buttonText]="'Check'" ></app-main-button>

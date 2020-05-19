@@ -69,7 +69,7 @@ io.on("connection", (socket) => {
     
     
     
-    
+    console.log('Envio a: ', player.position+1)
     socket.to(player.game).emit('startYourTurn', player.position+1);
     
   })
