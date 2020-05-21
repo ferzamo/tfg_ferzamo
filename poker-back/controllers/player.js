@@ -13,6 +13,8 @@ function createPlayer(req, res) {
   player.stack = params.stack;
   player.card1 = params.card1;
   player.card2 = params.card2;
+  player.playing = params.playing;
+
 
   player.save((err, playerStored) => {
     if (err) {

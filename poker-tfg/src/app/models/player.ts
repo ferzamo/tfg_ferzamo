@@ -6,6 +6,7 @@ export class Player{
         public position: number,
         public stack: number,
         public card1: string,
-        public card2: string
+        public card2: string,
+        public playing: boolean
     ){}
 }

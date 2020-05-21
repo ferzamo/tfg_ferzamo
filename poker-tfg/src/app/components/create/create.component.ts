@@ -30,8 +30,8 @@ export class CreateComponent implements OnInit {
 
     // Game initialized
     this.game = new Game(null, null, 0, null, null, null, null, null, null);
-    // Player initialized with position 1 by default
-    this.player = new Player(null, null, null, 1, null, null, null);
+    // Player initialized with position 1 by default and playing true because he starts the first hand playing
+    this.player = new Player(null, null, null, 1, null, null, null, true);
   }
 
   onClick() {

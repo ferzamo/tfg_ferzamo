@@ -7,7 +7,7 @@
       <div class="playerStack">{{player.stack}}</div>
       <div class="playerName">{{player.name}}</div>
     </div>
-    <div class="playerCards" [style.visibility]="'visible'">
+    <div *ngIf="player.playing" class="playerCards" [style.visibility]="'visible'">
       <div class="playerCard1">
         <svg width="71" height="97" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ player.card1 }}" x="60" y="0" fill="#e5240b" transform="scale(0.3)" />
