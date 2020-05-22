@@ -8,7 +8,7 @@ import { SocketioService } from "../../shared/services/socket/socketio.service";
 import { LoadingService } from "../../shared/services/loading/loading.service";
 import { finalize } from "rxjs/operators";
 import { DeckService } from "../../shared/services/api/deck.service";
-import { map } from "rxjs/operators";
+
 
 @Component({
   selector: "app-game",
@@ -25,7 +25,7 @@ export class GameComponent implements OnInit {
   public gameURL: string;
   public unPlayer: Player;
 
-  public myTurn: boolean;
+  
 
   constructor(
     private _gameService: GameService,
@@ -55,7 +55,7 @@ export class GameComponent implements OnInit {
       this.gameURL = this.route.snapshot.paramMap.get("gameId");
       this.unPlayer = JSON.parse(sessionStorage.getItem("player"));
 
-      this.myTurn = false;
+      
       
     } else {
       this.router.navigateByUrl("/");
@@ -88,7 +88,7 @@ export class GameComponent implements OnInit {
 
     this._socketService.startYourTurn().subscribe((res) => {
       
-
+      
       this.getPlayers(this.route.snapshot.paramMap.get("gameId"));
 
       //Calcula la posicion que le ha llegado a ver si es la suya
@@ -107,13 +107,17 @@ export class GameComponent implements OnInit {
 
       
       if(this.unPlayer.position === position && this.unPlayer.playing===true){
-        console.log('entro');
+       
         if (this.unPlayer.card1 === null ) {
-          console.log('envio');
+          
           this.getCards();
         }else{
           
-          this.myTurn = true;
+          this.unPlayer.myTurn = true;
+          this._playerService.updateplayer(this.unPlayer).subscribe(() => {
+            this._socketService.iChangedSomething(this.unPlayer);
+          });
+          
         }
       }else if(this.unPlayer.position === position && this.unPlayer.playing===false){
         this._socketService.myTurnIsOver(this.unPlayer);
@@ -123,20 +127,28 @@ export class GameComponent implements OnInit {
 
     
     });
+
+    this._socketService.checkSomethingChanged().subscribe(() => {
+        console.log('checkSomethingChanged');
+        this.getPlayers(this.route.snapshot.paramMap.get("gameId"));
+    })
   }
 
   
  
   fold() {
-    this.myTurn = false;
+    this.unPlayer.myTurn = false;
     this.unPlayer.playing = false;
-    this._playerService.updateplayer(this.unPlayer).subscribe();
-    this._socketService.myTurnIsOver(this.unPlayer);
+    this._playerService.updateplayer(this.unPlayer).subscribe(() => {
+      this._socketService.myTurnIsOver(this.unPlayer);
+    });
+    
     
   }
 
   check(){
-    this.myTurn = false;
+    this.unPlayer.myTurn = false;
+    this._playerService.updateplayer(this.unPlayer).subscribe();
     this._socketService.myTurnIsOver(this.unPlayer);
     
   }
@@ -166,6 +178,7 @@ export class GameComponent implements OnInit {
         player.card2 = "back";
         player.position =
           (9 - (this.unPlayer.position - player.position)) % 9;
+          console.log(this.players)
       });
     });
   }

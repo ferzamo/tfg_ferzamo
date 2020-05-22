@@ -10,7 +10,8 @@ var PlayerSchema = Schema({
     stack: Number,
     card1: String,
     card2: String,
-    playing: Boolean
+    playing: Boolean,
+    myTurn: Boolean
     
 })
 

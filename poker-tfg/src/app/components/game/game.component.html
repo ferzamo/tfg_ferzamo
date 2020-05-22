@@ -2,8 +2,8 @@
   
   <!------------------------PLAYERS SPACE------------------------>
   <div *ngFor="let player of players" class="playerSpace{{ player.position }} playerSpace">
-    <div class="playerPhoto"></div>
-    <div class="playerInfo">
+    <div class="playerPhoto" [style.borderColor]="player.myTurn ? 'white':'#e5240b'"></div>
+    <div class="playerInfo" [style.borderColor]="player.myTurn ? 'white':'#e5240b'">
       <div class="playerStack">{{player.stack}}</div>
       <div class="playerName">{{player.name}}</div>
     </div>
@@ -22,7 +22,8 @@
   </div>
    
   <!------------------------USER SPACE------------------------>
-  <div class="userSpace">
+  <div class="userSpace" [style.borderColor]="unPlayer.myTurn ? 'white':'#e5240b'" >
+   
     <div class="userCard1">
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ unPlayer.card1 }}" x="55" y="10" transform="scale(0.40)" />
@@ -170,7 +171,7 @@
     </div>
   </div>
   <!------------------------ACTIONS BAR------------------------>
-  <div class="actionsBar" [style.visibility]="myTurn ? 'visible':'hidden'">
+  <div class="actionsBar" [style.visibility]="unPlayer.myTurn ? 'visible':'hidden'">
     <div class="sliderArea">
       <mat-slider
        class="slider"

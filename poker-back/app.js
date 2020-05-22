@@ -65,10 +65,19 @@ io.on("connection", (socket) => {
     socket.to(player.game).emit('startGameBroadcast', 'start');
   })
 
+  
+
   socket.on('myTurnIsOver', (player) => {
     
     
     socket.to(player.game).emit('startYourTurn', player.position+1);
+    
+  })
+
+  socket.on('iChangedSomething', (player) => {
+    
+    console.log('El player: ', player)
+    socket.to(player.game).emit('checkSomethingChanged');
     
   })
 
