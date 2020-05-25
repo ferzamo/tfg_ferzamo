@@ -24,12 +24,12 @@
   <!------------------------USER SPACE------------------------>
   <div class="userSpace" [style.borderColor]="unPlayer.myTurn ? 'white':'#e5240b'" >
    
-    <div class="userCard1">
+    <div class="userCard1" *ngIf="unPlayer.playing">
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ unPlayer.card1 }}" x="55" y="10" transform="scale(0.40)" />
       </svg>
     </div>
-    <div class="userCard2">
+    <div class="userCard2" *ngIf="unPlayer.playing">
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ unPlayer.card2 }}" x="5" y="10" transform="scale(0.40)" />
       </svg>

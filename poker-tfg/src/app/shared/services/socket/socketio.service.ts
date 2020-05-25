@@ -87,13 +87,30 @@ export class SocketioService {
   }
 
   iChangedSomething(player: Player){
-    console.log('El player: ', player);
+    
     this.socket.emit('iChangedSomething', player);
   }
 
   checkSomethingChanged(){
     let observable = new Observable(observer => {
       this.socket.on('checkSomethingChanged', () => {
+        
+        observer.next();
+      });
+      return () => {this.socket.disconnect();}
+    })
+
+    return observable;
+  }
+
+  handEnded(player: Player){
+    this.socket.emit('handEnded', player);
+  
+  }
+
+  handEndedBroadcast(){
+    let observable = new Observable(observer => {
+      this.socket.on('handEndedBroadcast', () => {
         
         observer.next();
       });

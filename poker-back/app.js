@@ -76,8 +76,15 @@ io.on("connection", (socket) => {
 
   socket.on('iChangedSomething', (player) => {
     
-    console.log('El player: ', player)
+    
     socket.to(player.game).emit('checkSomethingChanged');
+    
+  })
+
+  socket.on('handEnded', (player) => {
+    
+    
+    socket.to(player.game).emit('handEndedBroadcast');
     
   })
 
