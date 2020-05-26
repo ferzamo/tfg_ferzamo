@@ -79,6 +79,10 @@ export class GameComponent implements OnInit {
       );
   }
 
+  gameCycle(){
+
+  }
+
   ngAfterViewInit() {
 
     if (this.unPlayer.position === 1) {
@@ -90,7 +94,7 @@ export class GameComponent implements OnInit {
     this._socketService.startYourTurn().subscribe((res) => {
       
       
-      
+      this.getPlayers(this.route.snapshot.paramMap.get("gameId"));
 
       //Calcula la posicion que le ha llegado a ver si es la suya
       var position =
@@ -116,22 +120,39 @@ export class GameComponent implements OnInit {
         }else{
 
           // Mi turno con cartas
-          console.log(this.players);
-         if(this.didIWon()===true){
-          this._socketService.handEnded(this.unPlayer);
-          this._deckService.populateDeck(this.gameURL).subscribe(() => {
-            this.getCards();
-          });
-
-         }else{
-
           
-          this.unPlayer.myTurn = true;
-          this._playerService.updateplayer(this.unPlayer).subscribe(() => {
-            
-          });
+          this._playerService.getPlayers(this.route.snapshot.paramMap.get("gameId")).subscribe((res) => { 
 
-        }
+            var jugadores = res["players"];
+        
+            var playersLeft = 0;
+        
+            jugadores.forEach((player) => {
+              if(player.playing===true){
+                playersLeft++;
+              }  
+            });
+        
+            
+            if(playersLeft===1){
+              console.log('aqui 1');
+              this._socketService.handEnded(this.unPlayer);
+          this._deckService.populateDeck(this.gameURL).subscribe(() => {
+            this.unPlayer.card1 = null;
+            this.unPlayer.card2 = null;
+            this.check();
+           
+          });
+            }else{
+              console.log('aqui 2');
+              this.unPlayer.myTurn = true;
+              this._playerService.updateplayer(this.unPlayer)
+              .pipe(finalize(() => this._socketService.iChangedSomething(this.unPlayer)))
+              .subscribe();
+            }
+        
+          });
+ 
           
         }
       }else if(this.unPlayer.position === position && this.unPlayer.playing===false){
@@ -152,12 +173,14 @@ export class GameComponent implements OnInit {
     })
 
     this._socketService.handEndedBroadcast().subscribe(() => {
+      console.log('handEndedBroadcast');
       this.unPlayer.playing = true;
+      this._playerService.updateplayer(this.unPlayer)
+              .pipe(finalize(() => this._socketService.iChangedSomething(this.unPlayer)))
+              .subscribe();
     })
 
-    setInterval(() => {
-      this._socketService.iChangedSomething(this.unPlayer);
-    }, 1000);
+    
     
   }
 
@@ -168,20 +191,20 @@ export class GameComponent implements OnInit {
     this.unPlayer.playing = false;
     this.unPlayer.card1 = null;
     this.unPlayer.card2 = null;
-    this._playerService.updateplayer(this.unPlayer).subscribe(() => {
-      
-      this._socketService.myTurnIsOver(this.unPlayer);
-    });
+    this._playerService.updateplayer(this.unPlayer)
+    .pipe(finalize(() => this._socketService.iChangedSomething(this.unPlayer)))
+    .pipe(finalize(() => this._socketService.myTurnIsOver(this.unPlayer)))
+    .subscribe();
     
     
   }
 
   check(){
     this.unPlayer.myTurn = false;
-    this._playerService.updateplayer(this.unPlayer).subscribe(() => {
-      
-      this._socketService.myTurnIsOver(this.unPlayer);
-    });
+    this._playerService.updateplayer(this.unPlayer)
+    .pipe(finalize(() => this._socketService.iChangedSomething(this.unPlayer)))
+    .pipe(finalize(() => this._socketService.myTurnIsOver(this.unPlayer)))
+    .subscribe();
     
   }
 
@@ -199,6 +222,8 @@ export class GameComponent implements OnInit {
       });
     });
   }
+
+
 
   getPlayers(gameId: string){
     this._playerService.getPlayers(gameId).subscribe((res) => {
@@ -219,22 +244,5 @@ export class GameComponent implements OnInit {
     
   }
 
-  didIWon(){
-
-    var playersLeft = 0;
-
-    this.players.forEach((player) => {
-      if(player.playing===true){
-        playersLeft++;
-      }  
-    });
-
-    console.log(playersLeft);
-    if(playersLeft===0){
-      return true;
-    }else{
-      return false;
-    }
-
-  }
+  
 }
