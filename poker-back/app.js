@@ -83,7 +83,7 @@ io.on("connection", (socket) => {
 
   socket.on('handEnded', (player) => {
     
-    console.log('handEndedBroadcast');
+    
     socket.to(player.game).emit('handEndedBroadcast');
     
   })

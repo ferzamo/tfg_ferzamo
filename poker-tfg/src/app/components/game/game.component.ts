@@ -50,6 +50,7 @@ export class GameComponent implements OnInit {
         null,
         null,
         null,
+        null,
         null
       );
       this.gameURL = this.route.snapshot.paramMap.get("gameId");
@@ -79,11 +80,10 @@ export class GameComponent implements OnInit {
       );
   }
 
-  gameCycle(){
-
-  }
+  
 
   ngAfterViewInit() {
+
 
     if (this.unPlayer.position === 1) {
       this._deckService.populateDeck(this.gameURL).subscribe(() => {
@@ -97,8 +97,7 @@ export class GameComponent implements OnInit {
       this.getPlayers(this.route.snapshot.paramMap.get("gameId"));
 
       //Calcula la posicion que le ha llegado a ver si es la suya
-      var position =
- Number(res) % JSON.parse(sessionStorage.getItem("numPlayers"));
+      var position = Number(res) % JSON.parse(sessionStorage.getItem("numPlayers"));
       
       
 
@@ -115,7 +114,7 @@ export class GameComponent implements OnInit {
        
         if (this.unPlayer.card1 === null ) {
           // Mi turno sin cartas
-          
+          console.log('El dealer: ', this.game.dealer);
           this.getCards();
         }else{
 
@@ -135,7 +134,7 @@ export class GameComponent implements OnInit {
         
             
             if(playersLeft===1){
-              console.log('aqui 1');
+              
               this._socketService.handEnded(this.unPlayer);
           this._deckService.populateDeck(this.gameURL).subscribe(() => {
             this.unPlayer.card1 = null;
@@ -144,7 +143,7 @@ export class GameComponent implements OnInit {
            
           });
             }else{
-              console.log('aqui 2');
+              
               this.unPlayer.myTurn = true;
               this._playerService.updateplayer(this.unPlayer)
               .pipe(finalize(() => this._socketService.iChangedSomething(this.unPlayer)))
@@ -173,7 +172,7 @@ export class GameComponent implements OnInit {
     })
 
     this._socketService.handEndedBroadcast().subscribe(() => {
-      console.log('handEndedBroadcast');
+      
       this.unPlayer.playing = true;
       this._playerService.updateplayer(this.unPlayer)
               .pipe(finalize(() => this._socketService.iChangedSomething(this.unPlayer)))

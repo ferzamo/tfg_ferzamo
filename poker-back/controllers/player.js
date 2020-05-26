@@ -15,6 +15,7 @@ function createPlayer(req, res) {
   player.card2 = params.card2;
   player.playing = params.playing;
   player.myTurn = params.myTurn;
+  
 
 
   player.save((err, playerStored) => {
