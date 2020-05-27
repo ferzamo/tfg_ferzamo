@@ -25,7 +25,7 @@ export class GameService {
   getGame(id: string): Observable<Game> {
     return this.http
       .get<Game>(this.url + "/getGame/" + id)
-      .pipe(delay(700))
+      
       .pipe(map((res) => res));
   }
 

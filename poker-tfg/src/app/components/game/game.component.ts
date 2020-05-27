@@ -73,6 +73,8 @@ export class GameComponent implements OnInit {
           this.game = res["game"];
 
           this.getPlayers(this.game._id);
+
+
         },
         (error) => {
           this.router.navigateByUrl("/");
@@ -92,14 +94,8 @@ export class GameComponent implements OnInit {
     }
 
     this._socketService.startYourTurn().subscribe((res) => {
-      
-      
-      this.getPlayers(this.route.snapshot.paramMap.get("gameId"));
 
-      //Calcula la posicion que le ha llegado a ver si es la suya
       var position = Number(res) % JSON.parse(sessionStorage.getItem("numPlayers"));
-      
-      
 
       if (
         position === 0 &&
@@ -109,18 +105,27 @@ export class GameComponent implements OnInit {
         position = this.unPlayer.position;
       }
 
+      this._gameService.getGame(this.gameURL).subscribe((res) => {
+        this.game = res["game"];
+
+        
+          this.getPlayers(this.game._id);
+
+
+      //Calcula la posicion que le ha llegado a ver si es la suya
       
+    
       if(this.unPlayer.position === position && this.unPlayer.playing===true){
-       
+        
         if (this.unPlayer.card1 === null ) {
           // Mi turno sin cartas
-          console.log('El dealer: ', this.game.dealer);
+          
           this.getCards();
         }else{
 
           // Mi turno con cartas
           
-          this._playerService.getPlayers(this.route.snapshot.paramMap.get("gameId")).subscribe((res) => { 
+          this._playerService.getPlayers(this.game._id).subscribe((res) => { 
 
             var jugadores = res["players"];
         
@@ -164,22 +169,24 @@ export class GameComponent implements OnInit {
     
     });
 
-    this._socketService.checkSomethingChanged().subscribe(() => {
-        
-        this.getPlayers(this.route.snapshot.paramMap.get("gameId"));
-        
-        
-    })
-
-    this._socketService.handEndedBroadcast().subscribe(() => {
-      
-      this.unPlayer.playing = true;
-      this._playerService.updateplayer(this.unPlayer)
-              .pipe(finalize(() => this._socketService.iChangedSomething(this.unPlayer)))
-              .subscribe();
-    })
-
     
+
+  });
+
+  this._socketService.checkSomethingChanged().subscribe(() => {
+        
+    this.getPlayers(this.game._id);
+    
+    
+})
+
+this._socketService.handEndedBroadcast().subscribe(() => {
+  
+  this.unPlayer.playing = true;
+  this._playerService.updateplayer(this.unPlayer)
+          .pipe(finalize(() => this._socketService.iChangedSomething(this.unPlayer)))
+          .subscribe();
+})
     
   }
 
