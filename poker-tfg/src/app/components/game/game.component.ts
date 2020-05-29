@@ -113,7 +113,10 @@ export class GameComponent implements OnInit {
 
             this._playerService.getPlayers(this.game._id).subscribe((res) => {
               this.realPlayers = res["players"];
-              console.log('lOS REALS: ',this.realPlayers);
+              this.unPlayer.dealer = this.realPlayers.find(
+                (item) => item.position === this.unPlayer.position
+              ).dealer;
+              
               var playersLeft = 0;
               var dealerPosition;
 
@@ -132,23 +135,19 @@ export class GameComponent implements OnInit {
                   this.unPlayer.card1 = null;
                   this.unPlayer.card2 = null;
                   this.unPlayer.myTurn = false;
-                  this._playerService
-                    .updateplayer(this.unPlayer)
-                    .pipe(
-                      finalize(() =>
-                        this._socketService.iChangedSomething(this.unPlayer)
-                      )
-                    )
-                    .pipe(
-                      finalize(() =>
-                        this._socketService.callDealer(this.unPlayer)
-                      )
-                    )
-                    .subscribe();
+                  this._playerService.updateplayer(this.unPlayer).subscribe(()=>{
+                    this._socketService.iChangedSomething(this.unPlayer)
+                    if(this.unPlayer.dealer){
+                      this.updateDealer();
+                    }else{
+                      this._socketService.callDealer(this.unPlayer);
+                    }
+                  });
+                    
                 });
               } else {
                 this.unPlayer.myTurn = true;
-                console.log('El player: ',this.unPlayer);
+                
                 this._playerService
                   .updateplayer(this.unPlayer)
                   .pipe(
@@ -185,33 +184,7 @@ export class GameComponent implements OnInit {
     });
 
     this._socketService.callDealerBroadcast().subscribe(() => {
-      if (this.unPlayer.dealer) {
-        this.unPlayer.dealer = false;
-        this._playerService.getPlayers(this.game._id).subscribe((res) => {
-          this.realPlayers = res["players"];
-          
-          var newDealer: Player;
-          if (this.unPlayer.position === this.realPlayers.length) {
-            newDealer = this.realPlayers.find((item) => item.position === 1);
-          } else {
-            newDealer = this.realPlayers.find(
-              (item) => item.position === this.unPlayer.position + 1
-            );
-          }
-          console.log('El nuevo dealer: ', newDealer);
-
-          newDealer.dealer = true;
-          this._playerService.updateplayer(newDealer).subscribe(()=>{
-            this._playerService.updateplayer(this.unPlayer).pipe(
-              finalize(() => this._socketService.iChangedSomething(this.unPlayer))
-            )
-            .pipe(finalize(() => this._socketService.myTurnIsOver(this.unPlayer)))
-            .subscribe();
-          });
-            console.log('El nuevo dealer: ', newDealer);
-        });
-        
-      }
+      this.updateDealer();
     });
   }
 
@@ -256,7 +229,7 @@ export class GameComponent implements OnInit {
   getPlayers() {
     this._playerService.getPlayers(this.game._id).subscribe((res) => {
       this.players = res["players"];
-
+      
       this.players.splice(this.unPlayer.position - 1, 1);
       this.players.forEach((player) => {
         player.card1 = "back";
@@ -264,5 +237,39 @@ export class GameComponent implements OnInit {
         player.position = (9 - (this.unPlayer.position - player.position)) % 9;
       });
     });
+  }
+
+  updateDealer(){
+    if (this.unPlayer.dealer) {
+        
+      this._playerService.getPlayers(this.game._id).subscribe((res) => {
+        this.realPlayers = res["players"];
+        
+        var newDealer: Player;
+        if (this.unPlayer.position === this.realPlayers.length) {
+          console.log('Entra aqui');
+          newDealer = this.realPlayers.find((item) => item.position === 1);
+        } else {
+          
+          newDealer = this.realPlayers.find(
+            (item) => item.position === this.unPlayer.position + 1
+          );
+        }
+      
+
+        newDealer.dealer = true;
+        this.unPlayer.dealer = false;
+        this._playerService.updateplayer(newDealer).subscribe(()=>{
+          
+          this._playerService.updateplayer(this.unPlayer).pipe(
+            finalize(() => this._socketService.iChangedSomething(this.unPlayer))
+          )
+          .pipe(finalize(() => this._socketService.myTurnIsOver(this.unPlayer)))
+          .subscribe();
+        });
+          
+      });
+      
+    }
   }
 }
