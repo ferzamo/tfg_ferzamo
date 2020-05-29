@@ -15,6 +15,7 @@ function createPlayer(req, res) {
   player.card2 = params.card2;
   player.playing = params.playing;
   player.myTurn = params.myTurn;
+  player.dealer = params.dealer;
   
 
 
@@ -63,6 +64,7 @@ function getPlayers(req, res) {
       if (!players) {
         res.status(404).send({ message: "Players dont exist" });
       } else {
+       
         res.status(200).send({ players });
       }
     }
@@ -71,6 +73,7 @@ function getPlayers(req, res) {
 
 function updatePlayer(req, res) {
   var update = req.body;
+  console.log(req.body);
 
   var id = req.params.id;
 

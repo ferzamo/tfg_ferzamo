@@ -69,7 +69,7 @@ io.on("connection", (socket) => {
 
   socket.on('myTurnIsOver', (player) => {
     
-    console.log('myTurnIsOver');
+    
     socket.to(player.game).emit('startYourTurn', player.position+1);
     
   })
@@ -85,6 +85,13 @@ io.on("connection", (socket) => {
     
     
     socket.to(player.game).emit('handEndedBroadcast');
+    
+  })
+
+  socket.on('callDealer', (player) => {
+    
+    
+    socket.to(player.game).emit('callDealerBroadcast');
     
   })
 

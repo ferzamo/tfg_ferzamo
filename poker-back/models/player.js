@@ -11,7 +11,8 @@ var PlayerSchema = Schema({
     card1: String,
     card2: String,
     playing: Boolean,
-    myTurn: Boolean
+    myTurn: Boolean,
+    dealer: Boolean
     
 })
 

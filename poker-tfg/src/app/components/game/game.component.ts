@@ -9,7 +9,6 @@ import { LoadingService } from "../../shared/services/loading/loading.service";
 import { finalize } from "rxjs/operators";
 import { DeckService } from "../../shared/services/api/deck.service";
 
-
 @Component({
   selector: "app-game",
   templateUrl: "./game.component.html",
@@ -21,11 +20,10 @@ export class GameComponent implements OnInit {
   public sliderValue = this.minSlider;
 
   public players: Player[] = [];
+  public realPlayers: Player[] = [];
   public game: Game;
   public gameURL: string;
   public unPlayer: Player;
-
-  
 
   constructor(
     private _gameService: GameService,
@@ -50,14 +48,10 @@ export class GameComponent implements OnInit {
         null,
         null,
         null,
-        null,
         null
       );
       this.gameURL = this.route.snapshot.paramMap.get("gameId");
       this.unPlayer = JSON.parse(sessionStorage.getItem("player"));
-
-      
-      
     } else {
       this.router.navigateByUrl("/");
     }
@@ -72,9 +66,7 @@ export class GameComponent implements OnInit {
         (res) => {
           this.game = res["game"];
 
-          this.getPlayers(this.game._id);
-
-
+          this.getPlayers();
         },
         (error) => {
           this.router.navigateByUrl("/");
@@ -82,11 +74,7 @@ export class GameComponent implements OnInit {
       );
   }
 
-  
-
   ngAfterViewInit() {
-
-
     if (this.unPlayer.position === 1) {
       this._deckService.populateDeck(this.gameURL).subscribe(() => {
         this.getCards();
@@ -94,8 +82,8 @@ export class GameComponent implements OnInit {
     }
 
     this._socketService.startYourTurn().subscribe((res) => {
-
-      var position = Number(res) % JSON.parse(sessionStorage.getItem("numPlayers"));
+      var position =
+        Number(res) % JSON.parse(sessionStorage.getItem("numPlayers"));
 
       if (
         position === 0 &&
@@ -108,147 +96,173 @@ export class GameComponent implements OnInit {
       this._gameService.getGame(this.gameURL).subscribe((res) => {
         this.game = res["game"];
 
-        
-          this.getPlayers(this.game._id);
+        this.getPlayers();
 
+        //Calcula la posicion que le ha llegado a ver si es la suya
 
-      //Calcula la posicion que le ha llegado a ver si es la suya
-      
-    
-      if(this.unPlayer.position === position && this.unPlayer.playing===true){
-        
-        if (this.unPlayer.card1 === null ) {
-          // Mi turno sin cartas
-          
-          this.getCards();
-        }else{
+        if (
+          this.unPlayer.position === position &&
+          this.unPlayer.playing === true
+        ) {
+          if (this.unPlayer.card1 === null) {
+            // Mi turno sin cartas
 
-          // Mi turno con cartas
-          
-          this._playerService.getPlayers(this.game._id).subscribe((res) => { 
+            this.getCards();
+          } else {
+            // Mi turno con cartas
 
-            var jugadores = res["players"];
-        
-            var playersLeft = 0;
-        
-            jugadores.forEach((player) => {
-              if(player.playing===true){
-                playersLeft++;
-              }  
+            this._playerService.getPlayers(this.game._id).subscribe((res) => {
+              this.realPlayers = res["players"];
+              console.log('lOS REALS: ',this.realPlayers);
+              var playersLeft = 0;
+              var dealerPosition;
+
+              this.realPlayers.forEach((player) => {
+                if (player.playing === true) {
+                  playersLeft++;
+                }
+                if (player.dealer === true) {
+                  dealerPosition = player.position;
+                }
+              });
+
+              if (playersLeft === 1) {
+                this._socketService.handEnded(this.unPlayer);
+                this._deckService.populateDeck(this.gameURL).subscribe(() => {
+                  this.unPlayer.card1 = null;
+                  this.unPlayer.card2 = null;
+                  this.unPlayer.myTurn = false;
+                  this._playerService
+                    .updateplayer(this.unPlayer)
+                    .pipe(
+                      finalize(() =>
+                        this._socketService.iChangedSomething(this.unPlayer)
+                      )
+                    )
+                    .pipe(
+                      finalize(() =>
+                        this._socketService.callDealer(this.unPlayer)
+                      )
+                    )
+                    .subscribe();
+                });
+              } else {
+                this.unPlayer.myTurn = true;
+                console.log('El player: ',this.unPlayer);
+                this._playerService
+                  .updateplayer(this.unPlayer)
+                  .pipe(
+                    finalize(() =>
+                      this._socketService.iChangedSomething(this.unPlayer)
+                    )
+                  )
+                  .subscribe();
+              }
             });
-        
-            
-            if(playersLeft===1){
-              
-              this._socketService.handEnded(this.unPlayer);
-          this._deckService.populateDeck(this.gameURL).subscribe(() => {
-            this.unPlayer.card1 = null;
-            this.unPlayer.card2 = null;
-            this.check();
-           
-          });
-            }else{
-              
-              this.unPlayer.myTurn = true;
-              this._playerService.updateplayer(this.unPlayer)
-              .pipe(finalize(() => this._socketService.iChangedSomething(this.unPlayer)))
-              .subscribe();
-            }
-        
-          });
- 
-          
+          }
+        } else if (
+          this.unPlayer.position === position &&
+          this.unPlayer.playing === false
+        ) {
+          // Mi turno pero no juego, paso turno
+          this._socketService.myTurnIsOver(this.unPlayer);
         }
-      }else if(this.unPlayer.position === position && this.unPlayer.playing===false){
-        // Mi turno pero no juego, paso turno
-        this._socketService.myTurnIsOver(this.unPlayer);
-      }
-
-      
-
-    
+      });
     });
 
-    
+    this._socketService.checkSomethingChanged().subscribe(() => {
+      this.getPlayers();
+    });
 
-  });
+    this._socketService.handEndedBroadcast().subscribe(() => {
+      this.unPlayer.playing = true;
+      this._playerService
+        .updateplayer(this.unPlayer)
+        .pipe(
+          finalize(() => this._socketService.iChangedSomething(this.unPlayer))
+        )
+        .subscribe();
+    });
 
-  this._socketService.checkSomethingChanged().subscribe(() => {
+    this._socketService.callDealerBroadcast().subscribe(() => {
+      if (this.unPlayer.dealer) {
+        this.unPlayer.dealer = false;
+        this._playerService.getPlayers(this.game._id).subscribe((res) => {
+          this.realPlayers = res["players"];
+          
+          var newDealer: Player;
+          if (this.unPlayer.position === this.realPlayers.length) {
+            newDealer = this.realPlayers.find((item) => item.position === 1);
+          } else {
+            newDealer = this.realPlayers.find(
+              (item) => item.position === this.unPlayer.position + 1
+            );
+          }
+          console.log('El nuevo dealer: ', newDealer);
+
+          newDealer.dealer = true;
+          this._playerService.updateplayer(newDealer).subscribe(()=>{
+            this._playerService.updateplayer(this.unPlayer).pipe(
+              finalize(() => this._socketService.iChangedSomething(this.unPlayer))
+            )
+            .pipe(finalize(() => this._socketService.myTurnIsOver(this.unPlayer)))
+            .subscribe();
+          });
+            console.log('El nuevo dealer: ', newDealer);
+        });
         
-    this.getPlayers(this.game._id);
-    
-    
-})
-
-this._socketService.handEndedBroadcast().subscribe(() => {
-  
-  this.unPlayer.playing = true;
-  this._playerService.updateplayer(this.unPlayer)
-          .pipe(finalize(() => this._socketService.iChangedSomething(this.unPlayer)))
-          .subscribe();
-})
-    
+      }
+    });
   }
 
-  
- 
   fold() {
     this.unPlayer.myTurn = false;
     this.unPlayer.playing = false;
     this.unPlayer.card1 = null;
     this.unPlayer.card2 = null;
-    this._playerService.updateplayer(this.unPlayer)
-    .pipe(finalize(() => this._socketService.iChangedSomething(this.unPlayer)))
-    .pipe(finalize(() => this._socketService.myTurnIsOver(this.unPlayer)))
-    .subscribe();
-    
-    
+    this._playerService
+      .updateplayer(this.unPlayer)
+      .pipe(
+        finalize(() => this._socketService.iChangedSomething(this.unPlayer))
+      )
+      .pipe(finalize(() => this._socketService.myTurnIsOver(this.unPlayer)))
+      .subscribe();
   }
 
-  check(){
+  check() {
     this.unPlayer.myTurn = false;
-    this._playerService.updateplayer(this.unPlayer)
-    .pipe(finalize(() => this._socketService.iChangedSomething(this.unPlayer)))
-    .pipe(finalize(() => this._socketService.myTurnIsOver(this.unPlayer)))
-    .subscribe();
-    
+    this._playerService
+      .updateplayer(this.unPlayer)
+      .pipe(
+        finalize(() => this._socketService.iChangedSomething(this.unPlayer))
+      )
+      .pipe(finalize(() => this._socketService.myTurnIsOver(this.unPlayer)))
+      .subscribe();
   }
 
-  raise(){
-
-  }
+  raise() {}
 
   getCards() {
     this._deckService.getCard(this.gameURL).subscribe((res) => {
       this.unPlayer.card1 = res["card"].name;
       this._deckService.getCard(this.gameURL).subscribe((res) => {
         this.unPlayer.card2 = res["card"].name;
-        
+
         this._socketService.myTurnIsOver(this.unPlayer);
       });
     });
   }
 
-
-
-  getPlayers(gameId: string){
-    this._playerService.getPlayers(gameId).subscribe((res) => {
+  getPlayers() {
+    this._playerService.getPlayers(this.game._id).subscribe((res) => {
       this.players = res["players"];
 
       this.players.splice(this.unPlayer.position - 1, 1);
       this.players.forEach((player) => {
         player.card1 = "back";
         player.card2 = "back";
-        player.position =
-          (9 - (this.unPlayer.position - player.position)) % 9;
-          
+        player.position = (9 - (this.unPlayer.position - player.position)) % 9;
       });
-
-      
     });
-
-    
   }
-
-  
 }

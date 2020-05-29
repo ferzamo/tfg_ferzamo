@@ -40,55 +40,19 @@
   </div>
   <!------------------------TABLE SPACE------------------------>
   <div class="tableSpace">
-    <div class="chipsSpace3 chipsSpace">
+    
+    <div *ngFor="let player of players" class="dealerSpace{{ player.position }}" [style.visibility]="player.dealer ? 'visible':'hidden'">
+      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image href="../../../assets/svg/dealer.svg" transform="scale(0.15)" />
+      </svg>
+    </div>
+    <div *ngFor="let player of players" class="chipsSpace{{ player.position }} chipsSpace">
       <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
       </svg>
       <p class="betAmount">234</p>
     </div>
-    <div class="dealerSpace3" [style.visibility]="'hidden'">
-      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/dealer.svg" transform="scale(0.15)" />
-      </svg>
-    </div>
-    <div class="chipsSpace4 chipsSpace">
-      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
-      </svg>
-      <p class="betAmount">234</p>
-    </div>
-    <div class="dealerSpace4" [style.visibility]="'hidden'">
-      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/dealer.svg" transform="scale(0.15)" />
-      </svg>
-    </div>
-    <div class="chipsSpace5 chipsSpace">
-      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
-      </svg>
-      <p class="betAmount">234</p>
-    </div>
-    <div class="dealerSpace5" [style.visibility]="'hidden'">
-      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/dealer.svg" transform="scale(0.15)" />
-      </svg>
-    </div>
-    <div class="chipsSpace6 chipsSpace">
-      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
-      </svg>
-      <p class="betAmount">234</p>
-    </div>
-    <div class="dealerSpace6" [style.visibility]="'hidden'">
-      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/dealer.svg" transform="scale(0.15)" />
-      </svg>
-    </div>
-    <div class="dealerSpace2">
-      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/dealer.svg" transform="scale(0.2)" />
-      </svg>
-    </div>
+   
     <div class="showDownSpace">
       <div class="card1">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -119,35 +83,8 @@
         Pot: 4527
       </div>
     </div>
-    <div class="chipsSpace7 chipsSpace">
-      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
-      </svg>
-      <p class="betAmount">234</p>
-    </div>
-    <div class="chipsSpace2 chipsSpace">
-      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
-      </svg>
-      <p class="betAmount">234</p>
-    </div>
-    <div class="dealerSpace7" [style.visibility]="'hidden'">
-      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/dealer.svg" transform="scale(0.15)" />
-      </svg>
-    </div>
-    <div class="dealerSpace1" [style.visibility]="'hidden'">
-      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/dealer.svg" transform="scale(0.15)" />
-      </svg>
-    </div>
-    <div class="chipsSpace1 chipsSpace">
-      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
-      </svg>
-      <p class="betAmount">234</p>
-    </div>
-    <div class="dealerSpaceUser" [style.visibility]="'hidden'">
+
+    <div class="dealerSpaceUser" [style.visibility]="unPlayer.dealer ? 'visible':'hidden'">
       <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <image href="../../../assets/svg/dealer.svg" transform="scale(0.15)" />
       </svg>
@@ -158,17 +95,8 @@
       </svg>
       <p class="betAmount">234</p>
     </div>
-    <div class="dealerSpace8" [style.visibility]="'hidden'">
-      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/dealer.svg" transform="scale(0.15)" />
-      </svg>
-    </div>
-    <div class="chipsSpace8 chipsSpace">
-      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
-      </svg>
-      <p class="betAmount">234</p>
-    </div>
+    
+   
   </div>
   <!------------------------ACTIONS BAR------------------------>
   <div class="actionsBar" [style.visibility]="unPlayer.myTurn ? 'visible':'hidden'">

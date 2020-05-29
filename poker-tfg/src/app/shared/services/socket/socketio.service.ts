@@ -121,6 +121,23 @@ export class SocketioService {
     return observable;
   }
 
+  callDealer(player: Player){
+    this.socket.emit('callDealer', player);
+  
+  }
+
+  callDealerBroadcast(){
+    let observable = new Observable(observer => {
+      this.socket.on('callDealerBroadcast', () => {
+        
+        observer.next();
+      });
+      return () => {this.socket.disconnect();}
+    })
+
+    return observable;
+  }
+
   
   
 }

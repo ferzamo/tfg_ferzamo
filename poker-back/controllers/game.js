@@ -15,7 +15,7 @@ function createGame(req,res){
     game.flop3 = params.flop3;
     game.turn = params.turn;
     game.river = params.river;
-    game.dealer = params.dealer;
+    
 
     game.save((err, gameStored) => {
         if(err){

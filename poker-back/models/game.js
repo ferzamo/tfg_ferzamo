@@ -11,8 +11,7 @@ var GameSchema = Schema({
     flop2: String,
     flop3: String,
     turn: String,
-    river: String,
-    dealer: Number
+    river: String
 })
 
 module.exports = mongoose.model('Game', GameSchema);
