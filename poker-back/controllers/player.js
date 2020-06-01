@@ -73,7 +73,7 @@ function getPlayers(req, res) {
 
 function updatePlayer(req, res) {
   var update = req.body;
-  console.log(req.body);
+
 
   var id = req.params.id;
 
