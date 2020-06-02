@@ -11,7 +11,6 @@ import { finalize } from "rxjs/operators";
 import { DeckService } from "../../shared/services/api/deck.service";
 import { MoveService } from "../../shared/services/api/move.service";
 
-
 @Component({
   selector: "app-game",
   templateUrl: "./game.component.html",
@@ -27,9 +26,7 @@ export class GameComponent implements OnInit {
   public game: Game;
   public gameURL: string;
   public unPlayer: Player;
-
-  
-  
+  public bigBlind = 500;
 
   constructor(
     private _gameService: GameService,
@@ -60,8 +57,6 @@ export class GameComponent implements OnInit {
       );
       this.gameURL = this.route.snapshot.paramMap.get("gameId");
       this.unPlayer = JSON.parse(sessionStorage.getItem("player"));
-      
-      
     } else {
       this.router.navigateByUrl("/");
     }
@@ -118,7 +113,7 @@ export class GameComponent implements OnInit {
             this.getCards();
           } else {
             // Mi turno con cartas
-            
+
             this._playerService.getPlayers(this.game._id).subscribe((res) => {
               this.realPlayers = res["players"];
               this.unPlayer.dealer = this.realPlayers.find(
@@ -127,19 +122,24 @@ export class GameComponent implements OnInit {
 
               var playersLeft = 0;
               var playersChecked = 0;
-              
+              var playersBlind = 0;
+
               this.realPlayers.forEach((player) => {
-                
                 if (player.playing === true) {
                   playersLeft++;
                 }
-                if (player.checked === true && player._id !== this.unPlayer._id){
+                if (
+                  player.checked === true &&
+                  player._id !== this.unPlayer._id
+                ) {
                   playersChecked++;
                 }
+                if (player.bet !== 0) {
+                  playersBlind++;
+                }
               });
-             
 
-              if(playersChecked===playersLeft-1){
+              if (playersChecked === playersLeft - 1) {
                 switch (this.game.state) {
                   case "preflop": {
                     console.log("Saca el flop");
@@ -158,40 +158,78 @@ export class GameComponent implements OnInit {
                     break;
                   }
                   default: {
-                    
                     break;
                   }
                 }
               }
 
-              if (playersLeft === 1) {
-                this._socketService.handEnded(this.unPlayer);
-                this._deckService.populateDeck(this.gameURL).subscribe(() => {
-                  this.unPlayer.card1 = null;
-                  this.unPlayer.card2 = null;
-                  this.unPlayer.myTurn = false;
-                  this._playerService
-                    .updateplayer(this.unPlayer)
-                    .subscribe(() => {
-                      this._socketService.iChangedSomething(this.unPlayer);
-                      if (this.unPlayer.dealer) {
-                        this.updateDealer();
-                      } else {
-                        this._socketService.callDealer(this.unPlayer);
-                      }
-                    });
-                });
-              } else {
-                this.unPlayer.myTurn = true;
-
+              if(this.game.state === "preflop" && playersBlind === 0 && this.unPlayer.dealer){
                 this._playerService
                   .updateplayer(this.unPlayer)
-                  .pipe(
-                    finalize(() =>
-                      this._socketService.iChangedSomething(this.unPlayer)
+                  .subscribe(() => {
+                    
+                        this._socketService.iChangedSomething(this.unPlayer);
+                        this._socketService.myTurnIsOver(this.unPlayer);
+                      
+                  });
+                
+
+              } else if (this.game.state === "preflop" && playersBlind === 0) {
+                this.unPlayer.bet = this.bigBlind / 2;
+                var myMove = new Move(this.unPlayer._id, this.sliderValue);
+                this._playerService
+                  .updateplayer(this.unPlayer)
+                  .subscribe(() => {
+                    this._moveService
+                      .insertMove(this.game._id, myMove)
+                      .subscribe(() => {
+                        this._socketService.iChangedSomething(this.unPlayer);
+                        this._socketService.myTurnIsOver(this.unPlayer);
+                      });
+                  });
+              } else if (this.game.state === "preflop" && playersBlind === 1) {
+                this.unPlayer.bet = this.bigBlind;
+                var myMove = new Move(this.unPlayer._id, this.sliderValue);
+                this._playerService
+                  .updateplayer(this.unPlayer)
+                  .subscribe(() => {
+                    this._moveService
+                      .insertMove(this.game._id, myMove)
+                      .subscribe(() => {
+                        this._socketService.iChangedSomething(this.unPlayer);
+                        this._socketService.myTurnIsOver(this.unPlayer);
+                      });
+                  });
+              } else {
+                if (playersLeft === 1) {
+                  this._socketService.handEnded(this.unPlayer);
+                  this._deckService.populateDeck(this.gameURL).subscribe(() => {
+                    this.unPlayer.card1 = null;
+                    this.unPlayer.card2 = null;
+                    this.unPlayer.myTurn = false;
+                    this._playerService
+                      .updateplayer(this.unPlayer)
+                      .subscribe(() => {
+                        this._socketService.iChangedSomething(this.unPlayer);
+                        if (this.unPlayer.dealer) {
+                          this.updateDealer();
+                        } else {
+                          this._socketService.callDealer(this.unPlayer);
+                        }
+                      });
+                  });
+                } else {
+                  this.unPlayer.myTurn = true;
+
+                  this._playerService
+                    .updateplayer(this.unPlayer)
+                    .pipe(
+                      finalize(() =>
+                        this._socketService.iChangedSomething(this.unPlayer)
+                      )
                     )
-                  )
-                  .subscribe();
+                    .subscribe();
+                }
               }
             });
           }
@@ -226,7 +264,7 @@ export class GameComponent implements OnInit {
     this._socketService.someoneRaised().subscribe(() => {
       this.unPlayer.checked = false;
       this._playerService.updateplayer(this.unPlayer).subscribe();
-    })
+    });
   }
 
   fold() {
@@ -258,7 +296,7 @@ export class GameComponent implements OnInit {
     this.unPlayer.checked = false;
     this.unPlayer.bet = this.sliderValue;
     this._socketService.iRaised(this.unPlayer);
-    var myMove = new Move(this.unPlayer._id, this.sliderValue);
+    var myMove = new Move(this.unPlayer._id, this.unPlayer.bet);
     this._playerService.updateplayer(this.unPlayer).subscribe(() => {
       this._moveService.insertMove(this.game._id, myMove).subscribe(() => {
         this._socketService.iChangedSomething(this.unPlayer);
