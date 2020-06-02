@@ -16,21 +16,21 @@ export class MoveService {
     this.url = SERVICESCONSTANTS.url;
   }
 
-  createDeck(game: Game): Observable<any> {
+  createRegistry(game: Game): Observable<any> {
     return this.http
-      .post<Game>(this.url + "/createDeck", game)
+      .post<Game>(this.url + "/createRegistry", game)
       .pipe(map((res) => res));
   }
 
-  populateDeck(gameId: string): Observable<any> {
+  insertMove(gameId: string, move: Move): Observable<any> {
     return this.http
-      .put<any>(this.url + "/populateDeck/" + gameId, gameId)
+      .put<any>(this.url + "/insertMove/" + gameId, move)
       .pipe(map((res) => res));
   }
 
-  getCard(gameId: string): Observable<any> {
+  getMoves(gameId: string): Observable<any> {
     return this.http
-      .get<any>(this.url + "/getCard/" + gameId)
+      .get<any>(this.url + "/getMoves/" + gameId)
       .pipe(map((res) => res));
   }
 

@@ -138,6 +138,23 @@ export class SocketioService {
     return observable;
   }
 
+  iRaised(player: Player){
+    this.socket.emit('iRaised', player);
+  
+  }
+
+  someoneRaised(){
+    let observable = new Observable(observer => {
+      this.socket.on('someoneRaised', () => {
+        
+        observer.next();
+      });
+      return () => {this.socket.disconnect();}
+    })
+
+    return observable;
+  }
+
   
   
 }

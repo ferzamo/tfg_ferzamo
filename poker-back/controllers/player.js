@@ -16,6 +16,7 @@ function createPlayer(req, res) {
   player.playing = params.playing;
   player.myTurn = params.myTurn;
   player.dealer = params.dealer;
+  player.checked = params.checked;
   
 
 

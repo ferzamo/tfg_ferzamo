@@ -9,6 +9,7 @@ export class Player{
         public card2: string,
         public playing: boolean,
         public myTurn: boolean,
-        public dealer: boolean
+        public dealer: boolean,
+        public checked: boolean
     ){}
 }

@@ -35,6 +35,8 @@ function insertMove(req, res){
       } else {
         if (!registry) {
           res.status(404).send({ message: "Registry doesnt exist" });
+        } else {
+          res.status(200).send({ move });
         }
       }
     });

@@ -97,6 +97,13 @@ io.on("connection", (socket) => {
     
   })
 
+  socket.on('iRaised', (player) => {
+    
+    
+    socket.to(player.game).emit('someoneRaised');
+    
+  })
+
 });
 
 module.exports = http;
