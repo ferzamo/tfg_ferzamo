@@ -106,8 +106,6 @@ export class GameComponent implements OnInit {
       this._gameService.getGame(this.gameURL).subscribe((res) => {
         this.game = res["game"];
 
-        this.getPlayers();
-
         //Calcula la posicion que le ha llegado a ver si es la suya
 
         if (
@@ -245,6 +243,7 @@ export class GameComponent implements OnInit {
   check() {
     this.unPlayer.myTurn = false;
     this.unPlayer.checked = true;
+    this.unPlayer.bet = this.sliderValue;
     var myMove = new Move(this.unPlayer._id, this.sliderValue);
     this._playerService.updateplayer(this.unPlayer).subscribe(() => {
       this._moveService.insertMove(this.game._id, myMove).subscribe(() => {
@@ -257,6 +256,7 @@ export class GameComponent implements OnInit {
   raise() {
     this.unPlayer.myTurn = false;
     this.unPlayer.checked = false;
+    this.unPlayer.bet = this.sliderValue;
     this._socketService.iRaised(this.unPlayer);
     var myMove = new Move(this.unPlayer._id, this.sliderValue);
     this._playerService.updateplayer(this.unPlayer).subscribe(() => {

@@ -11,6 +11,7 @@ function createPlayer(req, res) {
   player.game = params.game;
   player.position = params.position;
   player.stack = params.stack;
+  player.bet = params.bet;
   player.card1 = params.card1;
   player.card2 = params.card2;
   player.playing = params.playing;

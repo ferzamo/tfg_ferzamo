@@ -32,7 +32,7 @@ export class CreateComponent implements OnInit {
     // Game initialized
     this.game = new Game(null, null, 0, null, null, null, null, null, null, 'preflop');
     // Player initialized with position 1 by default, playing true because he starts the first hand playing and dealer true
-    this.player = new Player(null, null, null, 1, null, null, null, true, false, true, false);
+    this.player = new Player(null, null, null, 1, null, 0, null, null, true, false, true, false);
   }
 
   onClick() {

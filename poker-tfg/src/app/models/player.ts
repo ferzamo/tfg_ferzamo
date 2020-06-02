@@ -5,6 +5,7 @@ export class Player{
         public game: string,
         public position: number,
         public stack: number,
+        public bet: number,
         public card1: string,
         public card2: string,
         public playing: boolean,

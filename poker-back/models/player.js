@@ -8,6 +8,7 @@ var PlayerSchema = Schema({
     game: { type: Schema.ObjectId, ref: 'Game'},
     position: Number,
     stack: Number,
+    bet: Number,
     card1: String,
     card2: String,
     playing: Boolean,

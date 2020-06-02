@@ -47,10 +47,10 @@
       </svg>
     </div>
     <div *ngFor="let player of players" class="chipsSpace{{ player.position }} chipsSpace">
-      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <svg *ngIf="player.bet !== 0" class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
       </svg>
-      <p class="betAmount">234</p>
+      <p *ngIf="player.bet !== 0" class="betAmount">{{ player.bet }}</p>
     </div>
    
     <div class="showDownSpace">
@@ -90,10 +90,10 @@
       </svg>
     </div>
     <div class="chipsSpaceUser chipsSpace">
-      <svg class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <svg *ngIf="unPlayer.bet !== 0" class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
       </svg>
-      <p class="betAmount">234</p>
+      <p *ngIf="unPlayer.bet !== 0" class="betAmount">{{unPlayer.bet}}</p>
     </div>
     
    
