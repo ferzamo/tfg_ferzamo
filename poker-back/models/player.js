@@ -14,6 +14,8 @@ var PlayerSchema = Schema({
     playing: Boolean,
     myTurn: Boolean,
     dealer: Boolean,
+    smallBlind: Boolean,
+    bigBlind: Boolean,
     checked: Boolean
     
 })

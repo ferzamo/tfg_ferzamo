@@ -29,5 +29,9 @@ export class GameService {
       .pipe(map((res) => res));
   }
 
+  updateGame(game: Game){
+    return this.http.put<Game>(this.url + "/updateGame/" + game._id, game).pipe(map(res => res));
+  }
+
   
 }

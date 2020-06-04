@@ -10,7 +10,7 @@
     <div *ngIf="player.playing" class="playerCards" [style.visibility]="'visible'">
       <div class="playerCard1">
         <svg width="71" height="97" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ player.card1 }}" x="60" y="0" fill="#e5240b" transform="scale(0.3)" />
+          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ player.card1}}" x="60" y="0" fill="#e5240b" transform="scale(0.3)" />
         </svg>
       </div>
       <div class="playerCard2">
@@ -56,27 +56,27 @@
     <div class="showDownSpace">
       <div class="card1">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use xlink:href="../../../assets/svg/svg-cards.svg#spade_1" x="0" y="0" transform="scale(0.45)" />
+          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.flop1 }}" x="0" y="0" transform="scale(0.45)" />
         </svg>
       </div>
       <div class="card2">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use xlink:href="../../../assets/svg/svg-cards.svg#heart_4" x="0" y="0" transform="scale(0.45)" />
+          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.flop2 }}" x="0" y="0" transform="scale(0.45)" />
         </svg>
       </div>
       <div class="card3">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use xlink:href="../../../assets/svg/svg-cards.svg#spade_king" x="0" y="0" transform="scale(0.45)" />
+          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.flop3 }}" x="0" y="0" transform="scale(0.45)" />
         </svg>
       </div>
       <div class="card4">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use xlink:href="../../../assets/svg/svg-cards.svg#club_7" x="0" y="0" transform="scale(0.45)" />
+          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#club_7" x="0" y="0" transform="scale(0.45)" />
         </svg>
       </div>
       <div class="card5">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use xlink:href="../../../assets/svg/svg-cards.svg#diamond_7" x="0" y="0" transform="scale(0.45)" />
+          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#diamond_7" x="0" y="0" transform="scale(0.45)" />
         </svg>
       </div>
       <div class="pot">

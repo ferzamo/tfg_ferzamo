@@ -59,11 +59,8 @@ export class LobbyComponent implements OnInit {
         }
       });
 
-      // When player 1 starts the game, it broadcasted to every player and redirected to the game
-      this._socketService.startGameBroadcast().subscribe((res) => {
-        sessionStorage.setItem("numPlayers", JSON.stringify(this.players.length));
-        this.router.navigateByUrl("/" + this.gameURL);
-      });
+      
+     
 
       // When a player closes the window or the tab it will delete this players from the database and broadcast this to every other player in the game, if his position is lower than the player position that received this message. This player will subtract 1 to his position 
       this._socketService.playerDisconnectedBroadcast().subscribe((res) => {
@@ -117,14 +114,19 @@ export class LobbyComponent implements OnInit {
           this.router.navigateByUrl("/");
         }
       );
+
+      this._socketService.startGameBroadcast().subscribe((res) => {
+        
+        this.router.navigateByUrl("/" + this.gameURL);
+      });
   }
 
-  // Can only be accessed by the player 1
+ 
   public startGame() {
     // Broadcast the start of the game for every player
-    sessionStorage.setItem("numPlayers", JSON.stringify(this.players.length));
+   
     this._socketService.startGame(this.unPlayer);
-    this.router.navigateByUrl("/" + this.gameURL);
+     
   }
 
   

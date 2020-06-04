@@ -1,3 +1,5 @@
+import { Card } from './card';
+
 export class Player{
     constructor(
         public _id: string,
@@ -11,6 +13,8 @@ export class Player{
         public playing: boolean,
         public myTurn: boolean,
         public dealer: boolean,
+        public smallBlind: boolean,
+        public bigBlind: boolean,
         public checked: boolean
     ){}
 }
