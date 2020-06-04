@@ -64,8 +64,12 @@ export class GameComponent implements OnInit {
 
   ngOnInit(): void {
      
-    this.getPlayers();
-    this.getGame();
+    
+
+    this._socketService.startYourTurn().subscribe(()=>{
+      this.getPlayers();
+      this.getGame();
+    });
 
   }
 
@@ -99,7 +103,7 @@ export class GameComponent implements OnInit {
     this.unPlayer.myTurn = false;
     this.unPlayer.checked = false;
     this.unPlayer.bet = this.sliderValue;
-    this._socketService.iRaised(this.unPlayer);
+    
     var myMove = new Move(this.unPlayer._id, this.unPlayer.bet);
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
       this._moveService.insertMove(this.game._id, myMove).subscribe(() => {

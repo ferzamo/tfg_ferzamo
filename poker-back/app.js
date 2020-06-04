@@ -43,15 +43,11 @@ app.use("/api", registry_routes);
 
 function nextPlayer(player, players) {
   var i;
-  console.log('Me llega un: ', player.position);
   if (player.position === players.length) {
     i = 0;
   } else {
     i = player.position;
   }
-
-  console.log('Devuelvo un: ',i);
-
   return players[i];
 }
 
@@ -78,7 +74,7 @@ function populateDeck() {
     cards[ctr] = cards[index];
     cards[index] = temp;
   }
-  console.log(cards);
+  
   return cards;
 }
 
@@ -103,6 +99,8 @@ io.on("connection", (socket) => {
 
 
   socket.on("startGame", (player) => {
+
+    io.in(player.game).emit("startGameBroadcast", "start");
     Deck.updateOne({ game: player.game }, { cards: populateDeck() }, function (
       err,
       deckPopulated
@@ -132,7 +130,7 @@ io.on("connection", (socket) => {
             err
           ) {
             if (playerLoop.position===players.length){
-              io.in(player.game).emit("startGameBroadcast", "start");
+              io.in(player.game).emit("startYourTurn");
             }
           });
         });
@@ -155,12 +153,32 @@ io.on("connection", (socket) => {
   });
 
   socket.on("myTurnIsOver", (player) => {
-    socket.to(player.game).emit("startYourTurn", player.position + 1);
+
+    
+    Player.find({ game: player.game }, function (err, players) {
+      var next = nextPlayer(player, players);
+      while(!next.playing){
+        next = nextPlayer(next, players);
+      }
+
+      next.myTurn = true;
+
+      Player.updateOne({ _id: next._id },  next , function (
+        err
+      ) {
+          console.log(next);
+          io.in(player.game).emit("startYourTurn");
+        
+      });
+      
+
+      
+    });
+    
+    
   });
 
-  socket.on("iChangedSomething", (player) => {
-    socket.to(player.game).emit("checkSomethingChanged");
-  });
+  
 });
 
 module.exports = http;

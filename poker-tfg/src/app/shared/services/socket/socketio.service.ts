@@ -87,73 +87,15 @@ export class SocketioService {
 
   }
 
-  iChangedSomething(player: Player){
-    
-    this.socket.emit('iChangedSomething', player);
-  }
-
-  checkSomethingChanged(){
-    let observable = new Observable(observer => {
-      this.socket.on('checkSomethingChanged', () => {
-        
-        observer.next();
-      });
-      return () => {this.socket.disconnect();}
-    })
-
-    return observable;
-  }
-
-  handEnded(player: Player){
-    this.socket.emit('handEnded', player);
   
-  }
 
-  handEndedBroadcast(){
-    let observable = new Observable(observer => {
-      this.socket.on('handEndedBroadcast', () => {
-        
-        observer.next();
-      });
-      return () => {this.socket.disconnect();}
-    })
-
-    return observable;
-  }
-
-  callDealer(player: Player){
-    this.socket.emit('callDealer', player);
   
-  }
 
-  callDealerBroadcast(){
-    let observable = new Observable(observer => {
-      this.socket.on('callDealerBroadcast', () => {
-        
-        observer.next();
-      });
-      return () => {this.socket.disconnect();}
-    })
+ 
 
-    return observable;
-  }
-
-  iRaised(player: Player){
-    this.socket.emit('iRaised', player);
   
-  }
 
-  someoneRaised(){
-    let observable = new Observable(observer => {
-      this.socket.on('someoneRaised', () => {
-        
-        observer.next();
-      });
-      return () => {this.socket.disconnect();}
-    })
-
-    return observable;
-  }
+  
 
   
   
