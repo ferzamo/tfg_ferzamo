@@ -25,8 +25,8 @@ export class JoinComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.game = new Game(null, null, null, null, null, null, null, null, null, null);
-    this.player = new Player(null, null, null, null, null, 0, null, null, true, false, false, false, false, false);
+    this.game = new Game(null, null, null, null, null, null, null, null, null, null, null);
+    this.player = new Player(null, null, null, null, null, 0, null, null, true, false, false, false, false);
   }
 
   onClick() {

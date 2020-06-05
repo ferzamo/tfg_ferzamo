@@ -14,7 +14,6 @@ export class Player{
         public myTurn: boolean,
         public dealer: boolean,
         public smallBlind: boolean,
-        public bigBlind: boolean,
-        public checked: boolean
+        public bigBlind: boolean
     ){}
 }

@@ -7,6 +7,7 @@ var GameSchema = Schema({
     speed: String,
     stack: Number,
     pot: Number,
+    highestBet: Number,
     flop1: String,
     flop2: String,
     flop3: String,

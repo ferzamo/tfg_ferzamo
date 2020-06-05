@@ -45,7 +45,7 @@ export class LobbyComponent implements OnInit {
       this.route.snapshot.paramMap.get("gameId")
     ) {
 
-      this.game = new Game(null,null,null,null,null,null,null,null,null,null);
+      this.game = new Game(null,null,null,null,null,null,null,null,null,null,null);
 
       // Player info is retrieved from session storage
       this.gameURL = this.route.snapshot.paramMap.get("gameId");

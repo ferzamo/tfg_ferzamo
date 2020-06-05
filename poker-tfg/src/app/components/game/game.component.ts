@@ -17,16 +17,18 @@ import { MoveService } from "../../shared/services/api/move.service";
   styleUrls: ["./game.component.less"],
 })
 export class GameComponent implements OnInit {
-  public minSlider = 500;
-  public maxSlider = 1000;
-  public sliderValue = this.minSlider;
+  public minSlider: number;
+  public maxSlider: number;
+  public sliderValue: number;
 
   public players: Player[] = [];
   public realPlayers: Player[] = [];
   public game: Game;
   public gameURL: string;
   public unPlayer: Player;
+
   public bigBlind = 500;
+  public someoneBet: boolean = true;
 
   constructor(
     private _gameService: GameService,
@@ -53,10 +55,12 @@ export class GameComponent implements OnInit {
         null,
         null,
         null,
+        null,
         null
       );
       this.gameURL = this.route.snapshot.paramMap.get("gameId");
       this.unPlayer = JSON.parse(sessionStorage.getItem("player"));
+      
     } else {
       this.router.navigateByUrl("/");
     }
@@ -86,10 +90,11 @@ export class GameComponent implements OnInit {
     });
   }
 
-  check() {
+  call() {
     this.unPlayer.myTurn = false;
-    this.unPlayer.checked = true;
-    this.unPlayer.bet = this.sliderValue;
+    this.unPlayer.bet = this.game.highestBet;
+    this.unPlayer.stack = this.unPlayer.stack - this.unPlayer.bet;
+
     var myMove = new Move(this.unPlayer._id, this.sliderValue);
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
       this._moveService.insertMove(this.game._id, myMove).subscribe(() => {
@@ -101,8 +106,8 @@ export class GameComponent implements OnInit {
 
   raise() {
     this.unPlayer.myTurn = false;
-    this.unPlayer.checked = false;
     this.unPlayer.bet = this.sliderValue;
+    this.unPlayer.stack = this.unPlayer.stack - this.unPlayer.bet;
     
     var myMove = new Move(this.unPlayer._id, this.unPlayer.bet);
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
@@ -136,6 +141,12 @@ export class GameComponent implements OnInit {
   getGame(){
     this._gameService.getGame(this.gameURL).subscribe((res) => {
       this.game = res["game"];
+      if(this.game.highestBet===0){
+        this.someoneBet = false;
+      }
+      this.minSlider = this.game.highestBet + this.bigBlind;
+      this.maxSlider = this.unPlayer.stack;
+      this.sliderValue = this.minSlider;
     });
   }
 

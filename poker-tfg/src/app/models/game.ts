@@ -4,6 +4,7 @@ export class Game{
         public speed: string,
         public stack: number,
         public pot: number,
+        public highestBet: number,
         public flop1: string,
         public flop2: string,
         public flop3: string,

@@ -10,6 +10,7 @@ function createGame(req,res){
     game.speed = params.speed;
     game.stack = params.stack;
     game.pot = params.pot;
+    game.highestBet = params.highestBet;
     game.flop1 = params.flop1;
     game.flop2 = params.flop2;
     game.flop3 = params.flop3;
