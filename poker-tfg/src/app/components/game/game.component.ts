@@ -92,28 +92,32 @@ export class GameComponent implements OnInit {
 
   call() {
     this.unPlayer.myTurn = false;
+    this.unPlayer.stack = this.unPlayer.stack - this.game.highestBet + this.unPlayer.bet;
     this.unPlayer.bet = this.game.highestBet;
-    this.unPlayer.stack = this.unPlayer.stack - this.unPlayer.bet;
+    
 
     var myMove = new Move(this.unPlayer._id, this.sliderValue);
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
       this._moveService.insertMove(this.game._id, myMove).subscribe(() => {
-        
-        this._socketService.myTurnIsOver(this.unPlayer);
+        this._gameService.updateGame(this.game).subscribe(()=>{
+          this._socketService.myTurnIsOver(this.unPlayer);
+        });
       });
     });
   }
 
   raise() {
     this.unPlayer.myTurn = false;
+    this.unPlayer.stack = this.unPlayer.stack - this.sliderValue + this.unPlayer.bet;
     this.unPlayer.bet = this.sliderValue;
-    this.unPlayer.stack = this.unPlayer.stack - this.unPlayer.bet;
+    this.game.highestBet = this.unPlayer.bet;
     
     var myMove = new Move(this.unPlayer._id, this.unPlayer.bet);
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
       this._moveService.insertMove(this.game._id, myMove).subscribe(() => {
-        
-        this._socketService.myTurnIsOver(this.unPlayer);
+        this._gameService.updateGame(this.game).subscribe(()=>{
+          this._socketService.myTurnIsOver(this.unPlayer);
+        });
       });
     });
   }
@@ -125,9 +129,9 @@ export class GameComponent implements OnInit {
     this._playerService.getPlayers(this.gameURL).subscribe((res) => {
       
       this.players = res["players"];
-      console.log(this.players);
+      
       this.unPlayer = this.players[this.unPlayer.position-1];
-      console.log(this.unPlayer);
+      
 
       this.players.splice(this.unPlayer.position - 1, 1);
       this.players.forEach((player) => {

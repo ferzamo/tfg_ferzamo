@@ -41,8 +41,6 @@ app.use("/api", game_routes);
 app.use("/api", deck_routes);
 app.use("/api", registry_routes);
 
-
-
 //Socket.io
 
 io.on("connection", (socket) => {
@@ -76,13 +74,16 @@ io.on("connection", (socket) => {
             if (playerLoop.dealer === true) {
               nextPlayer(playerLoop, players).smallBlind = true;
               nextPlayer(playerLoop, players).bet = 250;
-              nextPlayer(playerLoop, players).stack = nextPlayer(playerLoop, players).stack - 250;
+              nextPlayer(playerLoop, players).stack =
+                nextPlayer(playerLoop, players).stack - 250;
               nextPlayer(
                 nextPlayer(playerLoop, players),
                 players
               ).bigBlind = true;
               nextPlayer(nextPlayer(playerLoop, players), players).bet = 500;
-              nextPlayer(nextPlayer(playerLoop, players), players).stack = nextPlayer(nextPlayer(playerLoop, players), players).stack-500;
+              nextPlayer(nextPlayer(playerLoop, players), players).stack =
+                nextPlayer(nextPlayer(playerLoop, players), players).stack -
+                500;
               nextPlayer(
                 nextPlayer(nextPlayer(playerLoop, players), players),
                 players
@@ -130,30 +131,49 @@ io.on("connection", (socket) => {
             game.state === "preflop"
           ) {
             nextRound = false;
+          } else if (playerLoop.playing && playerLoop.bet === null) {
+            nextRound = false;
           }
         });
 
         if (nextRound) {
-          switch (game.state) {
-            case "preflop":
-              game.state = 'flop';
-              console.log('preflop');
-              resetPlayersRound(players, game);
-              
-              break;
-            case "flop":
-              game.state = 'turn';
-              break;
+          Deck.findOne({ game: player.game }, function (err, deck) {
+            switch (game.state) {
+              case "preflop":
+                game.state = "flop";
 
-            case "turn":
-              game.state = 'river';
-              break;
-            case "river":
-              game.state = 'preflop';
-              break;
-            default:
-            // code block
-          }
+                game.flop1 = deck.cards[0].name;
+                game.flop2 = deck.cards[1].name;
+                game.flop3 = deck.cards[2].name;
+
+                for (var i = 0; i < 3; i++) {
+                  deck.cards.shift();
+                }
+                resetPlayersRound(players, game, deck);
+
+                break;
+              case "flop":
+                game.state = "turn";
+
+                game.turn = deck.cards[0].name;
+                deck.cards.shift();
+                resetPlayersRound(players, game, deck);
+                break;
+
+              case "turn":
+                game.state = "river";
+
+                game.river = deck.cards[0].name;
+                deck.cards.shift(); 
+                resetPlayersRound(players, game, deck);
+                break;
+              case "river":
+               
+                break;
+              default:
+              // code block
+            }
+          });
         } else {
           var next = nextPlayer(player, players);
           while (!next.playing) {
@@ -171,25 +191,28 @@ io.on("connection", (socket) => {
   });
 });
 
-function resetPlayersRound(players, game){
+function resetPlayersRound(players, game, deck) {
   var newPot = game.pot;
   var starter;
-    players.forEach((player)=>{
-      if(player.smallBlind){
-        starter = player;
-        while(!starter.playing){
-          starter = nextPlayer(starter, players);
-        }
-        starter.myTurn = true;
+  players.forEach((player) => {
+    if (player.smallBlind) {
+      starter = player;
+      while (!starter.playing) {
+        starter = nextPlayer(starter, players);
       }
-      newPot = newPot + player.bet;
-      player.bet = null;
-      Player.updateOne({ _id: player._id }, player, function (err) {});
-    });
-    game.pot = newPot;
-    Game.updateOne({ _id: game._id }, game, function (err) {
+      starter.myTurn = true;
+    }
+    newPot = newPot + player.bet;
+    player.bet = null;
+    Player.updateOne({ _id: player._id }, player, function (err) {});
+  });
+  game.pot = newPot;
+  game.highestBet = 0;
+  Game.updateOne({ _id: game._id }, game, function (err) {
+    Deck.findOneAndUpdate({ game: game._id },{ cards: deck.cards },function (err, deck) {
       io.in(game._id).emit("startYourTurn");
     });
+  });
   
 }
 
