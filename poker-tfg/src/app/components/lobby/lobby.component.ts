@@ -64,21 +64,21 @@ export class LobbyComponent implements OnInit {
 
       // When a player closes the window or the tab it will delete this players from the database and broadcast this to every other player in the game, if his position is lower than the player position that received this message. This player will subtract 1 to his position 
       this._socketService.playerDisconnectedBroadcast().subscribe((res) => {
-        
-        this.players.forEach((player) => {
-          if (player._id === res) {
 
-            if (this.unPlayer.position > player.position) {
-              this._playerService.subtractPlayerPosition(this.unPlayer).subscribe();
+        this._playerService.getPlayers(this.game._id).subscribe((res) => {
+          this.players = res["players"];
 
+          this.players.forEach((player) => {
+            if (this.unPlayer._id === player._id){
+              this.unPlayer = player;
               sessionStorage.setItem("player", JSON.stringify(this.unPlayer));
-            
             }
-            this.players.splice(player.position - 1, 1);
-            this.playersWaiting.push(0);
+          });
 
-          }
-
+          
+          this.playersWaiting = Array(9 - this.players.length)
+            .fill(0)
+            .map((x, i) => i);
         });
 
       })

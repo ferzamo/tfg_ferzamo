@@ -13,7 +13,7 @@ var game_routes = require("./routes/game");
 var deck_routes = require("./routes/deck");
 var registry_routes = require("./routes/registry");
 
-const axios = require("axios");
+var Hand = require("pokersolver").Hand;
 
 var Deck = require("./models/deck");
 var Game = require("./models/game");
@@ -47,13 +47,32 @@ io.on("connection", (socket) => {
   console.log("a user connected");
 
   socket.on("disconnect", () => {
-    axios.delete("http://localhost:3977/api/deletePlayer/" + socket.user);
-    socket.to(socket.game).emit("playerDisconnectedBroadcast", socket.user);
+    Player.find({ game: socket.game }, function (err, players) {
+      players.forEach((playerLoop) => {
+        if (playerLoop.position > socket.user.position) {
+          console.log("Entra en este: ", playerLoop.name);
+
+          Player.updateOne(
+            { _id: playerLoop._id },
+            { position: playerLoop.position - 1 },
+            function (err) {}
+          );
+        }
+      });
+
+      Player.deleteOne({ _id: socket.user._id }, function (err) {
+        if (err) return handleError(err);
+        console.log("BORRA");
+
+        socket.to(socket.game).emit("playerDisconnectedBroadcast", socket.user);
+      });
+    });
+
     console.log("user disconnected");
   });
 
   socket.on("playerConnection", (player) => {
-    socket.user = player._id;
+    socket.user = player;
     socket.game = player.game;
     socket.join(socket.game);
     socket.to(socket.game).emit("playerConnectionBroadcast", player);
@@ -84,14 +103,14 @@ io.on("connection", (socket) => {
             nextRound = false;
           }
 
-          if(playerLoop.playing){
+          if (playerLoop.playing) {
             playersPlaying++;
           }
         });
 
-        if(playersPlaying===1){
+        if (playersPlaying === 1) {
           nextRound = true;
-          game.state = 'river';
+          game.state = "river";
         }
 
         if (nextRound) {
@@ -126,8 +145,42 @@ io.on("connection", (socket) => {
                 newRound(players, game, deck);
                 break;
               case "river":
-                
-              newHand(player);
+                var hand1 = [
+                  "Ad",
+                  "As",
+                  "Jc",
+                  "Th",
+                  "2d",
+                  "3c",
+                  "Kd",
+                ];
+                var hand2 = [
+                  "Ad",
+                  "As",
+                  "Jc",
+                  "Th",
+                  "2d",
+                  "Qs",
+                  "Qd",
+                ];
+
+                var myHands = [hand1, hand2];
+
+               
+
+                const hands = [];
+                for (let i = 0; i < myHands.length; i += 1) {
+                  const c = myHands[i];
+                  const h = Hand.solve(c);
+                  h.playerId = myHands.indexOf(c); // AssignIdentifier
+                  hands.push(h);
+                  
+                }
+                console.log(hands);
+                const handWinners = Hand.winners(hands);
+                console.log(handWinners[0].playerId) ;
+
+                //newHand(player);
 
                 break;
               default:
@@ -157,7 +210,6 @@ function newHand(player) {
     Game.findOne({ _id: player.game }, function (err, game) {
       Deck.findOne({ game: player.game }, function (err, deck) {
         Player.find({ game: player.game }, function (err, players) {
-
           game.pot = 0;
           game.highestBet = 500;
           game.state = "preflop";
