@@ -50,8 +50,6 @@ io.on("connection", (socket) => {
     Player.find({ game: socket.game }, function (err, players) {
       players.forEach((playerLoop) => {
         if (playerLoop.position > socket.user.position) {
-          console.log("Entra en este: ", playerLoop.name);
-
           Player.updateOne(
             { _id: playerLoop._id },
             { position: playerLoop.position - 1 },
@@ -62,7 +60,6 @@ io.on("connection", (socket) => {
 
       Player.deleteOne({ _id: socket.user._id }, function (err) {
         if (err) return handleError(err);
-        console.log("BORRA");
 
         socket.to(socket.game).emit("playerDisconnectedBroadcast", socket.user);
       });
@@ -145,42 +142,55 @@ io.on("connection", (socket) => {
                 newRound(players, game, deck);
                 break;
               case "river":
-                var hand1 = [
-                  "Ad",
-                  "As",
-                  "Jc",
-                  "Th",
-                  "2d",
-                  "3c",
-                  "Kd",
-                ];
-                var hand2 = [
-                  "Ad",
-                  "As",
-                  "Jc",
-                  "Th",
-                  "2d",
-                  "Qs",
-                  "Qd",
-                ];
+                var playersHands = [];
+                var playersStill = [];
 
-                var myHands = [hand1, hand2];
-
-               
+                players.forEach((player) => {
+                  if (player.playing === true) {
+                    var playerHand = [
+                      translateCard(player.card1),
+                      translateCard(player.card2),
+                      translateCard(game.flop1),
+                      translateCard(game.flop2),
+                      translateCard(game.flop3),
+                      translateCard(game.turn),
+                      translateCard(game.river),
+                    ];
+                    
+                    playersHands.push(playerHand);
+                    
+                    playersStill.push(player);
+                  }
+                });
 
                 const hands = [];
-                for (let i = 0; i < myHands.length; i += 1) {
-                  const c = myHands[i];
+                for (let i = 0; i < playersHands.length; i += 1) {
+                  const c = playersHands[i];
                   const h = Hand.solve(c);
-                  h.playerId = myHands.indexOf(c); // AssignIdentifier
+                  console.log(Hand.solve(c).descr);
+                  h.playerId = playersHands.indexOf(c); // AssignIdentifier
                   hands.push(h);
-                  
                 }
-                console.log(hands);
-                const handWinners = Hand.winners(hands);
-                console.log(handWinners[0].playerId) ;
 
-                //newHand(player);
+                const handWinners = Hand.winners(hands);
+                console.log(handWinners[0].playerId);
+                console.log(playersStill[handWinners[0].playerId].name);
+                console.log('Tamaño: ', handWinners.length);
+                console.log(playersStill[handWinners[0].playerId]._id)
+
+                for(var i=0;i<handWinners.length;i++){
+                  var winnerId = playersStill[handWinners[i].playerId]._id;
+                  var newStack = playersStill[handWinners[i].playerId].stack + game.pot/handWinners.length;
+                  Player.updateOne({ _id:  winnerId},{stack: newStack},
+                     function (err) {
+                       //console.log('Modificado este: ', playersStill[handWinners[i].playerId].name);
+                       
+                       //console.log('stacn neuvo este: ', playersStill[handWinners[i].playerId].stack + game.pot/handWinners.length);
+                     });
+                }
+                Game.updateOne({ _id: game._id }, {pot: 0}, function (err) {});
+
+                newHand(player);
 
                 break;
               default:
@@ -202,7 +212,6 @@ io.on("connection", (socket) => {
 });
 
 function newHand(player) {
-  console.log("New hand");
   Deck.updateOne({ game: player.game }, { cards: populateDeck() }, function (
     err,
     deckPopulated
@@ -349,6 +358,19 @@ function nextPlayer(player, players) {
     i = player.position;
   }
   return players[i];
+}
+
+function translateCard(cardName) {
+  var suit = cardName.split("_")[0].substring(0, 1);
+  var number = cardName.split("_")[1];
+
+  if (number === "1") number = "A";
+  if (number === "10") number = "T";
+  if (number === "jack") number = "J";
+  if (number === "queen") number = "Q";
+  if (number === "king") number = "K";
+
+  return number + suit;
 }
 
 function populateDeck() {
