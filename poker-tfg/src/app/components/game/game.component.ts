@@ -92,34 +92,39 @@ export class GameComponent implements OnInit {
 
   call() {
     this.unPlayer.myTurn = false;
-    this.unPlayer.stack = this.unPlayer.stack - this.game.highestBet + this.unPlayer.bet;
-    this.unPlayer.bet = this.game.highestBet;
-    
 
-    var myMove = new Move(this.unPlayer._id, this.sliderValue);
+    if(this.unPlayer.bet !== this.game.highestBet){
+      this.unPlayer.stack = this.unPlayer.stack - this.game.highestBet + this.unPlayer.bet;
+      this.game.pot = this.game.pot + this.game.highestBet - this.unPlayer.bet;
+      this.unPlayer.bet = this.game.highestBet;
+
+    }
+
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
-      this._moveService.insertMove(this.game._id, myMove).subscribe(() => {
+     
         this._gameService.updateGame(this.game).subscribe(()=>{
           this._socketService.myTurnIsOver(this.unPlayer);
         });
-      });
+     
     });
   }
 
   raise() {
     this.unPlayer.myTurn = false;
+
     this.unPlayer.stack = this.unPlayer.stack - this.sliderValue + this.unPlayer.bet;
+    this.game.pot = this.game.pot + this.sliderValue - this.unPlayer.bet;
     this.unPlayer.bet = this.sliderValue;
+
     this.game.highestBet = this.unPlayer.bet;
-    
-    var myMove = new Move(this.unPlayer._id, this.unPlayer.bet);
+
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
-      this._moveService.insertMove(this.game._id, myMove).subscribe(() => {
+      
         this._gameService.updateGame(this.game).subscribe(()=>{
           this._socketService.myTurnIsOver(this.unPlayer);
         });
       });
-    });
+    
   }
 
   
