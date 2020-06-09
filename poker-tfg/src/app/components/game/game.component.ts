@@ -31,6 +31,11 @@ export class GameComponent implements OnInit {
   public canICheck: boolean;
   public canIRaise: boolean;
 
+
+  
+
+  
+
   constructor(
     private _gameService: GameService,
     private _playerService: PlayerService,
@@ -67,19 +72,29 @@ export class GameComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-     
-    
+ 
 
+  ngOnInit(): void {
+
+    
+    this._socketService.playerConnection(this.unPlayer);
+    this.getPlayers();
+    this.getGame();
+     
     this._socketService.startYourTurn().subscribe(()=>{
+      
       this.getPlayers();
       this.getGame();
+   
     });
+
+   
+    
 
   }
 
   
-
+  
   fold() {
     this.unPlayer.myTurn = false;
     this.unPlayer.playing = false;
@@ -131,8 +146,6 @@ export class GameComponent implements OnInit {
     
   }
 
-  
-
   getPlayers() {
    
     this._playerService.getPlayers(this.gameURL).subscribe((res) => {
@@ -154,7 +167,7 @@ export class GameComponent implements OnInit {
   getGame(){
     this._gameService.getGame(this.gameURL).subscribe((res) => {
       this.game = res["game"];
-      if(this.game.highestBet===this.unPlayer.bet){
+      if(this.game.highestBet===this.unPlayer.bet || this.game.highestBet===0){
         this.canICheck = true;
       }else{
         this.canICheck = false;
@@ -168,8 +181,10 @@ export class GameComponent implements OnInit {
       this.minSlider = this.game.highestBet + this.bigBlind;
       this.maxSlider = this.unPlayer.stack;
       this.sliderValue = this.minSlider;
+      
     });
   }
+  
 
   
    

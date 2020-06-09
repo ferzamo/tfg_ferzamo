@@ -75,10 +75,10 @@ export class SocketioService {
 
   startYourTurn(){
 
-    let observable = new Observable<Number>(observer => {
-      this.socket.on('startYourTurn', (data: number) => {
+    let observable = new Observable(observer => {
+      this.socket.on('startYourTurn', () => {
         
-        observer.next(data);
+        observer.next();
       });
       return () => {this.socket.disconnect();}
     })
@@ -87,16 +87,4 @@ export class SocketioService {
 
   }
 
-  
-
-  
-
- 
-
-  
-
-  
-
-  
-  
 }

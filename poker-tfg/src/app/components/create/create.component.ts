@@ -30,7 +30,7 @@ export class CreateComponent implements OnInit {
   ngOnInit(): void {
 
     // Game initialized
-    this.game = new Game(null, null, 0, 0, 500, null, null, null, null, null, 'preflop');
+    this.game = new Game(null, null, 0, 0, 500, null, null, null, null, null, 'pregame');
     // Player initialized with position 1 by default, playing true because he starts the first hand playing and dealer true
     this.player = new Player(null, null, null, 1, null, 0, null, null, true, false, true, false, false);
   }

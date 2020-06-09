@@ -49,22 +49,30 @@ io.on("connection", (socket) => {
   console.log("a user connected");
 
   socket.on("disconnect", () => {
-    Player.find({ game: socket.game }, function (err, players) {
-      players.forEach((playerLoop) => {
-        if (playerLoop.position > socket.user.position) {
-          Player.updateOne(
-            { _id: playerLoop._id },
-            { position: playerLoop.position - 1 },
-            function (err) {}
-          );
-        }
-      });
+    Game.findOne({ _id: socket.game }, function (err, game) {
+      try{
+      if(game.state === 'pregame'){
+      Player.find({ game: socket.game }, function (err, players) {
+        players.forEach((playerLoop) => {
+          if (playerLoop.position > socket.user.position) {
+            Player.updateOne(
+              { _id: playerLoop._id },
+              { position: playerLoop.position - 1 },
+              function (err) {}
+            );
+          }
+        });
 
-      Player.deleteOne({ _id: socket.user._id }, function (err) {
-        if (err) return handleError(err);
+        Player.deleteOne({ _id: socket.user._id }, function (err) {
+          if (err) return handleError(err);
 
-        socket.to(socket.game).emit("playerDisconnectedBroadcast", socket.user);
+          socket
+            .to(socket.game)
+            .emit("playerDisconnectedBroadcast", socket.user);
+        });
       });
+    }
+      }catch(e){console.log('Entra catch');}
     });
 
     console.log("user disconnected");
@@ -85,24 +93,21 @@ io.on("connection", (socket) => {
   socket.on("myTurnIsOver", (player) => {
     Player.find({ game: player.game }, function (err, players) {
       Game.findOne({ _id: player.game }, function (err, game) {
-        
         var nextRound = true;
         var playersPlaying = 0;
         players.forEach((playerLoop) => {
           if (playerLoop.playing && playerLoop.bet !== game.highestBet) {
-         
             nextRound = false;
           } else if (
             playerLoop.bigBlind &&
             player.smallBlind &&
             playerLoop.bet <= ciega &&
-            game.state === 'preflop'
+            game.state === "preflop"
           ) {
             //Ciega grande primera ronda
-           
+
             nextRound = false;
           } else if (playerLoop.playing && playerLoop.bet === null) {
-           
             //Para ronda con 0 apuestas
             nextRound = false;
           }
@@ -149,56 +154,66 @@ io.on("connection", (socket) => {
                 newRound(players, game, deck);
                 break;
               case "river":
+                if (playersPlaying !== 1) {
+                  var playersHands = [];
+                  var playersStill = [];
 
-              if(playersPlaying!==1){
-                var playersHands = [];
-                var playersStill = [];
+                  players.forEach((player) => {
+                    if (player.playing === true) {
+                      var playerHand = [
+                        translateCard(player.card1),
+                        translateCard(player.card2),
+                        translateCard(game.flop1),
+                        translateCard(game.flop2),
+                        translateCard(game.flop3),
+                        translateCard(game.turn),
+                        translateCard(game.river),
+                      ];
 
-                players.forEach((player) => {
-                  if (player.playing === true) {
-                    var playerHand = [
-                      translateCard(player.card1),
-                      translateCard(player.card2),
-                      translateCard(game.flop1),
-                      translateCard(game.flop2),
-                      translateCard(game.flop3),
-                      translateCard(game.turn),
-                      translateCard(game.river),
-                    ];
-                    
-                    playersHands.push(playerHand);
-                    
-                    playersStill.push(player);
+                      playersHands.push(playerHand);
+
+                      playersStill.push(player);
+                    }
+                  });
+
+                  const hands = [];
+                  for (let i = 0; i < playersHands.length; i += 1) {
+                    const c = playersHands[i];
+                    const h = Hand.solve(c);
+
+                    h.playerId = playersHands.indexOf(c); // AssignIdentifier
+                    hands.push(h);
                   }
-                });
 
-                const hands = [];
-                for (let i = 0; i < playersHands.length; i += 1) {
-                  const c = playersHands[i];
-                  const h = Hand.solve(c);
-                  
-                  h.playerId = playersHands.indexOf(c); // AssignIdentifier
-                  hands.push(h);
+                  const handWinners = Hand.winners(hands);
+
+                  for (var i = 0; i < handWinners.length; i++) {
+                    var winnerId = playersStill[handWinners[i].playerId]._id;
+                    var newStack =
+                      playersStill[handWinners[i].playerId].stack +
+                      game.pot / handWinners.length;
+                    Player.updateOne(
+                      { _id: winnerId },
+                      { stack: newStack },
+                      function (err) {}
+                    );
+                  }
+                } else {
+                  var winnerId = nextPlayerPlaying(player, players)._id;
+
+                  var newStack =
+                    nextPlayerPlaying(player, players).stack + game.pot;
+
+                  Player.updateOne(
+                    { _id: winnerId },
+                    { stack: newStack },
+                    function (err) {}
+                  );
                 }
 
-                const handWinners = Hand.winners(hands);
-
-                for(var i=0;i<handWinners.length;i++){
-                  var winnerId = playersStill[handWinners[i].playerId]._id;
-                  var newStack = playersStill[handWinners[i].playerId].stack + game.pot/handWinners.length;
-                  Player.updateOne({ _id:  winnerId},{stack: newStack}, function (err) {});
-                }
-
-              }else{
-                var winnerId = nextPlayerPlaying(player, players)._id;
-                
-                var newStack = nextPlayerPlaying(player, players).stack + game.pot;
-                
-                Player.updateOne({ _id:  winnerId},{stack: newStack}, function (err) {});
-
-              }
-                
-                Game.updateOne({ _id: game._id }, {pot: 0}, function (err) {});
+                Game.updateOne({ _id: game._id }, { pot: 0 }, function (
+                  err
+                ) {});
 
                 newHand(player);
 
@@ -229,7 +244,7 @@ function newHand(player) {
     Game.findOne({ _id: player.game }, function (err, game) {
       Deck.findOne({ game: player.game }, function (err, deck) {
         Player.find({ game: player.game }, function (err, players) {
-          game.pot = ciega + ciega/2;
+          game.pot = ciega + ciega / 2;
           game.highestBet = ciega;
           game.state = "preflop";
           game.flop1 = null;
@@ -265,9 +280,9 @@ function newHand(player) {
           players.forEach((playerLoop) => {
             if (playerLoop.dealer === true) {
               nextPlayerPlaying(playerLoop, players).smallBlind = true;
-              nextPlayerPlaying(playerLoop, players).bet = ciega/2;
+              nextPlayerPlaying(playerLoop, players).bet = ciega / 2;
               nextPlayerPlaying(playerLoop, players).stack =
-                nextPlayerPlaying(playerLoop, players).stack - ciega/2;
+                nextPlayerPlaying(playerLoop, players).stack - ciega / 2;
               nextPlayerPlaying(
                 nextPlayerPlaying(playerLoop, players),
                 players
@@ -325,25 +340,21 @@ function newHand(player) {
 }
 
 function newRound(players, game, deck) {
-  
-  
   players.forEach((player) => {
     if (player.smallBlind) {
       if (player.playing) {
-        
         player.myTurn = true;
       } else {
-        
         nextPlayerPlaying(player, players).myTurn = true;
       }
     }
-    
+
     player.bet = null;
   });
   players.forEach((player) => {
     Player.updateOne({ _id: player._id }, player, function (err) {});
   });
-  
+
   game.highestBet = 0;
   Game.updateOne({ _id: game._id }, game, function (err) {
     Deck.findOneAndUpdate({ game: game._id }, { cards: deck.cards }, function (
