@@ -116,10 +116,10 @@
       <app-main-button [buttonText]="'Fold'" (clickEvent)="fold()"></app-main-button>
     </div>
     <div class="checkArea">
-      <app-main-button [buttonText]="someoneBet ? 'Call':'Check'" (clickEvent)="call()"></app-main-button>
+      <app-main-button [buttonText]="canICheck ? 'Check':'Call'" (clickEvent)="call()"></app-main-button>
     </div>
     <div class="raiseArea">
-      <app-main-button [buttonText]="'Raise'" (clickEvent)="raise()"></app-main-button>
+      <app-main-button [buttonText]="canIRaise ? 'Raise':'Bet'" (clickEvent)="raise()"></app-main-button>
     </div>
   </div>
 </div>

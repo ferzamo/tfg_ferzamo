@@ -28,7 +28,8 @@ export class GameComponent implements OnInit {
   public unPlayer: Player;
 
   public bigBlind = 500;
-  public someoneBet: boolean = true;
+  public canICheck: boolean;
+  public canIRaise: boolean;
 
   constructor(
     private _gameService: GameService,
@@ -112,9 +113,12 @@ export class GameComponent implements OnInit {
   raise() {
     this.unPlayer.myTurn = false;
 
-    this.unPlayer.stack = this.unPlayer.stack - this.sliderValue + this.unPlayer.bet;
-    this.game.pot = this.game.pot + this.sliderValue - this.unPlayer.bet;
-    this.unPlayer.bet = this.sliderValue;
+    this.unPlayer.stack = this.unPlayer.stack - Number(this.sliderValue) + this.unPlayer.bet;
+
+    this.game.pot = this.game.pot + Number(this.sliderValue) - this.unPlayer.bet;
+  
+    this.unPlayer.bet = Number(this.sliderValue);
+   
 
     this.game.highestBet = this.unPlayer.bet;
 
@@ -150,8 +154,16 @@ export class GameComponent implements OnInit {
   getGame(){
     this._gameService.getGame(this.gameURL).subscribe((res) => {
       this.game = res["game"];
+      if(this.game.highestBet===this.unPlayer.bet){
+        this.canICheck = true;
+      }else{
+        this.canICheck = false;
+      }
+
       if(this.game.highestBet===0){
-        this.someoneBet = false;
+        this.canIRaise = false;
+      }else{
+        this.canIRaise = true;
       }
       this.minSlider = this.game.highestBet + this.bigBlind;
       this.maxSlider = this.unPlayer.stack;

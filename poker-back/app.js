@@ -19,6 +19,8 @@ var Deck = require("./models/deck");
 var Game = require("./models/game");
 var Player = require("./models/player");
 
+var ciega = 500;
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -88,15 +90,19 @@ io.on("connection", (socket) => {
         var playersPlaying = 0;
         players.forEach((playerLoop) => {
           if (playerLoop.playing && playerLoop.bet !== game.highestBet) {
+         
             nextRound = false;
           } else if (
             playerLoop.bigBlind &&
             player.smallBlind &&
-            game.state === "preflop"
+            playerLoop.bet <= ciega &&
+            game.state === 'preflop'
           ) {
             //Ciega grande primera ronda
+           
             nextRound = false;
           } else if (playerLoop.playing && playerLoop.bet === null) {
+           
             //Para ronda con 0 apuestas
             nextRound = false;
           }
@@ -223,8 +229,8 @@ function newHand(player) {
     Game.findOne({ _id: player.game }, function (err, game) {
       Deck.findOne({ game: player.game }, function (err, deck) {
         Player.find({ game: player.game }, function (err, players) {
-          game.pot = 500 + 250;
-          game.highestBet = 500;
+          game.pot = ciega + ciega/2;
+          game.highestBet = ciega;
           game.state = "preflop";
           game.flop1 = null;
           game.flop2 = null;
@@ -259,9 +265,9 @@ function newHand(player) {
           players.forEach((playerLoop) => {
             if (playerLoop.dealer === true) {
               nextPlayerPlaying(playerLoop, players).smallBlind = true;
-              nextPlayerPlaying(playerLoop, players).bet = 250;
+              nextPlayerPlaying(playerLoop, players).bet = ciega/2;
               nextPlayerPlaying(playerLoop, players).stack =
-                nextPlayerPlaying(playerLoop, players).stack - 250;
+                nextPlayerPlaying(playerLoop, players).stack - ciega/2;
               nextPlayerPlaying(
                 nextPlayerPlaying(playerLoop, players),
                 players
@@ -269,7 +275,7 @@ function newHand(player) {
               nextPlayerPlaying(
                 nextPlayerPlaying(playerLoop, players),
                 players
-              ).bet = 500;
+              ).bet = ciega;
               nextPlayerPlaying(
                 nextPlayerPlaying(playerLoop, players),
                 players
@@ -277,7 +283,7 @@ function newHand(player) {
                 nextPlayerPlaying(
                   nextPlayerPlaying(playerLoop, players),
                   players
-                ).stack - 500;
+                ).stack - ciega;
               nextPlayerPlaying(
                 nextPlayerPlaying(
                   nextPlayerPlaying(playerLoop, players),
