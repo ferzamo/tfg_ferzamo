@@ -89,21 +89,8 @@ io.on("connection", (socket) => {
     io.in(player.game).emit("startGameBroadcast", "start");
     newHand(player);
   });
- 
-  socket.on("countdown", (player) => {
-    
-    console.log('pasa por aqui')
-    var count = 7;
-    var timer = setInterval(()=>{
-      console.log(count)
-      io.in(player.game).emit("countdownBroadcast", count);
-      if(count === 0) clearInterval(timer);
-      
-      count--;
-    }, 1000);
-    
-    
-  });
+
+  
 
   
 
@@ -170,8 +157,14 @@ io.on("connection", (socket) => {
                 deck.cards.shift();
                 newRound(players, game, deck);
                 break;
+
+              
+                  
+                
               case "river":
                 if (playersPlaying !== 1) {
+                  showdown(players, game);
+                  
                   var playersHands = [];
                   var playersStill = [];
 
@@ -231,9 +224,10 @@ io.on("connection", (socket) => {
                 Game.updateOne({ _id: game._id }, { pot: 0 }, function (
                   err
                 ) {});
-
-                newHand(player);
-
+                
+                setTimeout(function(){
+                  newHand(player)}, 10000);
+                
                 break;
               default:
               // code block
@@ -253,7 +247,26 @@ io.on("connection", (socket) => {
   });
 });
 
+function showdown(players, game){
+  console.log('En showdown');
+  players.forEach((player) => {
+    player.bet = null;
+    Player.updateOne({ _id: player._id }, player, function (err) {});
+  });
+ 
+  game.highestBet = 0;
+  Game.updateOne({ _id: game._id }, game, function (err) {
+    
+      io.in(game._id).emit("showdown");
+   
+  });
+
+
+
+}
+
 function newHand(player) {
+  console.log('New hand');
   Deck.updateOne({ game: player.game }, { cards: populateDeck() }, function (
     err,
     deckPopulated
