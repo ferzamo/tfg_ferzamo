@@ -1,15 +1,14 @@
 import { Component, OnInit } from "@angular/core";
 import { Game } from "../../models/game";
 import { Player } from "../../models/player";
-import { Move } from "../../models/move";
 import { GameService } from "../../shared/services/api/game.service";
 import { PlayerService } from "../../shared/services/api/player.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SocketioService } from "../../shared/services/socket/socketio.service";
 import { LoadingService } from "../../shared/services/loading/loading.service";
-import { finalize } from "rxjs/operators";
 import { DeckService } from "../../shared/services/api/deck.service";
 import { MoveService } from "../../shared/services/api/move.service";
+import { FormControlDirective } from '@angular/forms';
 
 @Component({
   selector: "app-game",
@@ -32,6 +31,8 @@ export class GameComponent implements OnInit {
   public canIRaise: boolean;
 
 
+
+
   
 
   
@@ -39,8 +40,6 @@ export class GameComponent implements OnInit {
   constructor(
     private _gameService: GameService,
     private _playerService: PlayerService,
-    private _deckService: DeckService,
-    private _moveService: MoveService,
     private route: ActivatedRoute,
     private router: Router,
     private _socketService: SocketioService,
@@ -77,6 +76,7 @@ export class GameComponent implements OnInit {
   ngOnInit(): void {
 
     
+    
     this._socketService.playerConnection(this.unPlayer);
     this.getPlayers();
     this.getGame();
@@ -85,13 +85,23 @@ export class GameComponent implements OnInit {
       
       this.getPlayers();
       this.getGame();
+  
    
     });
+
+    this._socketService.countdownBroadcast().subscribe((count)=>{
+      console.log(count);
+      if(count === 0  && this.unPlayer.myTurn){
+        this.fold();
+      }
+    })
 
    
     
 
   }
+
+
 
   
   
@@ -153,6 +163,10 @@ export class GameComponent implements OnInit {
       this.players = res["players"];
       
       this.unPlayer = this.players[this.unPlayer.position-1];
+
+      if(this.unPlayer.myTurn){
+        this._socketService.countdown(this.unPlayer);
+      }
       
 
       this.players.splice(this.unPlayer.position - 1, 1);

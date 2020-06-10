@@ -89,6 +89,23 @@ io.on("connection", (socket) => {
     io.in(player.game).emit("startGameBroadcast", "start");
     newHand(player);
   });
+ 
+  socket.on("countdown", (player) => {
+    
+    console.log('pasa por aqui')
+    var count = 7;
+    var timer = setInterval(()=>{
+      console.log(count)
+      io.in(player.game).emit("countdownBroadcast", count);
+      if(count === 0) clearInterval(timer);
+      
+      count--;
+    }, 1000);
+    
+    
+  });
+
+  
 
   socket.on("myTurnIsOver", (player) => {
     Player.find({ game: player.game }, function (err, players) {

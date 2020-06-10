@@ -87,4 +87,24 @@ export class SocketioService {
 
   }
 
+  countdown(player: Player){
+
+    this.socket.emit('countdown', player);
+
+  }
+
+  countdownBroadcast(){
+
+    let observable = new Observable<number>(observer => {
+      this.socket.on('countdownBroadcast', (data: number) => {
+        
+        observer.next(data);
+      });
+      return () => {this.socket.disconnect();}
+    })
+
+    return observable;
+
+  }
+
 }
