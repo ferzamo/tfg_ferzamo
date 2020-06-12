@@ -6,9 +6,7 @@ import { PlayerService } from "../../shared/services/api/player.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SocketioService } from "../../shared/services/socket/socketio.service";
 import { LoadingService } from "../../shared/services/loading/loading.service";
-import { DeckService } from "../../shared/services/api/deck.service";
-import { MoveService } from "../../shared/services/api/move.service";
-import { FormControlDirective } from '@angular/forms';
+
 
 @Component({
   selector: "app-game",
@@ -91,7 +89,7 @@ export class GameComponent implements OnInit {
     });
 
     this._socketService.showDown().subscribe(()=>{
-      
+
       this.showDown = true
       this.getPlayers(this.showDown);
       this.getGame();
@@ -174,6 +172,7 @@ export class GameComponent implements OnInit {
         
         player.position = (9 - (this.unPlayer.position - player.position)) % 9;
       });
+      console.log(this.players);
     });
   }
 

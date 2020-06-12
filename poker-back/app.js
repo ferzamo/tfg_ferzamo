@@ -199,9 +199,11 @@ io.on("connection", (socket) => {
 
                   for (var i = 0; i < handWinners.length; i++) {
                     var winnerId = playersStill[handWinners[i].playerId]._id;
+                    console.log(playersStill[handWinners[i].playerId].name);
                     var newStack =
                       playersStill[handWinners[i].playerId].stack +
                       game.pot / handWinners.length;
+                      console.log('Se realiza el update');
                     Player.updateOne(
                       { _id: winnerId },
                       { stack: newStack },
