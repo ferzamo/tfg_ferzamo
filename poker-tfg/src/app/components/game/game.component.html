@@ -148,7 +148,7 @@
       </mat-slider>
     </div>
     <div class="sliderMarkerArea">
-      <input type="text" class="markerArea" [(ngModel)]="sliderValue" />
+      <input type="number" class="markerArea" [(ngModel)]="sliderValue" disabled/>
     </div>
     <div class="foldArea">
       <app-main-button [buttonText]="'Fold'" (clickEvent)="fold()"></app-main-button>

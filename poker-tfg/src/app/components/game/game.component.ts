@@ -29,6 +29,7 @@ export class GameComponent implements OnInit {
   public canIRaise: boolean;
 
   public showDown = false;
+  public flip = false;
   
 
 
@@ -77,13 +78,12 @@ export class GameComponent implements OnInit {
   ngOnInit(): void {
 
     this._socketService.playerConnection(this.unPlayer);
-    this.getPlayers(false);
-    this.getGame();
+   
      
     this._socketService.startYourTurn().subscribe(()=>{
       
       this.showDown = false;
-      this.getPlayers(this.showDown);
+      this.getPlayers();
       this.getGame();
   
    
@@ -92,8 +92,7 @@ export class GameComponent implements OnInit {
     this._socketService.showDown().subscribe(()=>{
 
       this.showDown = true
-      this.getPlayers(this.showDown);
-      this.getGame();
+      
     })
 
   }
@@ -153,7 +152,7 @@ export class GameComponent implements OnInit {
     
   }
 
-  getPlayers(showdown: boolean) {
+  getPlayers() {
    
     this._playerService.getPlayers(this.gameURL).subscribe((res) => {
       
@@ -166,14 +165,11 @@ export class GameComponent implements OnInit {
 
       this.players.splice(this.unPlayer.position - 1, 1);
       this.players.forEach((player) => {
-        if(!showdown){
-          //player.card1 = "back";
-          //player.card2 = "back";
-        }
+
         
         player.position = (9 - (this.unPlayer.position - player.position)) % 9;
       });
-      console.log(this.players);
+      
     });
   }
 
