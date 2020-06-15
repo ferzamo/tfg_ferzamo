@@ -28,7 +28,8 @@ export class GameComponent implements OnInit {
   public canICheck: boolean;
   public canIRaise: boolean;
 
-  public showDown: boolean;
+  public showDown = false;
+  
 
 
 
@@ -166,8 +167,8 @@ export class GameComponent implements OnInit {
       this.players.splice(this.unPlayer.position - 1, 1);
       this.players.forEach((player) => {
         if(!showdown){
-          player.card1 = "back";
-          player.card2 = "back";
+          //player.card1 = "back";
+          //player.card2 = "back";
         }
         
         player.position = (9 - (this.unPlayer.position - player.position)) % 9;

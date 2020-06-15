@@ -7,7 +7,6 @@ import { Player } from "../../models/player";
 import { Router } from "@angular/router";
 import { LoadingService } from '../../shared/services/loading/loading.service';
 import { finalize } from 'rxjs/operators';
-import { MoveService } from "../../shared/services/api/move.service";
 
 @Component({
   selector: "app-create",
@@ -22,7 +21,6 @@ export class CreateComponent implements OnInit {
     private _gameService: GameService,
     private _deckService: DeckService,
     private _playerService: PlayerService,
-    private _moveService: MoveService,
     private loadingService: LoadingService,
     private router: Router
   ) {}
@@ -52,8 +50,7 @@ export class CreateComponent implements OnInit {
         // Deck is initialized
         this._deckService.createDeck(this.game).subscribe();
 
-        // Registry is initialized
-        this._moveService.createRegistry(this.game).subscribe();
+       
 
         // First player of the game is created
         this._playerService.createPlayer(this.player)

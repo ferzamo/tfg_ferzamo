@@ -11,7 +11,7 @@ var io = require("socket.io")(http);
 var player_routes = require("./routes/player");
 var game_routes = require("./routes/game");
 var deck_routes = require("./routes/deck");
-var registry_routes = require("./routes/registry");
+
 
 var Hand = require("pokersolver").Hand;
 
@@ -41,7 +41,7 @@ app.use((req, res, next) => {
 app.use("/api", player_routes);
 app.use("/api", game_routes);
 app.use("/api", deck_routes);
-app.use("/api", registry_routes);
+
 
 //Socket.io
 

@@ -1,5 +1,5 @@
 <div class="gameContainer">
-  
+
   <!------------------------PLAYERS SPACE------------------------>
   <div *ngFor="let player of players" class="playerSpace{{ player.position }} playerSpace">
     <div class="playerPhoto" [style.borderColor]="player.myTurn ? 'white':'#e5240b'"></div>
@@ -7,31 +7,65 @@
       <div class="playerStack">{{player.stack}}</div>
       <div class="playerName">{{player.name}}</div>
     </div>
+
+
     <div *ngIf="player.playing" class="playerCards" [style.visibility]="'visible'">
       <div class="playerCard1">
-        <svg width="71" height="97" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ player.card1}}" x="60" y="0" [attr.fill]="showDown ? '' : '#e5240b'" transform="scale(0.3)" />
-        </svg>
+
+        <ngx-flip [flip]="showDown">
+          <div front>
+          <svg width="71" height="97" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink">
+            <use class="playerCard" xlink:href="../../../assets/svg/svg-cards.svg#back" x="60" y="0" fill="#e5240b"
+              transform="scale(0.3)" />
+          </svg>
+        </div>
+        <div back>
+          <svg width="71" height="97" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink">
+
+            <use class="playerCard" attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ player.card1}}" x="60" y="0"
+              transform="scale(0.3)" />
+          </svg>
+        </div>
+        </ngx-flip>
+
       </div>
       <div class="playerCard2">
-        <svg width="71" height="97" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ player.card2 }}" x="0" y="0" [attr.fill]="showDown ? '' : '#e5240b'" transform="scale(0.3)" />
-        </svg>
+        <ngx-flip [flip]="showDown">
+          <div front>
+          <svg width="71" height="97" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink">
+            <use class="playerCard" xlink:href="../../../assets/svg/svg-cards.svg#back" x="60" y="0" fill="#e5240b"
+              transform="scale(0.3)" />
+          </svg>
+        </div>
+        <div back>
+          <svg width="71" height="97" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink">
+
+            <use class="playerCard" attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ player.card2}}" x="60" y="0"
+              transform="scale(0.3)" />
+          </svg>
+        </div>
+        </ngx-flip>
       </div>
     </div>
   </div>
-   
+
   <!------------------------USER SPACE------------------------>
-  <div class="userSpace" [style.borderColor]="unPlayer.myTurn ? 'white':'#e5240b'" >
-   
+  <div class="userSpace" [style.borderColor]="unPlayer.myTurn ? 'white':'#e5240b'">
+
     <div class="userCard1" *ngIf="unPlayer.playing">
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ unPlayer.card1 }}" x="55" y="10" transform="scale(0.40)" />
+        <use class="userCard" attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ unPlayer.card1 }}" x="55" y="10"
+          transform="scale(0.40)" />
       </svg>
     </div>
     <div class="userCard2" *ngIf="unPlayer.playing">
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ unPlayer.card2 }}" x="5" y="10" transform="scale(0.40)" />
+        <use class="userCard" attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ unPlayer.card2 }}" x="5" y="10"
+          transform="scale(0.40)" />
       </svg>
     </div>
     <div class="userStack">
@@ -40,43 +74,50 @@
   </div>
   <!------------------------TABLE SPACE------------------------>
   <div class="tableSpace">
-    
-    <div *ngFor="let player of players" class="dealerSpace{{ player.position }}" [style.visibility]="player.dealer ? 'visible':'hidden'">
+
+    <div *ngFor="let player of players" class="dealerSpace{{ player.position }}"
+      [style.visibility]="player.dealer ? 'visible':'hidden'">
       <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <image href="../../../assets/svg/dealer.svg" transform="scale(0.15)" />
       </svg>
     </div>
     <div *ngFor="let player of players" class="chipsSpace{{ player.position }} chipsSpace">
-      <svg *ngIf="player.bet > 0" class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <svg *ngIf="player.bet > 0" class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
         <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
       </svg>
       <p *ngIf="player.bet > 0" class="betAmount">{{ player.bet }}</p>
     </div>
-   
+
     <div class="showDownSpace">
       <div class="card1">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.flop1 }}" x="0" y="0" transform="scale(0.45)" />
+          <use class="tableCard" attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.flop1 }}" x="0" y="0"
+            transform="scale(0.45)" />
         </svg>
       </div>
       <div class="card2">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.flop2 }}" x="0" y="0" transform="scale(0.45)" />
+          <use class="tableCard" attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.flop2 }}" x="0" y="0"
+            transform="scale(0.45)" />
         </svg>
       </div>
       <div class="card3">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.flop3 }}" x="0" y="0" transform="scale(0.45)" />
+          <use class="tableCard" attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.flop3 }}" x="0" y="0"
+            transform="scale(0.45)" />
         </svg>
       </div>
       <div class="card4">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.turn }}" x="0" y="0" transform="scale(0.45)" />
+          <use class="tableCard" attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.turn }}" x="0" y="0"
+            transform="scale(0.45)" />
         </svg>
       </div>
       <div class="card5">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <use attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.river }}" x="0" y="0" transform="scale(0.45)" />
+          <use class="tableCard" attr.xlink:href="../../../assets/svg/svg-cards.svg#{{ game.river }}" x="0" y="0"
+            transform="scale(0.45)" />
         </svg>
       </div>
       <div class="pot">
@@ -90,36 +131,35 @@
       </svg>
     </div>
     <div class="chipsSpaceUser chipsSpace">
-      <svg *ngIf="unPlayer.bet > 0" class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <svg *ngIf="unPlayer.bet > 0" class="chipSvg" width="22.5" height="22.5" xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
         <image href="../../../assets/svg/chip.svg" transform="scale(0.15)" />
       </svg>
       <p *ngIf="unPlayer.bet > 0" class="betAmount">{{unPlayer.bet}}</p>
     </div>
-    
-   
+
+
   </div>
   <!------------------------ACTIONS BAR------------------------>
   <div class="actionsBar" [style.visibility]="unPlayer.myTurn ? 'visible':'hidden'">
     <div class="sliderArea">
-      <mat-slider
-        class="slider"
-        [max]="maxSlider"
-        [min]="minSlider"
-        [(ngModel)]="sliderValue"
+      <mat-slider class="slider" [max]="maxSlider" [min]="minSlider" [(ngModel)]="sliderValue"
         (input)="sliderValue = $event.value">
-    </mat-slider>
+      </mat-slider>
     </div>
     <div class="sliderMarkerArea">
-      <input type="text" class="markerArea" [(ngModel)]="sliderValue"/>
+      <input type="text" class="markerArea" [(ngModel)]="sliderValue" />
     </div>
     <div class="foldArea">
       <app-main-button [buttonText]="'Fold'" (clickEvent)="fold()"></app-main-button>
     </div>
     <div class="checkArea">
-      <app-main-button [buttonText]="canICheck ? 'Check ':'Call ' + game.highestBet" (clickEvent)="call()"></app-main-button>
+      <app-main-button [buttonText]="canICheck ? 'Check ':'Call ' + game.highestBet" (clickEvent)="call()">
+      </app-main-button>
     </div>
     <div class="raiseArea">
-      <app-main-button [buttonText]="canIRaise ? 'Raise ' + sliderValue : 'Bet ' + sliderValue" (clickEvent)="raise()"></app-main-button>
+      <app-main-button [buttonText]="canIRaise ? 'Raise ' + sliderValue : 'Bet ' + sliderValue" (clickEvent)="raise()">
+      </app-main-button>
     </div>
   </div>
 </div>

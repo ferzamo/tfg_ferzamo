@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 /* Angular materials */
 import { SharedModule } from './shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { FlipModule } from 'ngx-flip';
 
 
 
@@ -37,6 +38,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
     MatSliderModule,
     BrowserAnimationsModule,
     FormsModule,
+    FlipModule,
     HttpClientModule],
   providers: [],
   bootstrap: [ShellComponent]
