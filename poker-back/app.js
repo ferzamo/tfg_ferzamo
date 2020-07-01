@@ -455,6 +455,7 @@ function populateDeck() {
   }
 
   return cards;
+  
 }
 
 module.exports = http;

@@ -3,6 +3,7 @@
 var Game = require('../models/game');
 
 function createGame(req,res){
+    console.log('aaaaa');
     var game = new Game();
 
     var params = req.body;
@@ -17,6 +18,9 @@ function createGame(req,res){
     game.turn = params.turn;
     game.river = params.river;
     game.state = params.state;
+    game.blind = createBlindTable(game);
+    console.log(game.blind);
+    console.log('Aqui 1');
 
     game.save((err, gameStored) => {
         if(err){
@@ -25,6 +29,7 @@ function createGame(req,res){
             if(!gameStored){
                 res.status(404).send({message: "Game not created"});
             }else{
+                console.log('Aqui 2');
                 res.status(200).send({game: gameStored});
             }
         }
@@ -70,6 +75,60 @@ function updateGame(req, res){
  
  
  }
+
+ function createBlindTable(game){
+    var table = [];
+
+    var date = new Date();
+    var dateIncreaser;
+
+    var blind = game.stack/100;
+    var blindIncreaser = game.stack/200;
+
+    var counter = 0;
+    
+
+    switch(game.speed){
+        case 'Normal':
+            dateIncreaser = 5;
+        break;
+        
+        case 'Turbo':
+            dateIncreaser = 10;
+        break;
+
+        case 'HyperTurbo':
+            dateIncreaser = 15;
+        break;
+    }
+
+    while (blind < game.stack*9){
+
+        if(counter === 3){
+            counter = 0;
+            blindIncreaser = blindIncreaser * 2;
+        }
+
+        if (table.length !== 0){
+            date = addMinutes(date, dateIncreaser);
+            blind += blindIncreaser;
+        }
+
+        counter++;
+
+        table.push({
+            value: blind,
+            time: date,
+        })
+
+    }
+
+    return table;
+ }
+
+ function addMinutes(date, minutes) {
+    return new Date(date.getTime() + minutes*60000);
+}
 
 module.exports =  {
     createGame,
