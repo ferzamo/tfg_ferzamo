@@ -45,7 +45,7 @@ export class LobbyComponent implements OnInit {
       this.route.snapshot.paramMap.get("gameId")
     ) {
 
-      this.game = new Game(null,null,null,null,null,null,null,null,null,null,null);
+      this.game = new Game(null,null,null,null,null,null,null,null,null,null,null,null);
 
       // Player info is retrieved from session storage
       this.gameURL = this.route.snapshot.paramMap.get("gameId");
@@ -102,6 +102,8 @@ export class LobbyComponent implements OnInit {
         (res) => {
           this.game = res["game"];
 
+          
+
           this._playerService.getPlayers(this.game._id).subscribe((res) => {
             this.players = res["players"];
             
@@ -125,7 +127,10 @@ export class LobbyComponent implements OnInit {
   public startGame() {
     // Broadcast the start of the game for every player
    
-    this._socketService.startGame(this.unPlayer);
+    this._gameService.createBlindTable(this.game).subscribe(()=>{
+      this._socketService.startGame(this.unPlayer);
+    });
+    
      
   }
 

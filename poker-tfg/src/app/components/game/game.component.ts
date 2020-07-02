@@ -63,6 +63,7 @@ export class GameComponent implements OnInit {
         null,
         null,
         null,
+        null, 
         null
       );
       this.gameURL = this.route.snapshot.paramMap.get("gameId");
@@ -187,7 +188,7 @@ export class GameComponent implements OnInit {
       }else{
         this.canIRaise = true;
       }
-      this.minSlider = this.game.highestBet + this.bigBlind;
+      this.minSlider = this.game.highestBet + this.game.blind[0].value;
       this.maxSlider = this.unPlayer.stack;
       this.sliderValue = this.minSlider;
       

@@ -33,5 +33,11 @@ export class GameService {
     return this.http.put<Game>(this.url + "/updateGame/" + game._id, game).pipe(map(res => res));
   }
 
+  createBlindTable(game: Game){
+    return this.http.put<Game>(this.url + "/createBlindTable/" + game._id, game).pipe(map(res => res));
+  }
+
+  
+
   
 }

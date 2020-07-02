@@ -1,3 +1,5 @@
+import {Blind} from './blind';
+
 export class Game{
     constructor(
         public _id: string,
@@ -10,7 +12,8 @@ export class Game{
         public flop3: string,
         public turn: string,
         public river: string,
-        public state: string
+        public state: string,
+        public blind: Blind[]
         
     ){}
 }

@@ -19,7 +19,7 @@ var Deck = require("./models/deck");
 var Game = require("./models/game");
 var Player = require("./models/player");
 
-var ciega = 500;
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -105,7 +105,7 @@ io.on("connection", (socket) => {
           } else if (
             playerLoop.bigBlind &&
             player.smallBlind &&
-            playerLoop.bet <= ciega &&
+            playerLoop.bet <= game.blind[0].value &&
             game.state === "preflop"
           ) {
             //Ciega grande primera ronda
@@ -276,8 +276,11 @@ function newHand(player) {
     Game.findOne({ _id: player.game }, function (err, game) {
       Deck.findOne({ game: player.game }, function (err, deck) {
         Player.find({ game: player.game }, function (err, players) {
-          game.pot = ciega + ciega / 2;
-          game.highestBet = ciega;
+          
+          game.blind = updateBlind(game.blind);
+          
+          game.pot = game.blind[0].value + game.blind[0].value / 2;
+          game.highestBet = game.blind[0].value;
           game.state = "preflop";
           game.flop1 = null;
           game.flop2 = null;
@@ -312,9 +315,9 @@ function newHand(player) {
           players.forEach((playerLoop) => {
             if (playerLoop.dealer === true) {
               nextPlayerPlaying(playerLoop, players).smallBlind = true;
-              nextPlayerPlaying(playerLoop, players).bet = ciega / 2;
+              nextPlayerPlaying(playerLoop, players).bet = game.blind[0].value / 2;
               nextPlayerPlaying(playerLoop, players).stack =
-                nextPlayerPlaying(playerLoop, players).stack - ciega / 2;
+                nextPlayerPlaying(playerLoop, players).stack - game.blind[0].value / 2;
               nextPlayerPlaying(
                 nextPlayerPlaying(playerLoop, players),
                 players
@@ -322,7 +325,7 @@ function newHand(player) {
               nextPlayerPlaying(
                 nextPlayerPlaying(playerLoop, players),
                 players
-              ).bet = ciega;
+              ).bet = game.blind[0].value;
               nextPlayerPlaying(
                 nextPlayerPlaying(playerLoop, players),
                 players
@@ -330,7 +333,7 @@ function newHand(player) {
                 nextPlayerPlaying(
                   nextPlayerPlaying(playerLoop, players),
                   players
-                ).stack - ciega;
+                ).stack - game.blind[0].value;
               nextPlayerPlaying(
                 nextPlayerPlaying(
                   nextPlayerPlaying(playerLoop, players),
@@ -456,6 +459,22 @@ function populateDeck() {
 
   return cards;
   
+}
+
+function updateBlind(blinds){
+  
+  var date = new Date();
+  var i = 0;
+    
+  while(blinds[i].time < date){
+
+    if(blinds[i+1].time < date){
+      blinds.shift(); 
+    }
+    i++;
+  }
+
+  return blinds;
 }
 
 module.exports = http;

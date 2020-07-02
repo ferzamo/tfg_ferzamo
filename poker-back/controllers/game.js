@@ -3,7 +3,7 @@
 var Game = require('../models/game');
 
 function createGame(req,res){
-    console.log('aaaaa');
+   
     var game = new Game();
 
     var params = req.body;
@@ -18,9 +18,8 @@ function createGame(req,res){
     game.turn = params.turn;
     game.river = params.river;
     game.state = params.state;
-    game.blind = createBlindTable(game);
-    console.log(game.blind);
-    console.log('Aqui 1');
+    
+    
 
     game.save((err, gameStored) => {
         if(err){
@@ -29,7 +28,7 @@ function createGame(req,res){
             if(!gameStored){
                 res.status(404).send({message: "Game not created"});
             }else{
-                console.log('Aqui 2');
+                
                 res.status(200).send({game: gameStored});
             }
         }
@@ -60,6 +59,7 @@ function updateGame(req, res){
     var update = req.body;
    
     var id = req.params.id;
+   
  
     Game.findByIdAndUpdate(id, update, (err, gameUpdated) => {
          if(err){
@@ -76,7 +76,29 @@ function updateGame(req, res){
  
  }
 
- function createBlindTable(game){
+ function createBlindTable(req,res){
+   
+    var game = req.body;
+    var id = req.params.id;
+   
+
+    game.blind = populateBlindTable(game);
+
+    Game.findByIdAndUpdate(id, game, (err, gameUpdated) => {
+        if(err){
+            res.status(500).send({message: "Error creating blind table"});
+        }else{
+            if(!gameUpdated){
+                res.status(404).send({message: "Table wasnt created"});
+            }else{
+                res.status(200).send({game: gameUpdated});
+            }
+        }
+   });
+    
+}
+
+ function populateBlindTable(game){
     var table = [];
 
     var date = new Date();
@@ -86,7 +108,7 @@ function updateGame(req, res){
     var blindIncreaser = game.stack/200;
 
     var counter = 0;
-    
+
 
     switch(game.speed){
         case 'Normal':
@@ -133,5 +155,6 @@ function updateGame(req, res){
 module.exports =  {
     createGame,
     getGame,
-    updateGame
+    updateGame,
+    createBlindTable
 };
