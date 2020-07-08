@@ -77,6 +77,8 @@ export class GameComponent implements OnInit {
  
 
   ngOnInit(): void {
+    this.getPlayers();
+      this.getGame();
 
     this._socketService.playerConnection(this.unPlayer);
    
