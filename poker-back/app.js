@@ -465,13 +465,17 @@ function updateBlind(blinds){
   
   var date = new Date();
   var i = 0;
+
+ 
     
   while(blinds[i].time < date){
-
+   
     if(blinds[i+1].time < date){
       blinds.shift(); 
     }
+
     i++;
+  
   }
 
   return blinds;

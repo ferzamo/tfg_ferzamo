@@ -191,6 +191,8 @@ export class GameComponent implements OnInit {
       this.minSlider = this.game.highestBet + this.game.blind[0].value;
       this.maxSlider = this.unPlayer.stack;
       this.sliderValue = this.minSlider;
+
+      console.log(this.game.blind);
       
     });
   }
