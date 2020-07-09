@@ -101,6 +101,24 @@ export class SocketioService {
 
   }
 
+  sendInfo(player: Player, text: String) {
+
+    this.socket.emit('sendInfo', {player: player, text: text});
+
+  }
+
+  getInfo(){
+    let observable = new Observable<string>(observer => {
+      this.socket.on('getInfo', (data: string) => {
+        
+        observer.next(data);
+      });
+      return () => {this.socket.disconnect();}
+    })
+
+    return observable;
+  }
+
   
 
 }

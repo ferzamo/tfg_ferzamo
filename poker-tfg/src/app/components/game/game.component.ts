@@ -24,12 +24,14 @@ export class GameComponent implements OnInit {
   public gameURL: string;
   public unPlayer: Player;
 
-  public bigBlind = 500;
   public canICheck: boolean;
   public canIRaise: boolean;
-
   public showDown = false;
-  public flip = false;
+
+  public info: string[] = [];
+
+
+  
   
 
 
@@ -98,6 +100,21 @@ export class GameComponent implements OnInit {
       
     })
 
+    this._socketService.getInfo().subscribe((res)=>{
+        if(this.info.length == 5){
+          for(let i=1; i<this.info.length; i++){
+            this.info[i-1]=this.info[i];
+
+          }
+          this.info[4]=res;
+        }else{
+          this.info.push(res)
+        }
+        console.log(res);
+        console.log(this.info);
+        
+    })
+
   }
 
 
@@ -110,7 +127,7 @@ export class GameComponent implements OnInit {
     this.unPlayer.card1 = null;
     this.unPlayer.card2 = null;
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
-      
+      this._socketService.sendInfo(this.unPlayer,this.unPlayer.name + ' folds');
       this._socketService.myTurnIsOver(this.unPlayer);
     });
   }
@@ -128,6 +145,7 @@ export class GameComponent implements OnInit {
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
      
         this._gameService.updateGame(this.game).subscribe(()=>{
+          this._socketService.sendInfo(this.unPlayer,this.unPlayer.name + ' calls ' + this.unPlayer.bet);
           this._socketService.myTurnIsOver(this.unPlayer);
         });
      
@@ -149,6 +167,7 @@ export class GameComponent implements OnInit {
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
       
         this._gameService.updateGame(this.game).subscribe(()=>{
+          this._socketService.sendInfo(this.unPlayer,this.unPlayer.name + ' raises ' + this.unPlayer.bet);
           this._socketService.myTurnIsOver(this.unPlayer);
         });
       });
@@ -194,7 +213,7 @@ export class GameComponent implements OnInit {
       this.maxSlider = this.unPlayer.stack;
       this.sliderValue = this.minSlider;
 
-      console.log(this.game.blind);
+      
       
     });
   }

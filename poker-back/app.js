@@ -90,6 +90,10 @@ io.on("connection", (socket) => {
     newHand(player);
   });
 
+  socket.on("sendInfo", (data) => {
+    io.in(data.player.game).emit("getInfo", data.text);
+  });
+
   
 
   
@@ -419,6 +423,8 @@ function nextPlayer(player, players) {
   }
   return players[i];
 }
+
+
 
 function translateCard(cardName) {
   var suit = cardName.split("_")[0].substring(0, 1);

@@ -165,17 +165,14 @@
 
   <!------------------------INFO------------------------>
   <div class="info card">
-    <p>Fernando bets 200</p>
-    <p>Pablo calls 200</p>
-    <p>Marcos calls 200</p>
-    <p style="color: #e5240b;">Fernado wins with pair of A</p>
-    <p>Pablo apuesta 200</p>
+    <p *ngFor="let phrase of info">{{phrase}}</p>
+    
   </div>
 
   <!------------------------CHAT------------------------>
   <div class="chat card">
-    <p>50/100 </p>
-    <p>Linea 2</p>
+    <p>3 minutes 50/100</p>
+    <p>Linea 2    </p>
     <p>Linea 3</p>
     <p>Linea 4</p>
     <p>Linea 5</p>
