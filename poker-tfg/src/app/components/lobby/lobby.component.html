@@ -2,7 +2,7 @@
   <div class="playersContainer">
     <div class="player" *ngFor="let player of players">
       <div class="photoLobby">
-        <img class="photoUser" src="/assets/images/photoUser1.jpg" />
+        <img class="photoUser" src="/assets/images/photoUser{{player.position}}.jpg" />
       </div>
       <div class="nameLobby">
         <p class="name">{{ player.name }}</p>

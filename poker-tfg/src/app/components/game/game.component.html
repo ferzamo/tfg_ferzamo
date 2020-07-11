@@ -2,7 +2,7 @@
 
   <!------------------------PLAYERS SPACE------------------------>
   <div *ngFor="let player of players" class="playerSpace{{ player.position }} playerSpace">
-    <div class="playerPhoto" [style.borderColor]="player.myTurn ? 'white':'#e5240b'"></div>
+    <div class="playerPhoto" [style.borderColor]="player.myTurn ? 'white':'#e5240b'" style="background-image: url(/assets/images/photoUser{{player.position}}.jpg);"></div>
     <div class="playerInfo" [style.borderColor]="player.myTurn ? 'white':'#e5240b'">
       <div class="playerStack">{{player.stack}}</div>
       <div class="playerName">{{player.name}}</div>
@@ -164,13 +164,13 @@
   </div>
 
   <!------------------------INFO------------------------>
-  <div class="info card">
+  <div class="info square">
     <p *ngFor="let phrase of info">{{phrase}}</p>
     
   </div>
 
   <!------------------------CHAT------------------------>
-  <div class="chat card">
+  <div class="chat square">
     <p>3 minutes 50/100</p>
     <p>Linea 2    </p>
     <p>Linea 3</p>
