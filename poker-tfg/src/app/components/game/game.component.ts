@@ -145,7 +145,9 @@ export class GameComponent implements OnInit {
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
      
         this._gameService.updateGame(this.game).subscribe(()=>{
-          this._socketService.sendInfo(this.unPlayer,this.unPlayer.name + ' calls ' + this.unPlayer.bet);
+          if(this.canICheck) this._socketService.sendInfo(this.unPlayer,this.unPlayer.name + ' checks ');
+          else this._socketService.sendInfo(this.unPlayer,this.unPlayer.name + ' calls ' + this.unPlayer.bet);
+          
           this._socketService.myTurnIsOver(this.unPlayer);
         });
      
@@ -167,7 +169,8 @@ export class GameComponent implements OnInit {
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
       
         this._gameService.updateGame(this.game).subscribe(()=>{
-          this._socketService.sendInfo(this.unPlayer,this.unPlayer.name + ' raises ' + this.unPlayer.bet);
+          if(this.canIRaise) this._socketService.sendInfo(this.unPlayer,this.unPlayer.name + ' raises ' + this.unPlayer.bet);
+          else this._socketService.sendInfo(this.unPlayer,this.unPlayer.name + ' bets ' + this.unPlayer.bet);
           this._socketService.myTurnIsOver(this.unPlayer);
         });
       });
