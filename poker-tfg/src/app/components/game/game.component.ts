@@ -19,7 +19,7 @@ export class GameComponent implements OnInit {
   public sliderValue: number;
 
   public players: Player[] = [];
-  public realPlayers: Player[] = [];
+  public realPlayers: number[] = [];
   public game: Game;
   public gameURL: string;
   public unPlayer: Player;
@@ -110,8 +110,7 @@ export class GameComponent implements OnInit {
         }else{
           this.info.push(res)
         }
-        console.log(res);
-        console.log(this.info);
+        
         
     })
 
@@ -187,13 +186,18 @@ export class GameComponent implements OnInit {
 
       
       
-
+      
       this.players.splice(this.unPlayer.position - 1, 1);
       this.players.forEach((player) => {
 
-        
+        var positionBefore = player.position;
         player.position = (9 - (this.unPlayer.position - player.position)) % 9;
+        this.realPlayers[player.position] = positionBefore;
       });
+
+      console.log(this.realPlayers);
+
+     
       
     });
   }
@@ -219,6 +223,12 @@ export class GameComponent implements OnInit {
       
       
     });
+  }
+
+  getRealPosition(position){
+
+    return position;
+
   }
   
 

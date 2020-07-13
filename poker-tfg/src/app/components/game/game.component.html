@@ -2,7 +2,7 @@
 
   <!------------------------PLAYERS SPACE------------------------>
   <div *ngFor="let player of players" class="playerSpace{{ player.position }} playerSpace">
-    <div class="playerPhoto" [style.borderColor]="player.myTurn ? 'white':'#e5240b'" style="background-image: url(/assets/images/photoUser{{player.position}}.jpg);"></div>
+    <div class="playerPhoto" [style.borderColor]="player.myTurn ? 'white':'#e5240b'" style="background-image: url(/assets/images/photoUser{{realPlayers[player.position]}}.jpg);"></div>
     <div class="playerInfo" [style.borderColor]="player.myTurn ? 'white':'#e5240b'">
       <div class="playerStack">{{player.stack}}</div>
       <div class="playerName">{{player.name}}</div>
