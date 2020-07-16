@@ -165,14 +165,13 @@
 
   <!------------------------INFO------------------------>
   <div class="info square">
-    <p *ngFor="let phrase of info">{{phrase}}</p>
+    <p *ngFor="let phrase of info" [ngStyle]="{'color': phraseWinner(phrase)? '#e5240b' : 'white'}">{{phrase}}</p>
     
   </div>
 
   <!------------------------CHAT------------------------>
   <div class="chat square">
-   <p>Actual blind level: {{game.blind[0].value/2}}/{{game.blind[0].value}}</p>
-   <p>Next blind level: {{game.blind[1].value/2}}/{{game.blind[1].value}}</p>
+   <p *ngFor="let blind of game.blind | slice:0:5; let i = index" [ngStyle]="{'color': firstItem(i)? '#e5240b' : 'white'}" >{{blind.value/2}}/{{blind.value}}</p>
   </div>
 
 </div>

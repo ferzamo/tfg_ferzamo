@@ -67,7 +67,7 @@ export class GameComponent implements OnInit {
         null,
         null,
         null, 
-        null
+        []
       );
       this.gameURL = this.route.snapshot.paramMap.get("gameId");
       this.unPlayer = JSON.parse(sessionStorage.getItem("player"));
@@ -235,6 +235,16 @@ export class GameComponent implements OnInit {
 
     return position;
 
+  }
+
+  firstItem(item){
+    if (item==0) return true;
+    else return false;
+  }
+
+  phraseWinner(phrase){
+    if (phrase.includes(' wins ')) return true;
+    else return false;
   }
   
 
