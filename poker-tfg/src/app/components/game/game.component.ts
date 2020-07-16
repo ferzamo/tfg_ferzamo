@@ -29,6 +29,7 @@ export class GameComponent implements OnInit {
   public showDown = false;
 
   public info: string[] = [];
+  public blindDate: Date;
 
 
   
@@ -80,13 +81,17 @@ export class GameComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPlayers();
-      this.getGame();
+    this.getGame();
+    this.blindDate = new Date();
 
     this._socketService.playerConnection(this.unPlayer);
    
      
     this._socketService.startYourTurn().subscribe(()=>{
       
+      this.blindDate = new Date();
+      console.log('Date: ', this.blindDate);
+
       this.showDown = false;
       this.getPlayers();
       this.getGame();
@@ -205,6 +210,7 @@ export class GameComponent implements OnInit {
   getGame(){
     this._gameService.getGame(this.gameURL).subscribe((res) => {
       this.game = res["game"];
+      console.log(this.game.blind);
       if(this.game.highestBet===this.unPlayer.bet || this.game.highestBet===0){
         this.canICheck = true;
       }else{
