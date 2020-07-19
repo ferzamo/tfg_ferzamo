@@ -302,10 +302,11 @@ function newHand(player) {
           var i = 0;
           var dealer;
           players.forEach((playerLoop) => {
-            if (player.bigBlind) {
+            if (playerLoop.bigBlind) {
               playerLoop.bigBlind = false;
             }
-            if (player.smallBlind) {
+            if (playerLoop.smallBlind) {
+             
               playerLoop.smallBlind = false;
             }
             if (playerLoop.stack > 0) {
@@ -386,9 +387,12 @@ function newHand(player) {
 function newRound(players, game, deck) {
   players.forEach((player) => {
     if (player.smallBlind) {
+      console.log('En small: ', player.name);
       if (player.playing) {
+        console.log('En playing: ', player.name);
         player.myTurn = true;
       } else {
+        console.log('En else: ', player.name);
         nextPlayerPlaying(player, players).myTurn = true;
       }
     }
