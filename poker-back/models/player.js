@@ -15,7 +15,8 @@ var PlayerSchema = Schema({
     myTurn: Boolean,
     dealer: Boolean,
     smallBlind: Boolean,
-    bigBlind: Boolean   
+    bigBlind: Boolean,
+    allIn: Boolean   
 })
 
 module.exports = mongoose.model('Player', PlayerSchema);

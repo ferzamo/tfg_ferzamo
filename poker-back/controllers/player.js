@@ -19,6 +19,7 @@ function createPlayer(req, res) {
   player.dealer = params.dealer;
   player.smallBlind = params.smallBlind;
   player.bigBlind = params.bigBlind;
+  player.allIn = params.allIn;
   
 
 

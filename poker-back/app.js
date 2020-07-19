@@ -99,24 +99,29 @@ io.on("connection", (socket) => {
   
 
   socket.on("myTurnIsOver", (player) => {
+    console.log('turn over');
     Player.find({ game: player.game }, function (err, players) {
       Game.findOne({ _id: player.game }, function (err, game) {
         var nextRound = true;
         var playersPlaying = 0;
         players.forEach((playerLoop) => {
-          if (playerLoop.playing && playerLoop.bet !== game.highestBet) {
+          if (playerLoop.playing && playerLoop.bet !== game.highestBet && !playerLoop.allIn) {
+            console.log('Entra 1 el jugador: ', playerLoop.name);
             nextRound = false;
           } else if (
             playerLoop.bigBlind &&
-            player.smallBlind &&
+            (player.smallBlind ||
+            (nextPlayerPlaying(player, players)._id == playerLoop._id)) &&
             playerLoop.bet <= game.blind[0].value &&
-            game.state === "preflop"
+            game.state === "preflop" &&
+            !playerLoop.allIn
           ) {
             //Ciega grande primera ronda
-
+            console.log('Entra 2 el jugador: ', playerLoop.name);
             nextRound = false;
-          } else if (playerLoop.playing && playerLoop.bet === null) {
+          } else if (playerLoop.playing && playerLoop.bet === null && !playerLoop.allIn) {
             //Para ronda con 0 apuestas
+            console.log('Entra 3 el jugador: ', playerLoop.name);
             nextRound = false;
           }
 
@@ -259,7 +264,7 @@ io.on("connection", (socket) => {
 });
 
 function showdown(players, game){
-  console.log('En showdown');
+  
   players.forEach((player) => {
     player.bet = null;
     Player.updateOne({ _id: player._id }, player, function (err) {});
@@ -277,7 +282,7 @@ function showdown(players, game){
 }
 
 function newHand(player) {
-  console.log('New hand');
+  
   Deck.updateOne({ game: player.game }, { cards: populateDeck() }, function (
     err,
     deckPopulated
@@ -311,46 +316,48 @@ function newHand(player) {
             }
             if (playerLoop.stack > 0) {
               playerLoop.playing = true;
+            }else{
+              playerLoop.playing = false;
             }
             if (playerLoop.dealer === true) {
               playerLoop.dealer = false;
               dealer = playerLoop;
             }
 
+            playerLoop.allIn = false;
             playerLoop.bet = null;
           });
 
           nextPlayerPlaying(dealer, players).dealer = true;
 
+          var small;
+          var big;
+
           players.forEach((playerLoop) => {
             if (playerLoop.dealer === true) {
-              nextPlayerPlaying(playerLoop, players).smallBlind = true;
-              nextPlayerPlaying(playerLoop, players).bet = game.blind[0].value / 2;
-              nextPlayerPlaying(playerLoop, players).stack =
-                nextPlayerPlaying(playerLoop, players).stack - game.blind[0].value / 2;
-              nextPlayerPlaying(
-                nextPlayerPlaying(playerLoop, players),
-                players
-              ).bigBlind = true;
-              nextPlayerPlaying(
-                nextPlayerPlaying(playerLoop, players),
-                players
-              ).bet = game.blind[0].value;
-              nextPlayerPlaying(
-                nextPlayerPlaying(playerLoop, players),
-                players
-              ).stack =
-                nextPlayerPlaying(
-                  nextPlayerPlaying(playerLoop, players),
-                  players
-                ).stack - game.blind[0].value;
-              nextPlayerPlaying(
-                nextPlayerPlaying(
-                  nextPlayerPlaying(playerLoop, players),
-                  players
-                ),
-                players
-              ).myTurn = true;
+              small = nextPlayerPlaying(playerLoop, players);
+              small.smallBlind = true;
+              if(small.stack < game.blind[0].value / 2){
+                small.bet = small.stack;
+                small.stack = 0;
+                small.allIn = true;
+              }else{
+                small.bet = game.blind[0].value / 2;
+                small.stack = small.stack - game.blind[0].value / 2;
+              }
+              
+              big = nextPlayerPlaying(small, players);
+              big.bigBlind = true;
+              if(big.stack < game.blind[0].value){
+                big.bet = big.stack;
+                big.stack = 0;
+                big.allIn = true;
+              }else{
+                big.bet = game.blind[0].value;
+                big.stack = big.stack - game.blind[0].value;
+              }
+              
+              nextPlayerPlaying(big, players).myTurn = true;
             }
 
             playerLoop.card1 = deck.cards[i].name;
@@ -387,12 +394,12 @@ function newHand(player) {
 function newRound(players, game, deck) {
   players.forEach((player) => {
     if (player.smallBlind) {
-      console.log('En small: ', player.name);
-      if (player.playing) {
-        console.log('En playing: ', player.name);
+      
+      if (player.playing && !player.allIn) {
+       
         player.myTurn = true;
       } else {
-        console.log('En else: ', player.name);
+       
         nextPlayerPlaying(player, players).myTurn = true;
       }
     }
@@ -416,7 +423,7 @@ function newRound(players, game, deck) {
 
 function nextPlayerPlaying(player, players) {
   var next = nextPlayer(player, players);
-  while (!next.playing) {
+  while (!next.playing || next.allIn) {
     next = nextPlayer(next, players);
   }
 
