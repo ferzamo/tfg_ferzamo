@@ -29,7 +29,7 @@ export class SocketioService {
         
         observer.next(player);
       });
-      return () => {this.socket.disconnect();}
+      return () => {}
     }).pipe(delay(1000))
 
     return observable;
@@ -48,7 +48,7 @@ export class SocketioService {
         
         observer.next(data);
       });
-      return () => {this.socket.disconnect();}
+      return () => {}
     })
 
     return observable;
@@ -61,7 +61,7 @@ export class SocketioService {
         
         observer.next(data);
       });
-      return () => {this.socket.disconnect();}
+      return () => {}
     })
 
     return observable;
@@ -80,7 +80,7 @@ export class SocketioService {
         
         observer.next();
       });
-      return () => {this.socket.disconnect();}
+      return () => {}
     })
 
     return observable;
@@ -94,7 +94,7 @@ export class SocketioService {
         
         observer.next();
       });
-      return () => {this.socket.disconnect();}
+      return () => {}
     })
 
     return observable;
@@ -113,7 +113,7 @@ export class SocketioService {
         
         observer.next(data);
       });
-      return () => {this.socket.disconnect();}
+      return () => {}
     })
 
     return observable;
