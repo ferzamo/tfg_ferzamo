@@ -90,7 +90,7 @@ export class GameComponent implements OnInit {
     this._socketService.startYourTurn().subscribe(()=>{
       
       this.blindDate = new Date();
-      console.log('Date: ', this.blindDate);
+      
 
       this.showDown = false;
       this.getPlayers();
@@ -200,7 +200,7 @@ export class GameComponent implements OnInit {
         this.realPlayers[player.position] = positionBefore;
       });
 
-      console.log(this.realPlayers);
+      
 
      
       
@@ -210,7 +210,7 @@ export class GameComponent implements OnInit {
   getGame(){
     this._gameService.getGame(this.gameURL).subscribe((res) => {
       this.game = res["game"];
-      console.log(this.game.blind);
+      
       if(this.game.highestBet===this.unPlayer.bet || this.game.highestBet===0){
         this.canICheck = true;
       }else{
