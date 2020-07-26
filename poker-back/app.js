@@ -99,14 +99,14 @@ io.on("connection", (socket) => {
   
 
   socket.on("myTurnIsOver", (player) => {
-    console.log('turn over');
+    
     Player.find({ game: player.game }, function (err, players) {
       Game.findOne({ _id: player.game }, function (err, game) {
         var nextRound = true;
         var playersPlaying = 0;
         players.forEach((playerLoop) => {
           if (playerLoop.playing && playerLoop.bet !== game.highestBet && !playerLoop.allIn) {
-            console.log('Entra 1 el jugador: ', playerLoop.name);
+            
             nextRound = false;
           } else if (
             playerLoop.bigBlind &&
@@ -117,11 +117,11 @@ io.on("connection", (socket) => {
             !playerLoop.allIn
           ) {
             //Ciega grande primera ronda
-            console.log('Entra 2 el jugador: ', playerLoop.name);
+            
             nextRound = false;
           } else if (playerLoop.playing && playerLoop.bet === null && !playerLoop.allIn) {
             //Para ronda con 0 apuestas
-            console.log('Entra 3 el jugador: ', playerLoop.name);
+            
             nextRound = false;
           }
 

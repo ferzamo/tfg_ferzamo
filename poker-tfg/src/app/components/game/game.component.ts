@@ -189,7 +189,8 @@ export class GameComponent implements OnInit {
       
       this.unPlayer = this.players[this.unPlayer.position-1];
 
-      
+      console.log(this.players);
+      console.log(this.unPlayer);
       
       
       this.players.splice(this.unPlayer.position - 1, 1);
