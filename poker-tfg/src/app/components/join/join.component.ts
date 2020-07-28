@@ -6,6 +6,7 @@ import { Player } from "../../models/player";
 import { Router } from "@angular/router";
 import { LoadingService } from '../../shared/services/loading/loading.service';
 import { finalize } from 'rxjs/operators';
+import { delay } from "rxjs/operators";
 
 @Component({
   selector: "app-join",
@@ -21,7 +22,7 @@ export class JoinComponent implements OnInit {
     private _gameService: GameService,
     private _playerService: PlayerService,
     private router: Router,
-    private loadingService: LoadingService,
+    private _loadingService: LoadingService,
   ) {}
 
   ngOnInit(): void {
@@ -32,9 +33,10 @@ export class JoinComponent implements OnInit {
   onClick() {
 
     // If there is a game with that ID, it will take all the players related to, it will asign a position according to the number of players already and will store the new created player in the session storage. If the game is full (9 players) or there is no game with that ID, it will redirect
-    this.loadingService.show();
+    this._loadingService.show();
     this._gameService.getGame(this.game._id)
-    .pipe(finalize(() => this.loadingService.hide()))
+    .pipe(delay(700))
+    .pipe(finalize(() => this._loadingService.hide()))
     .subscribe(
       (res) => {
         this.game = res["game"];

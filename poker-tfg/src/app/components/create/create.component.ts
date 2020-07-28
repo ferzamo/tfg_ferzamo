@@ -7,6 +7,7 @@ import { Player } from "../../models/player";
 import { Router } from "@angular/router";
 import { LoadingService } from "../../shared/services/loading/loading.service";
 import { finalize } from "rxjs/operators";
+import { delay } from "rxjs/operators";
 
 @Component({
   selector: "app-create",
@@ -21,7 +22,7 @@ export class CreateComponent implements OnInit {
     private _gameService: GameService,
     private _deckService: DeckService,
     private _playerService: PlayerService,
-    private loadingService: LoadingService,
+    private _loadingService: LoadingService,
     private router: Router
   ) {}
 
@@ -64,10 +65,11 @@ export class CreateComponent implements OnInit {
     if (this.game.stack > 0 && this.player.name !== "") {
 
       // Once the button is clicked, the game is created and the loading spin is shown till it ends
-      this.loadingService.show();
+      this._loadingService.show();
       this._gameService
         .createGame(this.game)
-        .pipe(finalize(() => this.loadingService.hide()))
+        .pipe(delay(700))
+        .pipe(finalize(() => this._loadingService.hide()))
         .subscribe(
           (res) => {
             this.game = res["game"];

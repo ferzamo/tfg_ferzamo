@@ -98,7 +98,7 @@ io.on("connection", (socket) => {
 
   
 
-  socket.on("myTurnIsOver", (player) => {
+  socket.on("myTurnIsOver", (player) => {                  
     
     Player.find({ game: player.game }, function (err, players) {
       Game.findOne({ _id: player.game }, function (err, game) {
@@ -243,6 +243,7 @@ io.on("connection", (socket) => {
                 
                 setTimeout(function(){
                   newHand(player)}, 10000);
+
                 
                 break;
               default:
@@ -282,6 +283,12 @@ function showdown(players, game){
 }
 
 function newHand(player) {
+
+  io.in(player.game).emit("getInfo", "\n");
+  io.in(player.game).emit("getInfo", "\n");
+  io.in(player.game).emit("getInfo", "------- NEW ROUND -------");
+
+
   
   Deck.updateOne({ game: player.game }, { cards: populateDeck() }, function (
     err,

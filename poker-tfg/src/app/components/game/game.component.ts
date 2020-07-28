@@ -80,6 +80,8 @@ export class GameComponent implements OnInit {
  
 
   ngOnInit(): void {
+
+    this._loadingService.hide()
     this.getPlayers();
     this.getGame();
     this.blindDate = new Date();
@@ -116,6 +118,7 @@ export class GameComponent implements OnInit {
           this.info.push(res)
         }
         
+        console.log(this.info)
         
     })
 
@@ -189,10 +192,6 @@ export class GameComponent implements OnInit {
       
       this.unPlayer = this.players[this.unPlayer.position-1];
 
-      console.log(this.players);
-      console.log(this.unPlayer);
-      
-      
       this.players.splice(this.unPlayer.position - 1, 1);
       this.players.forEach((player) => {
 
@@ -232,19 +231,13 @@ export class GameComponent implements OnInit {
     });
   }
 
-  getRealPosition(position){
-
-    return position;
-
-  }
-
   firstItem(item){
     if (item==0) return true;
     else return false;
   }
 
   phraseWinner(phrase){
-    if (phrase.includes(' wins ')) return true;
+    if (phrase.includes(' wins')) return true;
     else return false;
   }
   
