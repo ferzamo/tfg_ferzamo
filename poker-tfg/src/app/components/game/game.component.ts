@@ -149,6 +149,8 @@ export class GameComponent implements OnInit {
 
     }
 
+    if(this.unPlayer.stack == 0) this.unPlayer.allIn = true;
+
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
      
         this._gameService.updateGame(this.game).subscribe(()=>{
@@ -172,6 +174,8 @@ export class GameComponent implements OnInit {
    
 
     this.game.highestBet = this.unPlayer.bet;
+
+    if(this.unPlayer.stack == 0) this.unPlayer.allIn = true;
 
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
       

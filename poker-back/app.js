@@ -12,14 +12,11 @@ var player_routes = require("./routes/player");
 var game_routes = require("./routes/game");
 var deck_routes = require("./routes/deck");
 
-
 var Hand = require("pokersolver").Hand;
 
 var Deck = require("./models/deck");
 var Game = require("./models/game");
 var Player = require("./models/player");
-
-
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -42,7 +39,6 @@ app.use("/api", player_routes);
 app.use("/api", game_routes);
 app.use("/api", deck_routes);
 
-
 //Socket.io
 
 io.on("connection", (socket) => {
@@ -50,29 +46,31 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     Game.findOne({ _id: socket.game }, function (err, game) {
-      try{
-      if(game.state === 'pregame'){
-      Player.find({ game: socket.game }, function (err, players) {
-        players.forEach((playerLoop) => {
-          if (playerLoop.position > socket.user.position) {
-            Player.updateOne(
-              { _id: playerLoop._id },
-              { position: playerLoop.position - 1 },
-              function (err) {}
-            );
-          }
-        });
+      try {
+        if (game.state === "pregame") {
+          Player.find({ game: socket.game }, function (err, players) {
+            players.forEach((playerLoop) => {
+              if (playerLoop.position > socket.user.position) {
+                Player.updateOne(
+                  { _id: playerLoop._id },
+                  { position: playerLoop.position - 1 },
+                  function (err) {}
+                );
+              }
+            });
 
-        Player.deleteOne({ _id: socket.user._id }, function (err) {
-          if (err) return handleError(err);
+            Player.deleteOne({ _id: socket.user._id }, function (err) {
+              if (err) return handleError(err);
 
-          socket
-            .to(socket.game)
-            .emit("playerDisconnectedBroadcast", socket.user);
-        });
-      });
-    }
-      }catch(e){console.log('Entra catch');}
+              socket
+                .to(socket.game)
+                .emit("playerDisconnectedBroadcast", socket.user);
+            });
+          });
+        }
+      } catch (e) {
+        console.log("Entra catch");
+      }
     });
 
     console.log("user disconnected");
@@ -94,45 +92,60 @@ io.on("connection", (socket) => {
     io.in(data.player.game).emit("getInfo", data.text);
   });
 
-  
-
-  
-
-  socket.on("myTurnIsOver", (player) => {                  
-    
+  socket.on("myTurnIsOver", (player) => {
     Player.find({ game: player.game }, function (err, players) {
       Game.findOne({ _id: player.game }, function (err, game) {
         var nextRound = true;
         var playersPlaying = 0;
+        var playersAllIn = 0;
+        var allIn = false;
         players.forEach((playerLoop) => {
-          if (playerLoop.playing && playerLoop.bet !== game.highestBet && !playerLoop.allIn) {
-            
+
+          if (
+            playerLoop.playing &&
+            playerLoop.bet !== game.highestBet &&
+            !playerLoop.allIn
+          ) {
             nextRound = false;
           } else if (
             playerLoop.bigBlind &&
-            (player.smallBlind ||
-            (nextPlayerPlaying(player, players)._id == playerLoop._id)) &&
             playerLoop.bet <= game.blind[0].value &&
+            (player.smallBlind ||
+              nextPlayerPlaying(player, players)._id == playerLoop._id) &&
             game.state === "preflop" &&
             !playerLoop.allIn
           ) {
             //Ciega grande primera ronda
-            
+
             nextRound = false;
-          } else if (playerLoop.playing && playerLoop.bet === null && !playerLoop.allIn) {
+          } else if (
+            playerLoop.playing &&
+            playerLoop.bet === null &&
+            !playerLoop.allIn
+          ) {
             //Para ronda con 0 apuestas
-            
             nextRound = false;
           }
-
           if (playerLoop.playing) {
             playersPlaying++;
+          }
+
+          if (playerLoop.allIn) {
+            playersAllIn++;
           }
         });
 
         if (playersPlaying === 1) {
           nextRound = true;
           game.state = "river";
+        }
+
+        console.log("Playing: ", playersPlaying);
+        console.log("Alin: ", playersAllIn);
+
+        if (playersPlaying === playersAllIn) {
+          allIn = true;
+          nextRound = true;
         }
 
         if (nextRound) {
@@ -148,32 +161,38 @@ io.on("connection", (socket) => {
                 for (var i = 0; i < 3; i++) {
                   deck.cards.shift();
                 }
-                newRound(players, game, deck);
 
-                break;
+                if (!allIn) {
+                  newRound(players, game, deck);
+                  break;
+                }
+
               case "flop":
                 game.state = "turn";
 
                 game.turn = deck.cards[0].name;
                 deck.cards.shift();
-                newRound(players, game, deck);
-                break;
+                if (!allIn) {
+                  newRound(players, game, deck);
+                  break;
+                }
 
               case "turn":
                 game.state = "river";
 
                 game.river = deck.cards[0].name;
                 deck.cards.shift();
-                newRound(players, game, deck);
-                break;
+                if (!allIn) {
+                  newRound(players, game, deck);
+                  break;
+                }else{
+                  io.in(player.game).emit("startYourTurn");
+                }
 
-              
-                  
-                
               case "river":
                 if (playersPlaying !== 1) {
                   showdown(players, game);
-                  
+
                   var playersHands = [];
                   var playersStill = [];
 
@@ -205,17 +224,20 @@ io.on("connection", (socket) => {
                   }
 
                   const handWinners = Hand.winners(hands);
-                  
 
                   for (var i = 0; i < handWinners.length; i++) {
-                    io.in(game._id).emit("getInfo", playersStill[handWinners[i].playerId].name +
-                     ' wins with ' + handWinners[i].descr);
+                    io.in(game._id).emit(
+                      "getInfo",
+                      playersStill[handWinners[i].playerId].name +
+                        " wins with " +
+                        handWinners[i].descr
+                    );
                     var winnerId = playersStill[handWinners[i].playerId]._id;
-                    
+
                     var newStack =
                       playersStill[handWinners[i].playerId].stack +
                       game.pot / handWinners.length;
-                      
+
                     Player.updateOne(
                       { _id: winnerId },
                       { stack: newStack },
@@ -225,8 +247,10 @@ io.on("connection", (socket) => {
                 } else {
                   var winnerId = nextPlayerPlaying(player, players)._id;
 
-                  io.in(game._id).emit("getInfo", nextPlayerPlaying(player, players).name +
-                     ' wins');
+                  io.in(game._id).emit(
+                    "getInfo",
+                    nextPlayerPlaying(player, players).name + " wins"
+                  );
                   var newStack =
                     nextPlayerPlaying(player, players).stack + game.pot;
 
@@ -240,11 +264,11 @@ io.on("connection", (socket) => {
                 Game.updateOne({ _id: game._id }, { pot: 0 }, function (
                   err
                 ) {});
-                
-                setTimeout(function(){
-                  newHand(player)}, 10000);
 
-                
+                setTimeout(function () {
+                  newHand(player);
+                }, 10000);
+
                 break;
               default:
               // code block
@@ -264,32 +288,23 @@ io.on("connection", (socket) => {
   });
 });
 
-function showdown(players, game){
-  
+function showdown(players, game) {
   players.forEach((player) => {
     player.bet = null;
     Player.updateOne({ _id: player._id }, player, function (err) {});
   });
- 
+
   game.highestBet = 0;
   Game.updateOne({ _id: game._id }, game, function (err) {
-    
-      io.in(game._id).emit("showdown");
-   
+    io.in(game._id).emit("showdown");
   });
-
-
-
 }
 
 function newHand(player) {
-
   io.in(player.game).emit("getInfo", "\n");
   io.in(player.game).emit("getInfo", "\n");
   io.in(player.game).emit("getInfo", "------- NEW ROUND -------");
 
-
-  
   Deck.updateOne({ game: player.game }, { cards: populateDeck() }, function (
     err,
     deckPopulated
@@ -297,9 +312,8 @@ function newHand(player) {
     Game.findOne({ _id: player.game }, function (err, game) {
       Deck.findOne({ game: player.game }, function (err, deck) {
         Player.find({ game: player.game }, function (err, players) {
-          
           game.blind = updateBlind(game.blind);
-          
+
           game.pot = game.blind[0].value + game.blind[0].value / 2;
           game.highestBet = game.blind[0].value;
           game.state = "preflop";
@@ -318,12 +332,11 @@ function newHand(player) {
               playerLoop.bigBlind = false;
             }
             if (playerLoop.smallBlind) {
-             
               playerLoop.smallBlind = false;
             }
             if (playerLoop.stack > 0) {
               playerLoop.playing = true;
-            }else{
+            } else {
               playerLoop.playing = false;
             }
             if (playerLoop.dealer === true) {
@@ -344,26 +357,26 @@ function newHand(player) {
             if (playerLoop.dealer === true) {
               small = nextPlayerPlaying(playerLoop, players);
               small.smallBlind = true;
-              if(small.stack < game.blind[0].value / 2){
+              if (small.stack < game.blind[0].value / 2) {
                 small.bet = small.stack;
                 small.stack = 0;
                 small.allIn = true;
-              }else{
+              } else {
                 small.bet = game.blind[0].value / 2;
                 small.stack = small.stack - game.blind[0].value / 2;
               }
-              
+
               big = nextPlayerPlaying(small, players);
               big.bigBlind = true;
-              if(big.stack < game.blind[0].value){
+              if (big.stack < game.blind[0].value) {
                 big.bet = big.stack;
                 big.stack = 0;
                 big.allIn = true;
-              }else{
+              } else {
                 big.bet = game.blind[0].value;
                 big.stack = big.stack - game.blind[0].value;
               }
-              
+
               nextPlayerPlaying(big, players).myTurn = true;
             }
 
@@ -401,12 +414,9 @@ function newHand(player) {
 function newRound(players, game, deck) {
   players.forEach((player) => {
     if (player.smallBlind) {
-      
       if (player.playing && !player.allIn) {
-       
         player.myTurn = true;
       } else {
-       
         nextPlayerPlaying(player, players).myTurn = true;
       }
     }
@@ -447,8 +457,6 @@ function nextPlayer(player, players) {
   return players[i];
 }
 
-
-
 function translateCard(cardName) {
   var suit = cardName.split("_")[0].substring(0, 1);
   var number = cardName.split("_")[1];
@@ -487,24 +495,18 @@ function populateDeck() {
   }
 
   return cards;
-  
 }
 
-function updateBlind(blinds){
-  
+function updateBlind(blinds) {
   var date = new Date();
   var i = 0;
 
- 
-    
-  while(blinds[i].time < date){
-   
-    if(blinds[i+1].time < date){
-      blinds.shift(); 
+  while (blinds[i].time < date) {
+    if (blinds[i + 1].time < date) {
+      blinds.shift();
     }
 
     i++;
-  
   }
 
   return blinds;
