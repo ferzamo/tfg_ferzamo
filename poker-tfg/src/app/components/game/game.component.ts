@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { SocketioService } from "../../shared/services/socket/socketio.service";
 import { LoadingService } from "../../shared/services/loading/loading.service";
 
+import {MatDialog} from '@angular/material/dialog';
+import { WinnerModalComponent } from '../../shared/components/winner-modal/winner-modal.component'
 
 @Component({
   selector: "app-game",
@@ -48,7 +50,8 @@ export class GameComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private _socketService: SocketioService,
-    private _loadingService: LoadingService
+    private _loadingService: LoadingService,
+    public dialog: MatDialog
   ) {
     if (
       !(JSON.parse(sessionStorage.getItem("player")) === null) &&
@@ -121,7 +124,13 @@ export class GameComponent implements OnInit {
     })
 
     this._socketService.youWonTheGame().subscribe((res)=>{
-      if(res._id === this.unPlayer._id) console.log('i won the game');
+      if(res._id === this.unPlayer._id) {
+        const dialogRef = this.dialog.open(WinnerModalComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+      }
     })
 
   }

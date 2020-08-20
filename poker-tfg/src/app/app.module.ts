@@ -1,7 +1,8 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import {MatSliderModule} from '@angular/material/slider';
-import {HttpClientModule} from '@angular/common/http'
+import {HttpClientModule} from '@angular/common/http';
+import {MatDialogModule} from '@angular/material/dialog';
 
 import {
   CreateComponent,
@@ -39,6 +40,7 @@ import { FlipModule } from 'ngx-flip';
     BrowserAnimationsModule,
     FormsModule,
     FlipModule,
+    MatDialogModule,
     HttpClientModule],
   providers: [],
   bootstrap: [ShellComponent]
