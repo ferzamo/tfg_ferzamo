@@ -1,7 +1,7 @@
 <form class="createContainer" #createForm="ngForm">
 
     <label class="labelName labelCreate">Your name</label>
-    <input type="text" class="inputName inputCreate" autofocus #name="ngModel" name="name" [(ngModel)]="player.name" required />
+    <input autocomplete="off" type="text" class="inputName inputCreate" autofocus #name="ngModel" name="name" [(ngModel)]="player.name" required />
 
     <div class="separator"></div>
 
@@ -13,7 +13,7 @@
     </select>
 
     <label class="labelStack labelCreate">Stack</label>
-    <input type="text" class="inputStack inputCreate" #stack="ngModel" name="stack" [(ngModel)]="game.stack" required/>
+    <input autocomplete="off" type="text" class="inputStack inputCreate" #stack="ngModel" name="stack" [(ngModel)]="game.stack" required/>
 
     <app-main-button (clickEvent)="onClick()" class="buttonCreate" [buttonText]="'Create'"></app-main-button>
     

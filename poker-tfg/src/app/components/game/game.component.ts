@@ -118,8 +118,10 @@ export class GameComponent implements OnInit {
           this.info.push(res)
         }
         
-        console.log(this.info)
-        
+    })
+
+    this._socketService.youWonTheGame().subscribe((res)=>{
+      if(res._id === this.unPlayer._id) console.log('i won the game');
     })
 
   }
@@ -165,12 +167,12 @@ export class GameComponent implements OnInit {
 
   raise() {
     this.unPlayer.myTurn = false;
-
-    this.unPlayer.stack = this.unPlayer.stack - Number(this.sliderValue) + this.unPlayer.bet;
+    
+    this.unPlayer.stack = this.unPlayer.stack - Number(this.sliderValue);
 
     this.game.pot = this.game.pot + Number(this.sliderValue) - this.unPlayer.bet;
   
-    this.unPlayer.bet = Number(this.sliderValue);
+    this.unPlayer.bet = Number(this.sliderValue) + this.unPlayer.bet;
    
 
     this.game.highestBet = this.unPlayer.bet;

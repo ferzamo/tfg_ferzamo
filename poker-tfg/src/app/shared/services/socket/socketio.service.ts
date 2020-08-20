@@ -119,6 +119,19 @@ export class SocketioService {
     return observable;
   }
 
+  youWonTheGame(){
+   
+    let observable = new Observable<Player>(observer => {
+      this.socket.on('youWonTheGame', (data: Player) => {
+        
+        observer.next(data);
+      });
+      return () => {}
+    })
+
+    return observable;
+  }
+
   
 
 }
