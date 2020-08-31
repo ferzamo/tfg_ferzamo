@@ -83,11 +83,6 @@ export class GameComponent implements OnInit {
  
 
   ngOnInit(): void {
-    const dialogRef = this.dialog.open(WinnerModalComponent);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
 
     this._loadingService.hide()
     this.getPlayers();
@@ -128,15 +123,7 @@ export class GameComponent implements OnInit {
         
     })
 
-    this._socketService.youWonTheGame().subscribe((res)=>{
-      if(res._id === this.unPlayer._id) {
-        const dialogRef = this.dialog.open(WinnerModalComponent);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-      }
-    })
+    
 
   }
 

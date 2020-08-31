@@ -360,7 +360,7 @@ function newHand(player) {
             io.in(player.game).emit("getInfo", "¡¡ " + lastPlayerPlaying.name + " won the game !!");
             io.in(player.game).emit("getInfo", "***********");
             io.in(player.game).emit("getInfo", "***********");
-            io.in(player.game).emit("youWonTheGame", lastPlayerPlaying);
+            deleteEverything(player.game);
           } else {
             nextPlayerPlaying(dealer, players).dealer = true;
 
@@ -525,6 +525,17 @@ function updateBlind(blinds) {
   }
 
   return blinds;
+}
+
+function deleteEverything(game) {
+
+  Game.deleteOne({ _id: game }, function (err) {
+    Deck.deleteOne({ game: game }, function (err) {
+      Player.deleteMany({ game: game }, function (err) {
+      });
+    });
+  });
+
 }
 
 module.exports = http;
