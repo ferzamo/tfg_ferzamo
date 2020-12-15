@@ -139,7 +139,7 @@ io.on("connection", (socket) => {
           game.state = "river";
         }
 
-        if (playersPlaying === playersAllIn) {
+        if (playersPlaying <= playersAllIn + 1) {
           allIn = true;
           nextRound = true;
         }
@@ -255,7 +255,6 @@ io.on("connection", (socket) => {
                     { _id: winnerId },
                     { stack: newStack },
                     function (err) {
-                      console.log("doneeee");
                     }
                   );
                 }

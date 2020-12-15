@@ -34,16 +34,6 @@ export class GameComponent implements OnInit {
   public blindDate: Date;
 
 
-  
-  
-
-
-
-
-  
-
-  
-
   constructor(
     private _gameService: GameService,
     private _playerService: PlayerService,
@@ -145,11 +135,20 @@ export class GameComponent implements OnInit {
   call() {
     this.unPlayer.myTurn = false;
 
-    if(this.unPlayer.bet !== this.game.highestBet){
+    
+    if(this.unPlayer.stack < this.game.highestBet){
+      this.unPlayer.bet = this.unPlayer.stack;
+    }
+
+    if(this.unPlayer.bet !== this.game.highestBet && !(this.unPlayer.stack < this.game.highestBet)){
       this.unPlayer.stack = this.unPlayer.stack - this.game.highestBet + this.unPlayer.bet;
       this.game.pot = this.game.pot + this.game.highestBet - this.unPlayer.bet;
       this.unPlayer.bet = this.game.highestBet;
 
+    } else {
+      this.unPlayer.bet = this.unPlayer.stack
+      this.game.pot = this.game.pot + this.unPlayer.stack;
+      this.unPlayer.stack = 0;
     }
 
     if(this.unPlayer.stack == 0) this.unPlayer.allIn = true;
@@ -246,6 +245,13 @@ export class GameComponent implements OnInit {
   phraseWinner(phrase){
     if (phrase.includes(' wins')) return true;
     else return false;
+  }
+
+  allInToZero(): string{
+    if(this.game.highestBet > this.unPlayer.stack){
+      return this.unPlayer.stack.toString();
+    }
+    return  this.game.highestBet.toString();
   }
   
 

@@ -154,7 +154,7 @@
       <app-main-button [buttonText]="'Fold'" (clickEvent)="fold()"></app-main-button>
     </div>
     <div class="checkArea">
-      <app-main-button [buttonText]="canICheck ? 'Check ':'Call ' + game.highestBet" (clickEvent)="call()">
+      <app-main-button [buttonText]="canICheck ? 'Check ':'Call ' + allInToZero()" (clickEvent)="call()">
       </app-main-button>
     </div>
     <div class="raiseArea">
