@@ -133,6 +133,7 @@ export class GameComponent implements OnInit {
   }
 
   call() {
+    debugger
     this.unPlayer.myTurn = false;
 
     
@@ -145,7 +146,7 @@ export class GameComponent implements OnInit {
       this.game.pot = this.game.pot + this.game.highestBet - this.unPlayer.bet;
       this.unPlayer.bet = this.game.highestBet;
 
-    } else {
+    } else if (this.unPlayer.bet !== this.game.highestBet && (this.unPlayer.stack < this.game.highestBet)){
       this.unPlayer.bet = this.unPlayer.stack
       this.game.pot = this.game.pot + this.unPlayer.stack;
       this.unPlayer.stack = 0;
@@ -249,9 +250,9 @@ export class GameComponent implements OnInit {
 
   allInToZero(): string{
     if(this.game.highestBet > this.unPlayer.stack){
-      return this.unPlayer.stack.toString();
+      return this.unPlayer.stack ? this.unPlayer.stack.toString() : '';
     }
-    return  this.game.highestBet.toString();
+    return  this.game.highestBet ? this.game.highestBet.toString() : '';
   }
   
 
