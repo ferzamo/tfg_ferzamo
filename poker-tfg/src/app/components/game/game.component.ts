@@ -151,7 +151,14 @@ export class GameComponent implements OnInit {
       this.unPlayer.stack = 0;
     }
 
-    if(this.unPlayer.stack == 0) this.unPlayer.allIn = true;
+    let playersAllIn = 0;
+    let playersPlaying = 1;
+    this.players.forEach((player) => {
+      if (player.allIn) playersAllIn++;
+      if (player.playing) playersPlaying++;
+    })
+
+    if(this.unPlayer.stack == 0 || (playersAllIn + 1 === playersPlaying)) this.unPlayer.allIn = true;
 
     this._playerService.updatePlayer(this.unPlayer).subscribe(() => {
      
