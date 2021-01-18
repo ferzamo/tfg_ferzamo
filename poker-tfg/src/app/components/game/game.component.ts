@@ -133,7 +133,6 @@ export class GameComponent implements OnInit {
   }
 
   call() {
-    debugger
     this.unPlayer.myTurn = false;
 
     

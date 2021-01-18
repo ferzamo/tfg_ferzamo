@@ -139,9 +139,15 @@ io.on("connection", (socket) => {
           game.state = "river";
         }
 
-        if (playersPlaying <= playersAllIn + 1) {
+        console.log(player)
+        console.log(1111, !player.allIn)
+        console.log(22222, player.bet === game.highestBet)
+        console.log(33333, playersPlaying === playersAllIn + 1)
+        if (playersPlaying === playersAllIn ) {
           allIn = true;
           nextRound = true;
+        } else {
+          allIn = false;
         }
 
         if (nextRound) {
