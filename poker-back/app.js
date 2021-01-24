@@ -154,6 +154,7 @@ io.on("connection", (socket) => {
         }
 
         if (nextRound) {
+          if (playersPlaying - 1 === playersAllIn) allIn = true;
           Deck.findOne({ game: player.game }, function (err, deck) {
             switch (game.state) {
               case "preflop":
