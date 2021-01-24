@@ -143,7 +143,7 @@
   <!------------------------ACTIONS BAR------------------------>
   <div class="actionsBar" [style.visibility]="unPlayer.myTurn ? 'visible':'hidden'">
     <div class="sliderArea">
-      <mat-slider class="slider" [max]="maxSlider" [min]="minSlider" [(ngModel)]="sliderValue"
+      <mat-slider *ngIf="unPlayer.stack > game.highestBet" class="slider" [max]="maxSlider" [min]="minSlider" [(ngModel)]="sliderValue"
         (input)="sliderValue = $event.value">
       </mat-slider>
     </div>
@@ -158,7 +158,7 @@
       </app-main-button>
     </div>
     <div class="raiseArea">
-      <app-main-button [buttonText]="canIRaise ? 'Raise ' + sliderValue : 'Bet ' + sliderValue" (clickEvent)="raise()">
+      <app-main-button *ngIf="unPlayer.stack > game.highestBet" [buttonText]="canIRaise ? 'Raise ' + sliderValue : 'Bet ' + sliderValue" (clickEvent)="raise()">
       </app-main-button>
     </div>
   </div>

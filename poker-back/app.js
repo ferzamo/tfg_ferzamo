@@ -57,6 +57,13 @@ io.on("connection", (socket) => {
                   function (err) {}
                 );
               }
+              if(playerLoop.position === 2) {
+                Player.updateOne(
+                  { _id: playerLoop._id },
+                  { dealer: true },
+                  function (err) {}
+                );
+              }
             });
 
             Player.deleteOne({ _id: socket.user._id }, function (err) {
@@ -391,7 +398,6 @@ function newHand(player) {
                   big.bet = game.blind[0].value;
                   big.stack = big.stack - game.blind[0].value;
                 }
-
                 nextPlayerPlaying(big, players).myTurn = true;
               }
 

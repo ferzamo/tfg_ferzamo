@@ -112,7 +112,7 @@ function updateGame(req, res){
 
     switch(game.speed){
         case 'Normal':
-            dateIncreaser = 5;
+            dateIncreaser = 15;
         break;
         
         case 'Turbo':
@@ -120,7 +120,7 @@ function updateGame(req, res){
         break;
 
         case 'HyperTurbo':
-            dateIncreaser = 15;
+            dateIncreaser = 5;
         break;
     }
 
